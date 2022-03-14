@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  1 最大流和最小割问题 流网络  一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$ (V,E) 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$ 对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$">
+  <meta name="description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  最大流和最小割问题 流网络  一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$ $(V,E)$ 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$ 对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法之网络流">
 <meta property="og:url" content="http://example.com/2022/03/14/%E7%AE%97%E6%B3%95%E4%B9%8B%E7%BD%91%E7%BB%9C%E6%B5%81/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  1 最大流和最小割问题 流网络  一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$ (V,E) 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$ 对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$">
+<meta property="og:description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  最大流和最小割问题 流网络  一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$ $(V,E)$ 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$ 对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-14T15:24:24.000Z">
-<meta property="article:modified_time" content="2022-03-14T15:38:32.683Z">
+<meta property="article:modified_time" content="2022-03-14T15:58:39.382Z">
 <meta property="article:author" content="Rebecca">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="网络流">
@@ -202,7 +202,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-03-14 23:24:24 / 修改时间：23:38:32" itemprop="dateCreated datePublished" datetime="2022-03-14T23:24:24+08:00">2022-03-14</time>
+              <time title="创建时间：2022-03-14 23:24:24 / 修改时间：23:58:39" itemprop="dateCreated datePublished" datetime="2022-03-14T23:24:24+08:00">2022-03-14</time>
             </span>
 
           
@@ -221,11 +221,11 @@
 <li>理解最大流、任意流、最小割、任意割之间的关系；</li>
 <li>掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。</li>
 </ol>
-<h2 id="1-最大流和最小割问题"><a href="#1-最大流和最小割问题" class="headerlink" title="1 最大流和最小割问题"></a>1 最大流和最小割问题</h2><ol>
+<h2 id="最大流和最小割问题"><a href="#最大流和最小割问题" class="headerlink" title="最大流和最小割问题"></a>最大流和最小割问题</h2><ol>
 <li><p>流网络</p>
 <ol>
 <li>一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$<ol>
-<li>(V,E) 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$</li>
+<li>$(V,E)$ 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$</li>
 <li>对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$</li>
 </ol>
 </li>
@@ -235,10 +235,10 @@
 <ol>
 <li>一个流网络 $f$ 是一个函数，满足<ol>
 <li>对于每一条边 $e \in E$ ： $0 \le f(e)\le c(e)$ </li>
-<li>对于每一个结点 $v \in V-{s,t}$ ：$\sum_{e ,in , to , v} f(e)&#x3D;\sum_{e ,out , of , v}$</li>
+<li>对于每一个结点 $v \in V-\lbrace s, t \rbrace$ ： $\sum_{e \in \ to \ v } f(e)&#x3D;\sum_{e \ out \ of \ v}$</li>
 </ol>
 </li>
-<li>流值 $val(f)&#x3D;\sum_{e ,out , of , s} f(e) - \sum_{e ,in , to , s}$</li>
+<li>流值 $val(f)&#x3D;\sum_{e \ out \ of \ s}  f(e) - \sum_{e \ in \  to \  s}$</li>
 <li>最大流问题：找到一个流的最大流值。</li>
 </ol>
 </li>
@@ -246,14 +246,14 @@
 <ol>
 <li><p>一个割集是一个划分 $(A,B)$ ，满足 $s \in A$ 和 $t\in B$</p>
 </li>
-<li><p>割集的容量是从 $A$ 到 $B$​ 的所有边的容量之和<br>$$<br>cap(A,B)&#x3D;\sum_{e ,out , of , A}c(e)<br>$$</p>
+<li><p>割集的容量是从 $A$ 到 $B$​ 的所有边的容量之和<br>$$<br>cap(A,B)&#x3D;\sum_{e \ out \ of \ A}c(e)<br>$$</p>
 </li>
 <li><p>最小割问题：找到一个割的最小容量</p>
 </li>
 </ol>
 </li>
 </ol>
-<h2 id="2-Ford–Fulkerson算法"><a href="#2-Ford–Fulkerson算法" class="headerlink" title="2 Ford–Fulkerson算法"></a>2 Ford–Fulkerson算法</h2><ol>
+<h2 id="Ford–Fulkerson算法"><a href="#Ford–Fulkerson算法" class="headerlink" title="Ford–Fulkerson算法"></a>Ford–Fulkerson算法</h2><ol>
 <li><p>贪心算法</p>
 <ol>
 <li>对每一条边  $e \in E$ ，最开始初始化 $f(e)&#x3D;0$ ，即每一条边上的流量为0</li>
@@ -280,11 +280,11 @@
 <li>反向边就是对流的撤销操作</li>
 </ol>
 </li>
-<li><p>残留容量<br>$$<br>c_f(e)&#x3D;\left{\begin{matrix}<br>c(e)-f(e) &amp; if e \in E\<br>f(e) &amp; if e^{reverse}\in E<br>\end{matrix}\right.<br>$$</p>
+<li><p>残留容量<br>$$<br>c_f(e)&#x3D;<br>\begin{cases}<br>c(e)-f(e) &amp; if\ e \in E\<br>f(e) &amp; if\ e^{reverse}\in E<br>\end{cases}<br>$$</p>
 </li>
 <li><p>残量网络 $G_f&#x3D;(V,E_f,s,t,c_f)$</p>
 <ol>
-<li>$E_f&#x3D;{e:f(e)&lt;c(e)} \cup {e^{reverse}:f(e)&gt;0}$ ，即残量网络的边集是由流量小于容量的边以及那些有流量的反向边的并集。</li>
+<li>$E_f&#x3D;\lbrace e:f(e)&lt;c(e)\rbrace \cup \lbrace e^{reverse}:f(e)&gt;0\rbrace$ ，即残量网络的边集是由流量小于容量的边以及那些有流量的反向边的并集。</li>
 <li>关键性质：$f’$ 是一个在 $G_f$ 中的流，当且仅当 $f+f’$ 是 $G$  上的流。</li>
 </ol>
 </li>
@@ -327,7 +327,7 @@
 </ol>
 </li>
 </ol>
-<h2 id="3-最大流最小割定理"><a href="#3-最大流最小割定理" class="headerlink" title="3 最大流最小割定理"></a>3 最大流最小割定理</h2><ol>
+<h2 id="最大流最小割定理"><a href="#最大流最小割定理" class="headerlink" title="最大流最小割定理"></a>最大流最小割定理</h2><ol>
 <li><p>流值引理</p>
 <ol>
 <li>令 $f$ 为任意流，$(A,B)$ 为任意割集，那么，流 $f$ 的值 $val(f)$ 等于经过割集 $(A,B)$ 的流</li>
@@ -337,7 +337,7 @@
 <ol>
 <li><p>令  $f$ 为任意流，$(A,B)$ 为任意割集，那么，流 $f$ 的值 $val(f)$ 小于割集 $(A,B)$ 的容量。</p>
 </li>
-<li><p>证明：<br>$$<br>val(f) &amp;&#x3D;\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}<br>\ &amp;\le \sum_{\text{e out of A}}{f(e)}<br>\ &amp;\le \sum_{\text{e out of A}}{c(e)}<br>\ &amp;&#x3D; cap(A,B)<br>$$</p>
+<li><p>证明：<br>$$<br>\begin{align}<br>val(f) &amp;&#x3D;\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}<br>\ &amp;\le \sum_{\text{e out of A}}{f(e)}<br>\ &amp;\le \sum_{\text{e out of A}}{c(e)}<br>\ &amp;&#x3D; cap(A,B)<br>\end{align}<br>$$</p>
 </li>
 </ol>
 </li>
@@ -361,7 +361,7 @@
 </ol>
 </li>
 </ol>
-<h2 id="4-变尺度算法"><a href="#4-变尺度算法" class="headerlink" title="4 变尺度算法"></a>4 变尺度算法</h2><ol>
+<h2 id="变尺度算法"><a href="#变尺度算法" class="headerlink" title="变尺度算法"></a>变尺度算法</h2><ol>
 <li><p>如何选择增广路径</p>
 </li>
 <li><p>变尺度算法</p>
@@ -385,7 +385,7 @@
 </li>
 <li><p>引理2：令 $f$ 为一个 $\Delta$-变尺度阶段后的流，则最大流值不超过 $val(f)+m\Delta$</p>
 <ol>
-<li><p>$$<br>val(f) &amp;&#x3D;\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}<br>\&amp;\ge\sum_{\text{e out of A}}{(c(e)-\Delta)} - \sum_{\text{e in to A}}{\Delta}<br>\&amp;\ge \sum_{\text{e out of A}}c(e) - \sum_{\text{e out of A}}{\Delta} -\sum_{\text{e in to A}}{\Delta}<br>\&amp;\ge cap(A,B)-m\Delta<br>$$</p>
+<li><p>$$<br>\begin{align}<br>val(f) &amp;&#x3D;\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}<br>\&amp;\ge\sum_{\text{e out of A}}{(c(e)-\Delta)} - \sum_{\text{e in to A}}{\Delta}<br>\&amp;\ge \sum_{\text{e out of A}}c(e) - \sum_{\text{e out of A}}{\Delta} -\sum_{\text{e in to A}}{\Delta}<br>\&amp;\ge cap(A,B)-m\Delta<br>\end{align}<br>$$</p>
 </li>
 <li><p>流出边的流量一定$\le \Delta$ ，流入边的容量一定 $\le \Delta$</p>
 </li>
@@ -501,7 +501,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%80%E5%A4%A7%E6%B5%81%E5%92%8C%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">1 最大流和最小割问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Ford%E2%80%93Fulkerson%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">2 Ford–Fulkerson算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">3 最大流最小割定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%8F%98%E5%B0%BA%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">4 变尺度算法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E5%92%8C%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">最大流和最小割问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ford%E2%80%93Fulkerson%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Ford–Fulkerson算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">最大流最小割定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E5%B0%BA%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">变尺度算法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
