@@ -173,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/18/%E7%BB%84%E5%90%88%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96%E4%B9%8B%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/19/LinearProgramming/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -187,7 +187,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/03/18/%E7%BB%84%E5%90%88%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96%E4%B9%8B%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92/" class="post-title-link" itemprop="url">组合设计与组合优化之线性规划</a>
+            <a href="/2022/03/19/LinearProgramming/" class="post-title-link" itemprop="url">LinearProgramming</a>
         </h2>
 
         <div class="post-meta">
@@ -198,7 +198,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-03-18 14:44:24 / 修改时间：15:06:34" itemprop="dateCreated datePublished" datetime="2022-03-18T14:44:24+08:00">2022-03-18</time>
+              <time title="创建时间：2022-03-19 17:30:41 / 修改时间：17:35:19" itemprop="dateCreated datePublished" datetime="2022-03-19T17:30:41+08:00">2022-03-19</time>
             </span>
 
           
@@ -212,8 +212,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong>文章中图片引用有问题，hexo-asset-image 安装出错，等我上完课再改&#x3D;。&#x3D;</strong></p>
-<h1 id="组合设计与组合优化"><a href="#组合设计与组合优化" class="headerlink" title="组合设计与组合优化"></a>组合设计与组合优化</h1><h2 id="线性规划"><a href="#线性规划" class="headerlink" title="线性规划"></a>线性规划</h2><h3 id="1-线性规划问题的数学模型"><a href="#1-线性规划问题的数学模型" class="headerlink" title="1 线性规划问题的数学模型"></a>1 线性规划问题的数学模型</h3><p>线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。</p>
+          <h1 id="组合设计与组合优化"><a href="#组合设计与组合优化" class="headerlink" title="组合设计与组合优化"></a>组合设计与组合优化</h1><h2 id="线性规划"><a href="#线性规划" class="headerlink" title="线性规划"></a>线性规划</h2><h3 id="1-线性规划问题的数学模型"><a href="#1-线性规划问题的数学模型" class="headerlink" title="1 线性规划问题的数学模型"></a>1 线性规划问题的数学模型</h3><p>线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。</p>
 <p>线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。</p>
 <p>目标函数：<br>$$<br>\text{max(min)} \ y &#x3D; \sum \limits_{i&#x3D;1}^r c_ix_i<br>$$<br>约束条件：<br>$$<br>\begin{align}<br>s.t. \sum \limits_{i&#x3D;1}^r a_{1i}x_i &amp; \le(&#x3D;,\ge) b_1 \\<br> \sum \limits_{i&#x3D;1}^r a_{2i}x_i &amp; \le(&#x3D;,\ge) b_2 \\<br> ……\\<br>  \sum \limits_{i&#x3D;1}^r a_{2mi}x_i &amp; \le(&#x3D;,\ge) b_m \\<br>\end{align}<br>$$<br>非负约束条件：<br>$$<br>x_i \ge 0,i &#x3D; 1,2,…,r<br>$$</p>
 <h4 id="（1）运输问题"><a href="#（1）运输问题" class="headerlink" title="（1）运输问题"></a>（1）运输问题</h4><p>设有两个电视机厂A1,A2，产量分别为23万台与27万台，其产品供应三个城市B1,B2,B3。每个城市的需要量分别为17万台，18万台和15万台，而各厂到各城市的运费单价如下表。</p>
@@ -337,20 +336,28 @@
 <p><strong>可行解域：</strong>所有可行解的集合</p>
 <h4 id="（2）例子"><a href="#（2）例子" class="headerlink" title="（2）例子"></a>（2）例子</h4><p><strong>例1</strong>：给出一个线性规划问题如下：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; x_1 + x_2 \\<br>\begin{aligned}<br>s.t. 2x_1+3x_2 &amp; \le 6 \\<br>3x_1+2x_2 &amp; \le 6 \\<br>x_1  &amp; \ge 0 \\ x_2 &amp; \ge 0\\<br>\end{aligned}<br>\end{split}<br>\end{equation}<br>$$</p>
 <p>则画图如下：</p>
-<p><img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318114609670.png" alt="image-20220318114609670" style="zoom: 67%;"><img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318114616610.png" alt="image-20220318114616610" style="zoom: 67%;"></p>
+<img src="/2022/03/19/LinearProgramming/image-20220319171444450.png" class="" title="例1-图1">
+<img src="/2022/03/19/LinearProgramming/image-20220319171538409.png" class="" title="例1-图2">
+
 <p>如图所示，在点 (6&#x2F;5,6&#x2F;5) ， $y$ 取得最大值 12&#x2F;5 ，即最优可行解为 (6&#x2F;5,6&#x2F;5) 。</p>
 <p><strong>例2</strong> 给出一个线性规划问题如下：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; 3x_1 + x_2 \\<br>\begin{aligned}<br>s.t. x_1+x_2 &amp; \le 5 \\<br>-x_1+x_2 &amp; \le 0 \\<br>6x_1+2x_2 &amp; \le 21 \\<br>x_1  &amp; \ge 0 \\ x_2 &amp; \ge 0\\<br>\end{aligned}<br>\end{split}<br>\end{equation}<br>$$</p>
 <p>则画图如下：</p>
-<p><img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318114944778.png" alt="image-20220318114944778" style="zoom:50%;"><img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318115111885.png" alt="image-20220318115111885" style="zoom:50%;"></p>
+<p><img src="/LinearProgramming/image-20220318114944778.png" alt="image-20220318114944778"><img src="/LinearProgramming/image-20220318115111885.png" alt="image-20220318115111885"></p>
 <p>如图所示，$y$ 可取得最大值 21&#x2F;2 ，但有无穷多个最优可行解。</p>
 <p><strong>例3</strong> 给出一个线性规划问题如下：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; 2x_1 + 2x_2\\<br>\begin{aligned}<br>s.t. x_1 - x_2 &amp; \ge 1 \\<br>-x_1+2x_2 &amp; \le 0 \\<br>x_1  &amp; \ge 0 \\ x_2 &amp; \ge 0\\<br>\end{aligned}<br>\end{split}<br>\end{equation}<br>$$</p>
 <p>则画图如下：</p>
-<img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318115306288.png" alt="image-20220318115306288" style="zoom:50%;">
+<img src="/2022/03/19/LinearProgramming/image-20220318115306288.png" class="" title="image-20220318115306288">
+
+
 
 <p>如图所示，可行解域无穷大，$y$ 无法取到最大值， 有无穷多个最优可行解。</p>
 <p><strong>例4</strong> 给出一个线性规划问题如下：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{min} \ y &#x3D; 3x_1 + 2x_2 \\<br>\begin{aligned}<br>s.t. -x_1 + x_2 &amp; \ge 1 \\<br>x_1+x_2 &amp; \le -2 \\<br>x_1  &amp; \ge 0 \\ x_2 &amp; \ge 0\\<br>\end{aligned}<br>\end{split}<br>\end{equation}<br>$$</p>
 <p>则画图如下：</p>
-<img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318115526464.png" alt="image-20220318115526464" style="zoom: 67%;">
+<img src="/2022/03/19/LinearProgramming/image-20220318115526464.png" class="" title="image-20220318115526464">
+
+
+
+
 
 <p>如图所示，没有可行解，因此 $y$ 无法取到最大值，没有最优可行解。</p>
 <h4 id="（3）解的4种情况"><a href="#（3）解的4种情况" class="headerlink" title="（3）解的4种情况"></a>（3）解的4种情况</h4><p><strong>两个变量的线性规划问题的解可能有以下四种情况：</strong></p>
@@ -367,9 +374,9 @@
 <h4 id="（3）线性规划问题的几何表示"><a href="#（3）线性规划问题的几何表示" class="headerlink" title="（3）线性规划问题的几何表示"></a>（3）线性规划问题的几何表示</h4><p>对一个有 $r$ 个变元和 $m$ 个线性约束条件的线性规划问题，可行解域是 $r$ 维空间中的一个凸多面体，它由对应于线性约束条件的 $m$ 个超平面和对应于非负条件的 $r$ 个超平面所围成：<br>$$<br>\begin{split}<br>a_{11}x_1+a_{12}x_2+…+a_{1r}x_r&#x3D;b_1\\<br>a_{21}x_1+a_{22}x_2+…+a_{2r}x_r&#x3D;b_2\\<br>…\\<br>a_{m1}x_1+a_{m2}x_2+…+a_{mr}x_r&#x3D;b_m\\<br>x_i \ge 0,i &#x3D; 1,2,…,r<br>\end{split}<br>$$<br>对 $r$ 维空间的线性规划问题，如果存在最优可行解，那么在凸多面体的某个角点上一定能找到最优可行解。</p>
 <p>在二维空间中，互不平行的两条直线相交于一点，在 $r$ 维空间中，互不平行的 $r$ 个超平面也相交于一个点。</p>
 <h3 id="4-线性规划问题的标准形式"><a href="#4-线性规划问题的标准形式" class="headerlink" title="4 线性规划问题的标准形式"></a>4 线性规划问题的标准形式</h3><h4 id="（1）标准形式"><a href="#（1）标准形式" class="headerlink" title="（1）标准形式"></a>（1）标准形式</h4><p>给定一个线性规划问题：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max(min)} \ y &#x3D; \sum  \limits_{i&#x3D;1}^r c_ix_i \\<br>\begin{aligned}<br>s.t. \quad \sum \limits_{i&#x3D;1}^r a_{1i}x_i &amp; \le(&#x3D;,\ge) b_1 \\<br> \sum \limits_{i&#x3D;1}^r a_{2i}x_i &amp; \le(&#x3D;,\ge) b_2 \\<br> ……\\<br>  \sum \limits_{i&#x3D;1}^r a_{2mi}x_i &amp; \le(&#x3D;,\ge) b_m \\<br>\end{aligned}\\<br>\quad x_i   \ge 0,i  &#x3D; 1,2,…,r<br>\end{split}<br>\end{equation}<br>$$<br>将其标准化，为<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y  &#x3D; \sum  \limits_{i&#x3D;1}^r c_ix_i \\<br>\begin{aligned}<br>s.t.   \sum \limits_{i&#x3D;1}^r a_{1i}x_i  &amp;&#x3D; b_1 \\<br> \sum \limits_{i&#x3D;1}^r a_{2i}x_i  &amp;&#x3D; b_2 \\<br> ……\\<br>  \sum \limits_{i&#x3D;1}^r a_{2mi}x_i  &amp;&#x3D; b_m \\<br>\end{aligned} \\<br>x_i   \ge 0,i  &#x3D; 1,2,…,r<br>\end{split}<br>\end{equation}<br>$$</p>
-<h4 id="（2）标准化方法"><a href="#（2）标准化方法" class="headerlink" title="（2）标准化方法"></a>（2）标准化方法</h4><p>（a）如果约束条件中出现了 $&lt;,\le ,&gt;,\ge$ ，则需要引入松弛变量：<br>$$<br>\begin{align}<br>a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r \le b_k \\<br>\xRightarrow[]{x_{r+k}\ge0} a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r +x_{r+k}&#x3D; b_k<br>\end{align}<br>$$</p>
-<p>$$<br>\begin{align}<br>a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r \ge b_k \\<br>\xRightarrow[]{x_{r+k}\ge 0} a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r -x_{r+k}&#x3D; b_k<br>\end{align}<br>$$</p>
-<p>（b）如果线性规划问题求最小值，那么我们可以将等式左右取负转为求最大值问题：<br>$$<br>\text{min} \ y &#x3D; \sum  \limits_{i&#x3D;1}^r c_ix_i \Rightarrow \text{max} \ y’ &#x3D; -y &#x3D; -\sum  \limits_{i&#x3D;1}^r c_ix_i<br>$$<br>（c）如果约束条件中的 $b_k &lt;0$ ，那么我们可以将等式左右取负将等式后边置为正值：<br>$$<br>a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r &#x3D; b_k \xRightarrow[]{b_k &lt; 0} -a_{k1}x_1-a_{k2}x_2 -…-a_{kr}x_r &#x3D; -b_k<br>$$<br>（d）如果某个变量 $x_i &lt; 0$ ，做如下变换：<br>$$<br>x_i &#x3D; x_i’-x_i’’(x_i’’ &gt; x_i’ \ge 0)<br>$$<br>（e）这样我们就可以得到标准化的线性规划问题：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; \sum  \limits_{i&#x3D;1}^r c_ix_i \\<br>\begin{aligned}<br>s.t. \sum \limits_{i&#x3D;1}^r a_{1i}x_i \pm x_{r+1} &amp; &#x3D; b_1 \\<br>\sum \limits_{i&#x3D;1}^r a_{2i}x_i \pm x_{r+2} &amp; &#x3D; b_2 \\<br> ……\\<br>\sum \limits_{i&#x3D;1}^r a_{2mi}x_i \pm x_{r+m}  &amp; &#x3D; b_m<br>\end{aligned}<br> \\<br> x_i   \ge 0,x_{r+j} \ge 0,i  &#x3D; 1,2,…,r \\<br> b_i  \ge 0,i&#x3D;1,2,…,m<br>\end{split}<br>\end{equation}<br>$$</p>
+<h4 id="（2）标准化方法"><a href="#（2）标准化方法" class="headerlink" title="（2）标准化方法"></a>（2）标准化方法</h4><p>（a）如果约束条件中出现了 $&lt;,\le ,&gt;,\ge$ ，则需要引入松弛变量：<br>$$<br>\begin{align}<br>a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r \le b_k \\<br>\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r +x_{r+k}&#x3D; b_k<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r \ge b_k \\<br>\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r -x_{r+k}&#x3D; b_k<br>\end{align}<br>$$</p>
+<p>（b）如果线性规划问题求最小值，那么我们可以将等式左右取负转为求最大值问题：<br>$$<br>\text{min} \ y &#x3D; \sum  \limits_{i&#x3D;1}^r c_ix_i \Rightarrow \text{max} \ y’ &#x3D; -y &#x3D; -\sum  \limits_{i&#x3D;1}^r c_ix_i<br>$$<br>（c）如果约束条件中的 $b_k &lt;0$ ，那么我们可以将等式左右取负将等式后边置为正值：<br>$$<br>a_{k1}x_1+a_{k2}x_2 +…+a_{kr}x_r &#x3D; b_k \Rightarrow\text{插入}{b_k &lt; 0}\Rightarrow -a_{k1}x_1-a_{k2}x_2 -…-a_{kr}x_r &#x3D; -b_k<br>$$<br>（d）如果某个变量 $x_i &lt; 0$ ，做如下变换：<br>$$<br>x_i &#x3D; x_i’-x_i’’(x_i’’ &gt; x_i’ \ge 0)<br>$$<br>（e）这样我们就可以得到标准化的线性规划问题：<br>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; \sum  \limits_{i&#x3D;1}^r c_ix_i \\<br>\begin{aligned}<br>s.t. \sum \limits_{i&#x3D;1}^r a_{1i}x_i \pm x_{r+1} &amp; &#x3D; b_1 \\<br>\sum \limits_{i&#x3D;1}^r a_{2i}x_i \pm x_{r+2} &amp; &#x3D; b_2 \\<br> ……\\<br>\sum \limits_{i&#x3D;1}^r a_{2mi}x_i \pm x_{r+m}  &amp; &#x3D; b_m<br>\end{aligned}<br> \\<br> x_i   \ge 0,x_{r+j} \ge 0,i  &#x3D; 1,2,…,r \\<br> b_i  \ge 0,i&#x3D;1,2,…,m<br>\end{split}<br>\end{equation}<br>$$</p>
 <p>观察得到，$(x_1,x_2,…,x_r,x_{r+1},x_{r+2},…x_{r+m})$ &#x3D; $(0,0,…,0,b_1,b_2,…,b_m)$ 是当前约束条件下</p>
 <p>的一个可行解。</p>
 <h3 id="5-线性规划问题的基本定理"><a href="#5-线性规划问题的基本定理" class="headerlink" title="5 线性规划问题的基本定理"></a>5 线性规划问题的基本定理</h3><h4 id="（1）基本可行解的相关概念"><a href="#（1）基本可行解的相关概念" class="headerlink" title="（1）基本可行解的相关概念"></a>（1）<strong>基本可行解的相关概念</strong></h4><p><strong>基本可行解：</strong>一个可行解的 $r+m$ 个分量中的 $r$ 个分量都是0称为基本可行解；如果有多于 $r$ 个0的分量，则为退化的基本可行解。</p>
@@ -380,7 +387,9 @@
 <p><strong>推论：线性规划问题的最优可行解若存在，则必在可行解域的角点上找到。</strong></p>
 <p>只需在可行解域的有限个角点处计算目标函数的值，然后将这些值进行比较，从中挑出最优的值。</p>
 <p>当变量的数目和线性约束条件的数目增加时，可行解域中的角点就会大大增加，从而在每一角点处计算目标函数的值就会花费许多工作量。</p>
-<h3 id="6-单纯形方法"><a href="#6-单纯形方法" class="headerlink" title="6 单纯形方法"></a>6 单纯形方法</h3><h4 id="（1）基本思想"><a href="#（1）基本思想" class="headerlink" title="（1）基本思想"></a>（1）基本思想</h4><img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318140958990.png" alt="image-20220318140958990" style="zoom: 50%;">
+<h3 id="6-单纯形方法"><a href="#6-单纯形方法" class="headerlink" title="6 单纯形方法"></a>6 单纯形方法</h3><h4 id="（1）基本思想"><a href="#（1）基本思想" class="headerlink" title="（1）基本思想"></a>（1）基本思想</h4><img src="/2022/03/19/LinearProgramming/image-20220318140958990.png" class="" title="image-20220318140958990">
+
+
 
 <h4 id="（2）存在问题"><a href="#（2）存在问题" class="headerlink" title="（2）存在问题"></a>（2）存在问题</h4><ul>
 <li>计算了目标函数在某一角点处的值之后，如何求得另一角点使得目标函数在该角点的值会更大些？</li>
@@ -389,7 +398,7 @@
 <h4 id="（3）例子"><a href="#（3）例子" class="headerlink" title="（3）例子"></a>（3）例子</h4><p>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; x_1 + 4x_2 \\<br>\begin{aligned}<br>s.t. 4x_1 + 5x_2 &amp; \le 10 \\<br>5x_1 + 2x_2 &amp; \le 10\\<br>-7x_1+4x_2 &amp; \le 4 \\<br>x_1  &amp; \ge 0 \\ x_2 &amp; \ge 0\\<br>\end{aligned}<br>\end{split}<br>\end{equation}<br>$$</p>
 <p>标准化后，为：</p>
 <p>$$<br>\begin{equation}<br>\begin{split}<br>\text{max} \ y &#x3D; x_1 + 4x_2 \\<br>\begin{aligned}<br>s.t. 4x_1 + 5x_2 + x_3 &amp; &#x3D; 10 \\<br>5x_1 + 2x_2 + x_4 &amp; &#x3D; 10 \\<br>-7x_1+4x_2 +x_5 &amp; &#x3D; 4 \\<br>x_1  &amp; \ge 0 \\ x_2 &amp; \ge 0\\<br>\end{aligned}<br>\end{split}<br>\end{equation}<br>$$<br>注意这里 $r&#x3D;2,m&#x3D;3$</p>
-<img src="/.com//Users\23613\AppData\Roaming\Typora\typora-user-images\image-20220318143957406.png" alt="image-20220318143957406" style="zoom:67%;">
+<img src="/2022/03/19/LinearProgramming/image-20220318143957406.png" class="" title="image-20220318143957406">
 
 <p>在 $m$ 个约束条件中，令 $r+m$ 个变量的 $r$ 个(非基本变量)为0，解出其余 $m$ 个变量，就可以得到一个基本可行解，对应一个角点。</p>
 
@@ -652,76 +661,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/14/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/14/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-14 22:12:28" itemprop="dateCreated datePublished" datetime="2022-03-14T22:12:28+08:00">2022-03-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
 
@@ -790,7 +729,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
