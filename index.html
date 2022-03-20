@@ -173,6 +173,182 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" class="post-title-link" itemprop="url">机器学习之线性回归</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-21 00:07:10 / 修改时间：00:19:21" itemprop="dateCreated datePublished" datetime="2022-03-21T00:07:10+08:00">2022-03-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="机器学习之线性回归"><a href="#机器学习之线性回归" class="headerlink" title="机器学习之线性回归"></a>机器学习之线性回归</h1><p>在准备华为昇腾RCNN的课程设计，暂时没有时间打公式，凑活着看吧&#x3D;。&#x3D;</p>
+<p>之后会解释每个式子的直观解释的！</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h3><p>回归问题的最简单模型是输入变量的线性组合。<br>$$<br>y(\boldsymbol{x},\boldsymbol{w})&#x3D;w_0+w_1x_1+…+w_Dx_D<br>$$<br>其中，$\boldsymbol{x}&#x3D;(x_1,…,x_D)^T$</p>
+<p>称为线性回归（linear regression）。</p>
+<p>这个模型的关键性质：是参数 $w_0, …,w_D$ 的⼀个线性函数。</p>
+<h3 id="一般形式"><a href="#一般形式" class="headerlink" title="一般形式"></a>一般形式</h3><ul>
+<li>线性模型一般形式</li>
+<li>向量形式</li>
+</ul>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>$$<br>f(\boldsymbol{x};\boldsymbol{w},b)&#x3D;\boldsymbol{w}^T\boldsymbol{x}+b<br>$$</p>
+<ul>
+<li>增广权重向量和增广特征向量 $f(\boldsymbol{x};\hat{\boldsymbol{w}})&#x3D;\hat{\boldsymbol{w}}^T\hat{\boldsymbol{x}}$</li>
+</ul>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234627441.png" class="" title="image-20220316234627441">
+
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234640197.png" class="" title="image-20220316234640197">
+
+<h3 id="一元线性回归"><a href="#一元线性回归" class="headerlink" title="一元线性回归"></a>一元线性回归</h3><ul>
+<li><p>一元线性回归<br>$$<br>f(x)&#x3D;wx_i+b \text{使得}f(x_i)\simeq y_i<br>$$</p>
+</li>
+<li><p>参数&#x2F;模型估计：最小二乘法（least square method）</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234834443.png" class="" title="image-20220316234834443">
+</li>
+<li><p>最小化均方误差</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234848017.png" class="" title="image-20220316234848017">
+</li>
+<li><p>分别对w和b求导</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234858233.png" class="" title="image-20220316234858233">
+</li>
+<li><p>得到闭式解</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234908998.png" class="" title="image-20220316234908998">
+
+<p>其中，</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234919459.png" class="" title="image-20220316234919459"></li>
+</ul>
+<h3 id="多元线性回归"><a href="#多元线性回归" class="headerlink" title="多元线性回归"></a>多元线性回归</h3><ul>
+<li><p>给定数据集</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234952472.png" class="" title="image-20220316234952472">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234959106.png" class="" title="image-20220316234959106">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235004841.png" class="" title="image-20220316235004841">
+
+
+</li>
+<li><p>多元线性回归目标<br>$$<br>f(\boldsymbol{x}_i)&#x3D;\boldsymbol{w}^T\boldsymbol{x}_i+b \text{使得}f(\boldsymbol{x}_i)\simeq y_i<br>$$</p>
+</li>
+<li><p>把 w 和 b 吸收进入向量形式，数据集表示为</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235125794.png" class="" title="image-20220316235125794">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235133775.png" class="" title="image-20220316235133775">
+</li>
+<li><p>最小二乘法（least square method）</p>
+<ul>
+<li><p>$$<br>\hat{\boldsymbol{w}}^{*}&#x3D; \text{argmin}_{\hat{w}} \left( \boldsymbol{y}- \mathbf{X} \hat{ \boldsymbol{w}}^{ \boldsymbol{T}} \right) \left( \boldsymbol{y} - \mathbf{X} \hat{ \boldsymbol{w}} \right)<br>$$</p>
+</li>
+<li><p>令 $E_{\hat{\boldsymbol{w}}}&#x3D;\left(\boldsymbol{y}-\mathbf{X}\hat{\boldsymbol{w}}\right)^{\boldsymbol{T}} \left(\boldsymbol{y}-\mathbf{X}\hat{\boldsymbol{w}}\right)$ ，对 $\hat{\boldsymbol{w}}$ 求导得到<br>$$<br>\frac{\partial E_{\hat{\boldsymbol{w}}}}{\partial \hat{\boldsymbol{w}}} &#x3D; 2\mathbf{X}^{\rm{T}}\left(\mathbf{X}\hat{\boldsymbol{w}}-\boldsymbol{y}\right)<br>$$</p>
+</li>
+<li><p>令上式为零可得 $\hat{\boldsymbol{w}}$ 最优解的闭式解<br>$$<br>\hat{\boldsymbol{w}}^{*}&#x3D;\left(\mathbf{X}^{\rm{T}}\mathbf{X}\right)^{-1} \mathbf{X}^{\boldsymbol{T}}\boldsymbol{y}<br>$$<br>又称伪逆。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="满秩讨论"><a href="#满秩讨论" class="headerlink" title="满秩讨论"></a>满秩讨论</h3><ul>
+<li><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235812685.png" class="" title="image-20220316235812685"></li>
+<li><p>$\mathbf{X}^{\rm{T}}\mathbf{X} $ 不是满秩矩阵：</p>
+<ul>
+<li>奇异值分解（SVD）</li>
+<li>引入正则化</li>
+</ul>
+</li>
+<li><p>并不是所有的函数都能通过输入变量直接线性地近似</p>
+</li>
+<li><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000002862.png" class="" title="image-20220317000002862"></li>
+<li><p>这样的情况下，我们需要采用输入变量的多项式或其它项来拟合函数，这样还是线性回归吗？</p>
+</li>
+<li><p>是的，只要对于系数是线性的就仍然是线性回归问题。</p>
+</li>
+</ul>
+<h3 id="基函数"><a href="#基函数" class="headerlink" title="基函数"></a>基函数</h3><ul>
+<li>在一些应用中，我们对原始数据变量进行一些预处理或特征提取。</li>
+<li>比如原始变量为x，特征可以表示为基函数的形式{φ(x)}。</li>
+<li>通过采用基函数，我们使得线性模型可以是输入变量的非线性函数。</li>
+</ul>
+<h3 id="扩展模型"><a href="#扩展模型" class="headerlink" title="扩展模型"></a>扩展模型</h3><ul>
+<li><p>将输⼊变量的固定的⾮线性函数进⾏线性组合</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000139983.png" class="" title="image-20220317000139983">
+
+<p>$\phi_j(\boldsymbol{x})$ 被称为基函数（basis function）。</p>
+</li>
+<li><p>模型中的参数总数为 $M$</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000231536.png" class="" title="image-20220317000231536">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000236259.png" class="" title="image-20220317000236259">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000243397.png" class="" title="image-20220317000243397"></li>
+</ul>
+<h3 id="基函数的选择"><a href="#基函数的选择" class="headerlink" title="基函数的选择"></a>基函数的选择</h3><p>多项式曲线拟合</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000339208.png" class="" title="image-20220317000339208">
+
+<p>其中，$M$ 是多项式的阶数（order），$x^j$ 表⽰ $x$ 的 $j$ 次幂，多项式系数 $w_0 ,…,w_M$ 整体记作向量 $\boldsymbol{w}$，多项式函数 $y(x,\boldsymbol{w})$ 是 $x$ 的⼀个⾮线性函数，是系数 $\boldsymbol{w}$ 的⼀个线性函数。</p>
+<ul>
+<li><p>多项式基函数</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000607775.png" class="" title="image-20220317000607775">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000617476.png" class="" title="image-20220317000617476">
+</li>
+<li><p>“高斯”基函数</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000625242.png" class="" title="image-20220317000625242">
+
+<ul>
+<li>参数μj控制了基函数在输⼊空间中的位置，</li>
+<li>参数s控制了基函数的空间⼤⼩</li>
+</ul>
+</li>
+<li><p>sigmoid基函数</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000650443.png" class="" title="image-20220317000650443"></li>
+</ul>
+<h2 id="最大似然与最小平方"><a href="#最大似然与最小平方" class="headerlink" title="最大似然与最小平方"></a>最大似然与最小平方</h2><h3 id="最大似然与最小平方-1"><a href="#最大似然与最小平方-1" class="headerlink" title="最大似然与最小平方"></a>最大似然与最小平方</h3><h3 id="最大似然"><a href="#最大似然" class="headerlink" title="最大似然"></a>最大似然</h3><h3 id="boldsymbol-w-的解"><a href="#boldsymbol-w-的解" class="headerlink" title="$\boldsymbol{w}$的解"></a>$\boldsymbol{w}$的解</h3><h3 id="偏置参数-w-0"><a href="#偏置参数-w-0" class="headerlink" title="偏置参数$w_0$"></a>偏置参数$w_0$</h3><h3 id="噪声精度-beta"><a href="#噪声精度-beta" class="headerlink" title="噪声精度$\beta$"></a>噪声精度$\beta$</h3><h2 id="正则化最小平方"><a href="#正则化最小平方" class="headerlink" title="正则化最小平方"></a>正则化最小平方</h2><h3 id="正则化最小平方-1"><a href="#正则化最小平方-1" class="headerlink" title="正则化最小平方"></a>正则化最小平方</h3><h3 id="最简单正则化项——权值衰减"><a href="#最简单正则化项——权值衰减" class="headerlink" title="最简单正则化项——权值衰减"></a>最简单正则化项——权值衰减</h3><h3 id="岭回归的闭式解"><a href="#岭回归的闭式解" class="headerlink" title="岭回归的闭式解"></a>岭回归的闭式解</h3><h3 id="正则化项的几何解释"><a href="#正则化项的几何解释" class="headerlink" title="正则化项的几何解释"></a>正则化项的几何解释</h3><h3 id="岭回归的最优解"><a href="#岭回归的最优解" class="headerlink" title="岭回归的最优解"></a>岭回归的最优解</h3><h3 id="更加⼀般的正则化项"><a href="#更加⼀般的正则化项" class="headerlink" title="更加⼀般的正则化项"></a>更加⼀般的正则化项</h3><h3 id="正则化方法结论"><a href="#正则化方法结论" class="headerlink" title="正则化方法结论"></a>正则化方法结论</h3><h2 id="偏置-方差分解"><a href="#偏置-方差分解" class="headerlink" title="偏置-方差分解"></a>偏置-方差分解</h2><h3 id="回顾回归的决策论"><a href="#回顾回归的决策论" class="headerlink" title="回顾回归的决策论"></a>回顾回归的决策论</h3><h3 id="偏置-方差分解-1"><a href="#偏置-方差分解-1" class="headerlink" title="偏置-方差分解"></a>偏置-方差分解</h3><h3 id="偏置-方差折中"><a href="#偏置-方差折中" class="headerlink" title="偏置-方差折中"></a>偏置-方差折中</h3><h3 id="偏置"><a href="#偏置" class="headerlink" title="偏置"></a>偏置</h3><h3 id="方差"><a href="#方差" class="headerlink" title="方差"></a>方差</h3><h3 id="监督学习中方差的来源"><a href="#监督学习中方差的来源" class="headerlink" title="监督学习中方差的来源"></a>监督学习中方差的来源</h3><h3 id="偏置-方差之间的权衡"><a href="#偏置-方差之间的权衡" class="headerlink" title="偏置-方差之间的权衡"></a>偏置-方差之间的权衡</h3><h2 id="贝叶斯线性回归"><a href="#贝叶斯线性回归" class="headerlink" title="贝叶斯线性回归"></a>贝叶斯线性回归</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/19/LinearProgramming/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -733,14 +909,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

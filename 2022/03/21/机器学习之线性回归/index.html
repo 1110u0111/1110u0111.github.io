@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="机器学习之线性回归在准备华为昇腾RCNN的课程设计，暂时没有时间打公式，凑活着看吧&#x3D;。&#x3D; 之后会解释每个式子的直观解释的！ 线性回归线性模型回归问题的最简单模型是输入变量的线性组合。$$y(\boldsymbol{x},\boldsymbol{w})&#x3D;w_0+w_1x_1+…+w_Dx_D$$其中，$\boldsymbol{x}&#x3D;(x_1,…,x_D)^T$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习之线性回归">
+<meta property="og:url" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/index.html">
+<meta property="og:site_name" content="Rebecca的赛博世界">
+<meta property="og:description" content="机器学习之线性回归在准备华为昇腾RCNN的课程设计，暂时没有时间打公式，凑活着看吧&#x3D;。&#x3D; 之后会解释每个式子的直观解释的！ 线性回归线性模型回归问题的最简单模型是输入变量的线性组合。$$y(\boldsymbol{x},\boldsymbol{w})&#x3D;w_0+w_1x_1+…+w_Dx_D$$其中，$\boldsymbol{x}&#x3D;(x_1,…,x_D)^T$">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234627441.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234640197.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234834443.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234848017.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234858233.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234908998.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234919459.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234952472.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234959106.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235004841.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235125794.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235133775.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235812685.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000002862.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000139983.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000231536.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000236259.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000243397.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000339208.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000607775.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000617476.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000625242.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000650443.png">
+<meta property="article:published_time" content="2022-03-20T16:07:10.000Z">
+<meta property="article:modified_time" content="2022-03-20T16:19:21.913Z">
+<meta property="article:author" content="Rebecca">
+<meta property="article:tag" content="机器学习 线性回归">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234627441.png">
+
+<link rel="canonical" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>机器学习之线性回归 | Rebecca的赛博世界</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rebecca的赛博世界</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习之线性回归
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-21 00:07:10 / 修改时间：00:19:21" itemprop="dateCreated datePublished" datetime="2022-03-21T00:07:10+08:00">2022-03-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="机器学习之线性回归"><a href="#机器学习之线性回归" class="headerlink" title="机器学习之线性回归"></a>机器学习之线性回归</h1><p>在准备华为昇腾RCNN的课程设计，暂时没有时间打公式，凑活着看吧&#x3D;。&#x3D;</p>
+<p>之后会解释每个式子的直观解释的！</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h3><p>回归问题的最简单模型是输入变量的线性组合。<br>$$<br>y(\boldsymbol{x},\boldsymbol{w})&#x3D;w_0+w_1x_1+…+w_Dx_D<br>$$<br>其中，$\boldsymbol{x}&#x3D;(x_1,…,x_D)^T$</p>
+<p>称为线性回归（linear regression）。</p>
+<p>这个模型的关键性质：是参数 $w_0, …,w_D$ 的⼀个线性函数。</p>
+<h3 id="一般形式"><a href="#一般形式" class="headerlink" title="一般形式"></a>一般形式</h3><ul>
+<li>线性模型一般形式</li>
+<li>向量形式</li>
+</ul>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>$$<br>f(\boldsymbol{x};\boldsymbol{w},b)&#x3D;\boldsymbol{w}^T\boldsymbol{x}+b<br>$$</p>
+<ul>
+<li>增广权重向量和增广特征向量 $f(\boldsymbol{x};\hat{\boldsymbol{w}})&#x3D;\hat{\boldsymbol{w}}^T\hat{\boldsymbol{x}}$</li>
+</ul>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234627441.png" class="" title="image-20220316234627441">
+
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234640197.png" class="" title="image-20220316234640197">
+
+<h3 id="一元线性回归"><a href="#一元线性回归" class="headerlink" title="一元线性回归"></a>一元线性回归</h3><ul>
+<li><p>一元线性回归<br>$$<br>f(x)&#x3D;wx_i+b \text{使得}f(x_i)\simeq y_i<br>$$</p>
+</li>
+<li><p>参数&#x2F;模型估计：最小二乘法（least square method）</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234834443.png" class="" title="image-20220316234834443">
+</li>
+<li><p>最小化均方误差</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234848017.png" class="" title="image-20220316234848017">
+</li>
+<li><p>分别对w和b求导</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234858233.png" class="" title="image-20220316234858233">
+</li>
+<li><p>得到闭式解</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234908998.png" class="" title="image-20220316234908998">
+
+<p>其中，</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234919459.png" class="" title="image-20220316234919459"></li>
+</ul>
+<h3 id="多元线性回归"><a href="#多元线性回归" class="headerlink" title="多元线性回归"></a>多元线性回归</h3><ul>
+<li><p>给定数据集</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234952472.png" class="" title="image-20220316234952472">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234959106.png" class="" title="image-20220316234959106">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235004841.png" class="" title="image-20220316235004841">
+
+
+</li>
+<li><p>多元线性回归目标<br>$$<br>f(\boldsymbol{x}_i)&#x3D;\boldsymbol{w}^T\boldsymbol{x}_i+b \text{使得}f(\boldsymbol{x}_i)\simeq y_i<br>$$</p>
+</li>
+<li><p>把 w 和 b 吸收进入向量形式，数据集表示为</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235125794.png" class="" title="image-20220316235125794">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235133775.png" class="" title="image-20220316235133775">
+</li>
+<li><p>最小二乘法（least square method）</p>
+<ul>
+<li><p>$$<br>\hat{\boldsymbol{w}}^{*}&#x3D; \text{argmin}_{\hat{w}} \left( \boldsymbol{y}- \mathbf{X} \hat{ \boldsymbol{w}}^{ \boldsymbol{T}} \right) \left( \boldsymbol{y} - \mathbf{X} \hat{ \boldsymbol{w}} \right)<br>$$</p>
+</li>
+<li><p>令 $E_{\hat{\boldsymbol{w}}}&#x3D;\left(\boldsymbol{y}-\mathbf{X}\hat{\boldsymbol{w}}\right)^{\boldsymbol{T}} \left(\boldsymbol{y}-\mathbf{X}\hat{\boldsymbol{w}}\right)$ ，对 $\hat{\boldsymbol{w}}$ 求导得到<br>$$<br>\frac{\partial E_{\hat{\boldsymbol{w}}}}{\partial \hat{\boldsymbol{w}}} &#x3D; 2\mathbf{X}^{\rm{T}}\left(\mathbf{X}\hat{\boldsymbol{w}}-\boldsymbol{y}\right)<br>$$</p>
+</li>
+<li><p>令上式为零可得 $\hat{\boldsymbol{w}}$ 最优解的闭式解<br>$$<br>\hat{\boldsymbol{w}}^{*}&#x3D;\left(\mathbf{X}^{\rm{T}}\mathbf{X}\right)^{-1} \mathbf{X}^{\boldsymbol{T}}\boldsymbol{y}<br>$$<br>又称伪逆。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="满秩讨论"><a href="#满秩讨论" class="headerlink" title="满秩讨论"></a>满秩讨论</h3><ul>
+<li><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235812685.png" class="" title="image-20220316235812685"></li>
+<li><p>$\mathbf{X}^{\rm{T}}\mathbf{X} $ 不是满秩矩阵：</p>
+<ul>
+<li>奇异值分解（SVD）</li>
+<li>引入正则化</li>
+</ul>
+</li>
+<li><p>并不是所有的函数都能通过输入变量直接线性地近似</p>
+</li>
+<li><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000002862.png" class="" title="image-20220317000002862"></li>
+<li><p>这样的情况下，我们需要采用输入变量的多项式或其它项来拟合函数，这样还是线性回归吗？</p>
+</li>
+<li><p>是的，只要对于系数是线性的就仍然是线性回归问题。</p>
+</li>
+</ul>
+<h3 id="基函数"><a href="#基函数" class="headerlink" title="基函数"></a>基函数</h3><ul>
+<li>在一些应用中，我们对原始数据变量进行一些预处理或特征提取。</li>
+<li>比如原始变量为x，特征可以表示为基函数的形式{φ(x)}。</li>
+<li>通过采用基函数，我们使得线性模型可以是输入变量的非线性函数。</li>
+</ul>
+<h3 id="扩展模型"><a href="#扩展模型" class="headerlink" title="扩展模型"></a>扩展模型</h3><ul>
+<li><p>将输⼊变量的固定的⾮线性函数进⾏线性组合</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000139983.png" class="" title="image-20220317000139983">
+
+<p>$\phi_j(\boldsymbol{x})$ 被称为基函数（basis function）。</p>
+</li>
+<li><p>模型中的参数总数为 $M$</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000231536.png" class="" title="image-20220317000231536">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000236259.png" class="" title="image-20220317000236259">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000243397.png" class="" title="image-20220317000243397"></li>
+</ul>
+<h3 id="基函数的选择"><a href="#基函数的选择" class="headerlink" title="基函数的选择"></a>基函数的选择</h3><p>多项式曲线拟合</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000339208.png" class="" title="image-20220317000339208">
+
+<p>其中，$M$ 是多项式的阶数（order），$x^j$ 表⽰ $x$ 的 $j$ 次幂，多项式系数 $w_0 ,…,w_M$ 整体记作向量 $\boldsymbol{w}$，多项式函数 $y(x,\boldsymbol{w})$ 是 $x$ 的⼀个⾮线性函数，是系数 $\boldsymbol{w}$ 的⼀个线性函数。</p>
+<ul>
+<li><p>多项式基函数</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000607775.png" class="" title="image-20220317000607775">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000617476.png" class="" title="image-20220317000617476">
+</li>
+<li><p>“高斯”基函数</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000625242.png" class="" title="image-20220317000625242">
+
+<ul>
+<li>参数μj控制了基函数在输⼊空间中的位置，</li>
+<li>参数s控制了基函数的空间⼤⼩</li>
+</ul>
+</li>
+<li><p>sigmoid基函数</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000650443.png" class="" title="image-20220317000650443"></li>
+</ul>
+<h2 id="最大似然与最小平方"><a href="#最大似然与最小平方" class="headerlink" title="最大似然与最小平方"></a>最大似然与最小平方</h2><h3 id="最大似然与最小平方-1"><a href="#最大似然与最小平方-1" class="headerlink" title="最大似然与最小平方"></a>最大似然与最小平方</h3><h3 id="最大似然"><a href="#最大似然" class="headerlink" title="最大似然"></a>最大似然</h3><h3 id="boldsymbol-w-的解"><a href="#boldsymbol-w-的解" class="headerlink" title="$\boldsymbol{w}$的解"></a>$\boldsymbol{w}$的解</h3><h3 id="偏置参数-w-0"><a href="#偏置参数-w-0" class="headerlink" title="偏置参数$w_0$"></a>偏置参数$w_0$</h3><h3 id="噪声精度-beta"><a href="#噪声精度-beta" class="headerlink" title="噪声精度$\beta$"></a>噪声精度$\beta$</h3><h2 id="正则化最小平方"><a href="#正则化最小平方" class="headerlink" title="正则化最小平方"></a>正则化最小平方</h2><h3 id="正则化最小平方-1"><a href="#正则化最小平方-1" class="headerlink" title="正则化最小平方"></a>正则化最小平方</h3><h3 id="最简单正则化项——权值衰减"><a href="#最简单正则化项——权值衰减" class="headerlink" title="最简单正则化项——权值衰减"></a>最简单正则化项——权值衰减</h3><h3 id="岭回归的闭式解"><a href="#岭回归的闭式解" class="headerlink" title="岭回归的闭式解"></a>岭回归的闭式解</h3><h3 id="正则化项的几何解释"><a href="#正则化项的几何解释" class="headerlink" title="正则化项的几何解释"></a>正则化项的几何解释</h3><h3 id="岭回归的最优解"><a href="#岭回归的最优解" class="headerlink" title="岭回归的最优解"></a>岭回归的最优解</h3><h3 id="更加⼀般的正则化项"><a href="#更加⼀般的正则化项" class="headerlink" title="更加⼀般的正则化项"></a>更加⼀般的正则化项</h3><h3 id="正则化方法结论"><a href="#正则化方法结论" class="headerlink" title="正则化方法结论"></a>正则化方法结论</h3><h2 id="偏置-方差分解"><a href="#偏置-方差分解" class="headerlink" title="偏置-方差分解"></a>偏置-方差分解</h2><h3 id="回顾回归的决策论"><a href="#回顾回归的决策论" class="headerlink" title="回顾回归的决策论"></a>回顾回归的决策论</h3><h3 id="偏置-方差分解-1"><a href="#偏置-方差分解-1" class="headerlink" title="偏置-方差分解"></a>偏置-方差分解</h3><h3 id="偏置-方差折中"><a href="#偏置-方差折中" class="headerlink" title="偏置-方差折中"></a>偏置-方差折中</h3><h3 id="偏置"><a href="#偏置" class="headerlink" title="偏置"></a>偏置</h3><h3 id="方差"><a href="#方差" class="headerlink" title="方差"></a>方差</h3><h3 id="监督学习中方差的来源"><a href="#监督学习中方差的来源" class="headerlink" title="监督学习中方差的来源"></a>监督学习中方差的来源</h3><h3 id="偏置-方差之间的权衡"><a href="#偏置-方差之间的权衡" class="headerlink" title="偏置-方差之间的权衡"></a>偏置-方差之间的权衡</h3><h2 id="贝叶斯线性回归"><a href="#贝叶斯线性回归" class="headerlink" title="贝叶斯线性回归"></a>贝叶斯线性回归</h2>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Rebecca
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="机器学习之线性回归">http://example.com/2022/03/21/机器学习之线性回归/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag"># 机器学习 线性回归</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/19/LinearProgramming/" rel="prev" title="LinearProgramming">
+      <i class="fa fa-chevron-left"></i> LinearProgramming
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.</span> <span class="nav-text">机器学习之线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.1.</span> <span class="nav-text">线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">线性模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">一般形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">1.1.4.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.1.5.</span> <span class="nav-text">一元线性回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.1.6.</span> <span class="nav-text">多元线性回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A1%E7%A7%A9%E8%AE%A8%E8%AE%BA"><span class="nav-number">1.1.7.</span> <span class="nav-text">满秩讨论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%87%BD%E6%95%B0"><span class="nav-number">1.1.8.</span> <span class="nav-text">基函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.9.</span> <span class="nav-text">扩展模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%87%BD%E6%95%B0%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.1.10.</span> <span class="nav-text">基函数的选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%B9%B3%E6%96%B9"><span class="nav-number">1.2.</span> <span class="nav-text">最大似然与最小平方</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%B9%B3%E6%96%B9-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">最大似然与最小平方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">最大似然</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#boldsymbol-w-%E7%9A%84%E8%A7%A3"><span class="nav-number">1.2.3.</span> <span class="nav-text">$\boldsymbol{w}$的解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE%E5%8F%82%E6%95%B0-w-0"><span class="nav-number">1.2.4.</span> <span class="nav-text">偏置参数$w_0$</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%99%AA%E5%A3%B0%E7%B2%BE%E5%BA%A6-beta"><span class="nav-number">1.2.5.</span> <span class="nav-text">噪声精度$\beta$</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E6%9C%80%E5%B0%8F%E5%B9%B3%E6%96%B9"><span class="nav-number">1.3.</span> <span class="nav-text">正则化最小平方</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E6%9C%80%E5%B0%8F%E5%B9%B3%E6%96%B9-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">正则化最小平方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%AE%80%E5%8D%95%E6%AD%A3%E5%88%99%E5%8C%96%E9%A1%B9%E2%80%94%E2%80%94%E6%9D%83%E5%80%BC%E8%A1%B0%E5%87%8F"><span class="nav-number">1.3.2.</span> <span class="nav-text">最简单正则化项——权值衰减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B2%AD%E5%9B%9E%E5%BD%92%E7%9A%84%E9%97%AD%E5%BC%8F%E8%A7%A3"><span class="nav-number">1.3.3.</span> <span class="nav-text">岭回归的闭式解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E9%A1%B9%E7%9A%84%E5%87%A0%E4%BD%95%E8%A7%A3%E9%87%8A"><span class="nav-number">1.3.4.</span> <span class="nav-text">正则化项的几何解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B2%AD%E5%9B%9E%E5%BD%92%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3"><span class="nav-number">1.3.5.</span> <span class="nav-text">岭回归的最优解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%8A%A0%E2%BC%80%E8%88%AC%E7%9A%84%E6%AD%A3%E5%88%99%E5%8C%96%E9%A1%B9"><span class="nav-number">1.3.6.</span> <span class="nav-text">更加⼀般的正则化项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E6%96%B9%E6%B3%95%E7%BB%93%E8%AE%BA"><span class="nav-number">1.3.7.</span> <span class="nav-text">正则化方法结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE-%E6%96%B9%E5%B7%AE%E5%88%86%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">偏置-方差分解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E9%A1%BE%E5%9B%9E%E5%BD%92%E7%9A%84%E5%86%B3%E7%AD%96%E8%AE%BA"><span class="nav-number">1.4.1.</span> <span class="nav-text">回顾回归的决策论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE-%E6%96%B9%E5%B7%AE%E5%88%86%E8%A7%A3-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">偏置-方差分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE-%E6%96%B9%E5%B7%AE%E6%8A%98%E4%B8%AD"><span class="nav-number">1.4.3.</span> <span class="nav-text">偏置-方差折中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE"><span class="nav-number">1.4.4.</span> <span class="nav-text">偏置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE"><span class="nav-number">1.4.5.</span> <span class="nav-text">方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E4%B8%AD%E6%96%B9%E5%B7%AE%E7%9A%84%E6%9D%A5%E6%BA%90"><span class="nav-number">1.4.6.</span> <span class="nav-text">监督学习中方差的来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE-%E6%96%B9%E5%B7%AE%E4%B9%8B%E9%97%B4%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="nav-number">1.4.7.</span> <span class="nav-text">偏置-方差之间的权衡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.5.</span> <span class="nav-text">贝叶斯线性回归</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rebecca"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Rebecca</p>
+  <div class="site-description" itemprop="description">弱小和无知不是生存的障碍，傲慢才是。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-03 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rebecca</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
