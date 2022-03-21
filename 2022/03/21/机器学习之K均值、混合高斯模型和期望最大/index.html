@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="机器学习之K均值、混合高斯模型和期望最大提纲  聚类与K均值 混合高斯模型与期望最大 期望最大的另一个视角 期望最大的另一个视角 期望最大的理论基础  1 聚类与K均值示例聚类是什么？举个例子，我们想把下图的人物归类，那么我们可以根据衣服样式归类，也可以根据性别、年龄等进行归类。   比如，我们想检测视频中的移动目标，这也是聚类的应用场景。   聚类由上面的示例，我们对聚类应该有了一个大致的意识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习之K均值、混合高斯模型和期望最大">
+<meta property="og:url" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/index.html">
+<meta property="og:site_name" content="Rebecca的赛博世界">
+<meta property="og:description" content="机器学习之K均值、混合高斯模型和期望最大提纲  聚类与K均值 混合高斯模型与期望最大 期望最大的另一个视角 期望最大的另一个视角 期望最大的理论基础  1 聚类与K均值示例聚类是什么？举个例子，我们想把下图的人物归类，那么我们可以根据衣服样式归类，也可以根据性别、年龄等进行归类。   比如，我们想检测视频中的移动目标，这也是聚类的应用场景。   聚类由上面的示例，我们对聚类应该有了一个大致的意识。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092330178.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092356073.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092634112.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094023139.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094031460.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094102368.png">
+<meta property="og:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094107927.png">
+<meta property="article:published_time" content="2022-03-21T02:03:28.000Z">
+<meta property="article:modified_time" content="2022-03-21T02:04:29.038Z">
+<meta property="article:author" content="Rebecca">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="K均值">
+<meta property="article:tag" content="混合高斯模型">
+<meta property="article:tag" content="期望最大">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092330178.png">
+
+<link rel="canonical" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>机器学习之K均值、混合高斯模型和期望最大 | Rebecca的赛博世界</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rebecca的赛博世界</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习之K均值、混合高斯模型和期望最大
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-21 10:03:28 / 修改时间：10:04:29" itemprop="dateCreated datePublished" datetime="2022-03-21T10:03:28+08:00">2022-03-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="机器学习之K均值、混合高斯模型和期望最大"><a href="#机器学习之K均值、混合高斯模型和期望最大" class="headerlink" title="机器学习之K均值、混合高斯模型和期望最大"></a>机器学习之K均值、混合高斯模型和期望最大</h1><p>提纲</p>
+<ul>
+<li>聚类与K均值</li>
+<li>混合高斯模型与期望最大</li>
+<li>期望最大的另一个视角</li>
+<li>期望最大的另一个视角</li>
+<li>期望最大的理论基础</li>
+</ul>
+<h2 id="1-聚类与K均值"><a href="#1-聚类与K均值" class="headerlink" title="1 聚类与K均值"></a>1 聚类与K均值</h2><h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>聚类是什么？举个例子，我们想把下图的人物归类，那么我们可以根据衣服样式归类，也可以根据性别、年龄等进行归类。</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092330178.png" class="" title="image-20220321092330178">
+
+<p>比如，我们想检测视频中的移动目标，这也是聚类的应用场景。</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092356073.png" class="" title="image-20220321092356073">
+
+<h3 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h3><p>由上面的示例，我们对聚类应该有了一个大致的意识。聚类的基本思想就是将相似的实例分组在一起。什么才叫做相似的实例？如果两个点之间的距离足够近，那我们就认为他们是相似的，就像下图这种2D点的模式。</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092634112.png" class="" title="image-20220321092634112">
+
+<p>两个点之间距离的衡量有很多种方法，在这篇文章中，我们取欧式距离，公式如下：<br>$$<br>dist(\boldsymbol{x},\boldsymbol{x})&#x3D;||\boldsymbol{x}-\boldsymbol{y}||_2^2<br>$$<br>其中，$\boldsymbol{x}$ 是一个向量，$||\cdot||_2$ 是两个向量之间的二范数，其计算方法为 $||\boldsymbol{x}||<em>2&#x3D;(\sum</em>{i&#x3D;1}^n x_i^2)^\frac{1}{2}$ ，后面 $||\cdot|| $ 默认用二范数。</p>
+<p>我们的聚类结果取决于簇内相似度和簇间相似度，一般来说，我们希望簇内相似度更高，簇间相似度更低。</p>
+<h3 id="聚类方法"><a href="#聚类方法" class="headerlink" title="聚类方法"></a>聚类方法</h3><ul>
+<li>原型聚类——K均值算法、高斯混合聚类</li>
+<li>密度聚类——DBSCAN算法、Mean-Shift算法</li>
+<li>层次聚类——–Agglomerative 算法、Divisive算法、BIRCH 算法</li>
+<li>谱聚类</li>
+</ul>
+<h3 id="聚类例子"><a href="#聚类例子" class="headerlink" title="聚类例子"></a>聚类例子</h3><p>我们举几个聚类所应用的场景。</p>
+<ul>
+<li><p>图像分割，目标：将图像分割成有意义的或感知上相似的区域</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094023139.png" class="" title="image-20220321094023139">
+</li>
+<li><p>基因表达数据聚类</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094031460.png" class="" title="image-20220321094031460">
+
+<p>[^]: Eisen et al,PNAS 1998</p>
+</li>
+<li><p>聚类新闻文章</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094102368.png" class="" title="image-20220321094102368">
+</li>
+<li><p>进化树</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094107927.png" class="" title="image-20220321094107927">
+
+<p>[^]: Lindbald-Toh et al., Nature 2005</p>
+</li>
+</ul>
+<h3 id="K均值聚类"><a href="#K均值聚类" class="headerlink" title="K均值聚类"></a>K均值聚类</h3><h4 id="（1）-准备"><a href="#（1）-准备" class="headerlink" title="（1） 准备"></a>（1） 准备</h4><p>在 $D$ 维的欧式空间里，给定数据集 ${x_1,x_2,…,x_n}$ ，将其划分为 $K$ 个簇（类），这是给定的$K$ 个编码之一。同时引入指标变量 $r_{nk} \in \lbrace 0,1 \rbrace$，表示数据点 $x_n$ 属于K个聚类中的哪一个。</p>
+<h4 id="（2）失真度量"><a href="#（2）失真度量" class="headerlink" title="（2）失真度量"></a>（2）失真度量</h4><p>K均值算法针对聚类所得簇 $C&#x3D;\lbrace C_1,C_2,…,C_K \rbrace$ ，最小化平方误差和：<br>$$<br>J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2<br>$$<br>\其中，$\mu_k &#x3D; \frac{1}{|C_k|} \sum \limits_{x \in C_k}x$ ，是簇 $C_k$ 的均值（$k &#x3D; 1,2,…,K$）。</p>
+<p>我们的目标其实就是找到 $\lbrace r_{nk} \rbrace$ 和 $\lbrace \mu_k \rbrace$ 的值，使得 $J$ 达到最小值。也就是说，我们希望找到对于每个簇 $C_k$ ，找到它的指标变量和均值，使得簇内每个点的距离最小。直观来看，这个式子在一定程度上刻画了簇内样本围绕簇均值向量的紧密程度，$J$ 值越小，簇内样本相似度越高。</p>
+<p>我们可以⽤⼀种迭代的⽅法完成这件事，其中每次迭代涉及到两个连续的步骤，分别关于$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化。</p>
+<h4 id="（3）寻找-lbrace-r-nk-rbrace-的最优化和-lbrace-mu-k-rbrace-的最优化"><a href="#（3）寻找-lbrace-r-nk-rbrace-的最优化和-lbrace-mu-k-rbrace-的最优化" class="headerlink" title="（3）寻找$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化"></a>（3）寻找$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化</h4><ol>
+<li>首先选择 $\lbrace \mu_k \rbrace$ 的初始值；</li>
+<li>第一阶段：我们关于 $r_{nk}$ 最小化 $J$，保持 $\mu_k$ 固定；</li>
+<li>第二阶段：我们关于 $\mu_k$ 最小化 $J$，保持 $r_{nk}$ 固定；</li>
+</ol>
+<p>注：两个阶段分别对应于EM算法中的E（期望）步骤和M（最⼤化）步骤，EM算法稍后会介绍，这里只是引入这样的一个概念。</p>
+<h4 id="（4）E：参数-r-nk-的选择"><a href="#（4）E：参数-r-nk-的选择" class="headerlink" title="（4）E：参数 $r_{nk}$ 的选择"></a>（4）E：参数 $r_{nk}$ 的选择</h4><h4 id="（5）M：优化-mu-k"><a href="#（5）M：优化-mu-k" class="headerlink" title="（5）M：优化 $\mu_k$"></a>（5）M：优化 $\mu_k$</h4><h4 id=""><a href="#" class="headerlink" title=""></a></h4>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Rebecca
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/" title="机器学习之K均值、混合高斯模型和期望最大">http://example.com/2022/03/21/机器学习之K均值、混合高斯模型和期望最大/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/K%E5%9D%87%E5%80%BC/" rel="tag"># K均值</a>
+              <a href="/tags/%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B/" rel="tag"># 混合高斯模型</a>
+              <a href="/tags/%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/" rel="tag"># 期望最大</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="prev" title="机器学习之线性回归">
+      <i class="fa fa-chevron-left"></i> 机器学习之线性回归
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7"><span class="nav-number">1.</span> <span class="nav-text">机器学习之K均值、混合高斯模型和期望最大</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%81%9A%E7%B1%BB%E4%B8%8EK%E5%9D%87%E5%80%BC"><span class="nav-number">1.1.</span> <span class="nav-text">1 聚类与K均值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB"><span class="nav-number">1.1.2.</span> <span class="nav-text">聚类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.3.</span> <span class="nav-text">聚类方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB%E4%BE%8B%E5%AD%90"><span class="nav-number">1.1.4.</span> <span class="nav-text">聚类例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K%E5%9D%87%E5%80%BC%E8%81%9A%E7%B1%BB"><span class="nav-number">1.1.5.</span> <span class="nav-text">K均值聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89-%E5%87%86%E5%A4%87"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">（1） 准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%A4%B1%E7%9C%9F%E5%BA%A6%E9%87%8F"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">（2）失真度量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%AF%BB%E6%89%BE-lbrace-r-nk-rbrace-%E7%9A%84%E6%9C%80%E4%BC%98%E5%8C%96%E5%92%8C-lbrace-mu-k-rbrace-%E7%9A%84%E6%9C%80%E4%BC%98%E5%8C%96"><span class="nav-number">1.1.5.3.</span> <span class="nav-text">（3）寻找$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89E%EF%BC%9A%E5%8F%82%E6%95%B0-r-nk-%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.1.5.4.</span> <span class="nav-text">（4）E：参数 $r_{nk}$ 的选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%885%EF%BC%89M%EF%BC%9A%E4%BC%98%E5%8C%96-mu-k"><span class="nav-number">1.1.5.5.</span> <span class="nav-text">（5）M：优化 $\mu_k$</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">1.1.5.6.</span> <span class="nav-text"></span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rebecca"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Rebecca</p>
+  <div class="site-description" itemprop="description">弱小和无知不是生存的障碍，傲慢才是。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-03 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rebecca</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
