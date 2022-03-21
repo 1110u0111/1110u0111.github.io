@@ -198,7 +198,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-03-21 10:03:28 / 修改时间：10:04:29" itemprop="dateCreated datePublished" datetime="2022-03-21T10:03:28+08:00">2022-03-21</time>
+              <time title="创建时间：2022-03-21 10:03:28 / 修改时间：21:19:38" itemprop="dateCreated datePublished" datetime="2022-03-21T10:03:28+08:00">2022-03-21</time>
             </span>
 
           
@@ -257,7 +257,7 @@
 </li>
 </ul>
 <h3 id="K均值聚类"><a href="#K均值聚类" class="headerlink" title="K均值聚类"></a>K均值聚类</h3><h4 id="（1）-准备"><a href="#（1）-准备" class="headerlink" title="（1） 准备"></a>（1） 准备</h4><p>在 $D$ 维的欧式空间里，给定数据集 ${x_1,x_2,…,x_n}$ ，将其划分为 $K$ 个簇（类），这是给定的$K$ 个编码之一。同时引入指标变量 $r_{nk} \in \lbrace 0,1 \rbrace$，表示数据点 $x_n$ 属于K个聚类中的哪一个。</p>
-<h4 id="（2）失真度量"><a href="#（2）失真度量" class="headerlink" title="（2）失真度量"></a>（2）失真度量</h4><p>K均值算法针对聚类所得簇 $C&#x3D;\lbrace C_1,C_2,…,C_K \rbrace$ ，最小化平方误差和：<br>$$<br>J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2<br>$$<br>\其中，$\mu_k &#x3D; \frac{1}{|C_k|} \sum \limits_{x \in C_k}x$ ，是簇 $C_k$ 的均值（$k &#x3D; 1,2,…,K$）。</p>
+<h4 id="（2）失真度量"><a href="#（2）失真度量" class="headerlink" title="（2）失真度量"></a>（2）失真度量</h4><p>K均值算法针对聚类所得簇 $C&#x3D;\lbrace C_1,C_2,…,C_K \rbrace$ ，最小化平方误差和：<br>$$<br>J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2<br>$$<br>其中，$\mu_k &#x3D; \frac{1}{|C_k|} \sum \limits_{x \in C_k}x$ ，是簇 $C_k$ 的均值（$k &#x3D; 1,2,…,K$）。</p>
 <p>我们的目标其实就是找到 $\lbrace r_{nk} \rbrace$ 和 $\lbrace \mu_k \rbrace$ 的值，使得 $J$ 达到最小值。也就是说，我们希望找到对于每个簇 $C_k$ ，找到它的指标变量和均值，使得簇内每个点的距离最小。直观来看，这个式子在一定程度上刻画了簇内样本围绕簇均值向量的紧密程度，$J$ 值越小，簇内样本相似度越高。</p>
 <p>我们可以⽤⼀种迭代的⽅法完成这件事，其中每次迭代涉及到两个连续的步骤，分别关于$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化。</p>
 <h4 id="（3）寻找-lbrace-r-nk-rbrace-的最优化和-lbrace-mu-k-rbrace-的最优化"><a href="#（3）寻找-lbrace-r-nk-rbrace-的最优化和-lbrace-mu-k-rbrace-的最优化" class="headerlink" title="（3）寻找$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化"></a>（3）寻找$\lbrace r_{nk} \rbrace$ 的最优化和 $\lbrace \mu_k \rbrace$ 的最优化</h4><ol>
@@ -266,7 +266,76 @@
 <li>第二阶段：我们关于 $\mu_k$ 最小化 $J$，保持 $r_{nk}$ 固定；</li>
 </ol>
 <p>注：两个阶段分别对应于EM算法中的E（期望）步骤和M（最⼤化）步骤，EM算法稍后会介绍，这里只是引入这样的一个概念。</p>
-<h4 id="（4）E：参数-r-nk-的选择"><a href="#（4）E：参数-r-nk-的选择" class="headerlink" title="（4）E：参数 $r_{nk}$ 的选择"></a>（4）E：参数 $r_{nk}$ 的选择</h4><h4 id="（5）M：优化-mu-k"><a href="#（5）M：优化-mu-k" class="headerlink" title="（5）M：优化 $\mu_k$"></a>（5）M：优化 $\mu_k$</h4><h4 id=""><a href="#" class="headerlink" title=""></a></h4>
+<h4 id="（4）E：参数-r-nk-的选择"><a href="#（4）E：参数-r-nk-的选择" class="headerlink" title="（4）E：参数 $r_{nk}$ 的选择"></a>（4）E：参数 $r_{nk}$ 的选择</h4><ol>
+<li><p>由于平方误差和 $J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2$ 是一个关于 $r_{nk}$ 的线性函数（这里再次提醒，$r_{nk} \in \lbrace 0,1 \rbrace$，表示数据点 $x_n$ 属于 $K$ 个聚类中的哪一个），因此，这个优化问题存在解析解。</p>
+</li>
+<li><p>而显然，$J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2 &#x3D; \sum \limits_{k&#x3D;1}^K r_{1k}||x_1-\mu_k||^2+…+ \sum \limits_{k&#x3D;1}^K r_{Nk}||x_N-\mu_k||^2$ ，其中有不同的 $n$ 的项是独立的，因此，我们可以对每个 $n$ 分别进行最优化，只要 $k$ 的值使得 $||x_n-\mu_k||^2$ 最小，那么就使 $r_{nk}&#x3D;1$。其实就是我们对于每一个数据点 $x_n$ ，都计算 $x_n$ 与每个簇 $C_k$ 的中心点（即 $\mu_k$）之间的距离，通过距离的比较，找到与 $x_n$ 最近的簇，将 $r_{nk}$ 置为1，表示这个数据点 $x_n$ 已经被分到簇 $C_k$ 中了。</p>
+</li>
+<li><p>因此，我们可以对参数 $r_{nk}$ 选择如下：<br>   $$<br>   r_{nk} &#x3D;<br>   \begin{cases}<br>   1,  &amp; \text{if} \ k&#x3D; \text{argmin}_j||x_n-\mu_j||^2 \<br>   0, &amp; \text{otherwise}<br>   \end{cases}<br>   $$</p>
+</li>
+<li><p>直观地说，其实就是将 $x_n$ 分到最近的一个类里面。</p>
+</li>
+</ol>
+<h4 id="（5）M：优化-mu-k"><a href="#（5）M：优化-mu-k" class="headerlink" title="（5）M：优化 $\mu_k$"></a>（5）M：优化 $\mu_k$</h4><ol>
+<li><p>固定 $r_{nk}$ ；</p>
+</li>
+<li><p>由于平方误差和 $J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2$ 是一个关于 $\mu_k$ 的线性函数，（这里提醒一句，$\mu_k &#x3D; \frac{1}{|C_k|} \sum \limits_{x \in C_k}x$ ，是簇 $C_k$ 的均值（$k &#x3D; 1,2,…,K$）因此，我们只要令 $J$ 关于 $\mu_k$ 的导数等于零，$J$ 即可达到最小值。</p>
+</li>
+<li><p>求解过程为：<br>$$<br>2\sum \limits_{n&#x3D;1}^N r_{nk}(x_n-\mu_k)&#x3D;0<br>$$<br>解出结果为<br>$$<br>\mu_k &#x3D; \frac{\sum_n r_{nk}x_n}{\sum_n r_{nk}}<br>$$</p>
+</li>
+<li><p>直观地说，其实就是令 $\mu_k$ 等于类别为 $k$ 的所有数据点的均值，$\sum_n r_{nk}$ 为类别为 $k$ 的所有数据点的数量，$\sum_n r_{nk}x_n$ 等于类别为 $k$ 的所有数据点的总和。</p>
+</li>
+</ol>
+<h4 id="（6）K均值算法终止"><a href="#（6）K均值算法终止" class="headerlink" title="（6）K均值算法终止"></a>（6）K均值算法终止</h4><p>K均值算法，就是重复执行上述的选择 $r_{nk}$ 和优化 $\mu_k$ 的步骤，即重复分配数据点给簇（或类）和重复计算簇（或类）中心，直到聚类的分配不改变。由于每个阶段都减小了目标函数 $J$ 的值，因此算法的收敛性得到了保证。</p>
+<h4 id="（7）示例（来自PRML）"><a href="#（7）示例（来自PRML）" class="headerlink" title="（7）示例（来自PRML）"></a>（7）示例（来自PRML）</h4><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321210022034.png" class="" title="image-20220321210022034">
+
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321210028211.png" class="" title="image-20220321210028211">
+
+<ul>
+<li>$J$ 是老忠实间歇喷泉数据的代价函数。</li>
+<li>我们故意将聚类中⼼选择了较差的初始值，从⽽算法在收敛之前执⾏了若⼲步。更好的选择是将聚类中⼼选择为由k个随机数据点组成的⼦集。</li>
+<li>K均值算法本身经常被用于在EM算法之前初始化高斯混合模型的参数。（这里出现了一个新概念：混合高斯模型，什么是混合高斯模型，这就是接下来要介绍的。）</li>
+</ul>
+<h3 id="局部最小值"><a href="#局部最小值" class="headerlink" title="局部最小值"></a>局部最小值</h3><p>K均值算法的目标函数 $J&#x3D;\sum \limits_{n&#x3D;1}^N \sum \limits_{k&#x3D;1}^K r_{nk} ||x_n-\mu_k||^2$ 是非凸的，因此，并不能保证 $J$ 上的坐标下降收敛到全局最小值，没有什么办法能够阻止K均值陷入局部极小值。我们可以尝试更多随机初始化的点，或者尝试非局部拆分和合并操作，非局部拆分就是同时合并相邻的两个簇，合并操作就是将一个大的簇分为两个。</p>
+<h3 id="K均值算法的性质"><a href="#K均值算法的性质" class="headerlink" title="K均值算法的性质"></a>K均值算法的性质</h3><ol>
+<li>保证在有限次迭代中收敛。</li>
+<li>每次迭代的训练时间：将数据点分配到最近的簇中心是 $O(KN)$ 时间，根据分配的点改变聚类中心是 $O(N)$ 时间。</li>
+</ol>
+<h3 id="K均值的局限"><a href="#K均值的局限" class="headerlink" title="K均值的局限"></a>K均值的局限</h3><ul>
+<li>在每⼀次迭代中，每个数据点被分配到⼀个唯⼀的聚类中（“硬”分配）  </li>
+<li>某些点可能到两个聚类中心的距离相等</li>
+<li>通过使⽤概率的⽅法，我们得到对数据点聚类的“软”分配，它反映出在最合适聚类分配上的不确定性</li>
+</ul>
+<h4 id="图像分割与压缩"><a href="#图像分割与压缩" class="headerlink" title="图像分割与压缩"></a>图像分割与压缩</h4><p>之前提到，聚类算法其实可以用于图像分割与压缩。我们的目标是，将图像分割成若干的区域，每个区域有⼀个相对相似的视觉外观，或者对应于某个物体，或物体的⼀部分。在计算机图像中，每个像素是⼀个3维空间中的⼀个点，三维空间由{红、绿、蓝} 通道的三个亮度值构成，每个值由8比特的精度存储。</p>
+<p>K均值聚类与K个颜色的调色板一起使用，该方法没有考虑不同像素的空间上的近似性。</p>
+<h5 id="（1）图像分割"><a href="#（1）图像分割" class="headerlink" title="（1）图像分割"></a>（1）图像分割</h5><p>以下是选择2、3和10种颜色对彩色图像进行编码的两个示例：</p>
+<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321210941474.png" class="" title="image-20220321210941474">
+
+<p>（2）数据压缩</p>
+<ul>
+<li><p>无损数据压缩：能够从压缩的表⽰中精确地重建原始数据。</p>
+</li>
+<li><p>有损数据压缩：接受重建过程中出现的⼀些错误。</p>
+</li>
+<li><p>K-Means应用于有损数据压缩</p>
+<ul>
+<li>对于 $ N $ 个数据点中的每一个，我们只存储它被分配的聚类种类 $k$。</li>
+<li>我们还存储了 $K$个聚类中心 $μ_k$ 的值，这通常需要存储小得多的数据,其中我们假定 $K ≪ N$。这样，每个数据点都根据它最近的中心 $μ_k$ 确定。新的数据点可以类似地压缩。</li>
+<li>首先找到最近的 $μ_k$，然后存储标签 $k$ 而不是原始的数据向量</li>
+</ul>
+<p>这个框架被称为向量量子化(vector quantization)，向量 $μ_k$ 被称为编码书向量 (code-book vector)。</p>
+</li>
+<li><p>上面讨论的图像分割问题也说明了数据压缩中聚类的使用。</p>
+<ul>
+<li>假设原始图像有 $ N $ 个像素，每个像素由$ {R, G, B} $三个值组成，每个值由$ 8 $比特的精度存储。这样，直接传递整幅图像需要$ 24N $比特。</li>
+<li>现在假设我们首先在图像数据上运行K均值算法，然后，我们不直接传递原始像素亮度向量，而是传递最近的向量$ \mu_k $的亮度。由于有$ K $个这样的向量，因此每个像素需要$ \log_2K $比特。</li>
+<li>我们还必须传送$ K $个编码书向量$ \mu_k $，这需要$ 24K $比特</li>
+<li>因此传递这个图像所需的比特总数为$ 24K + N \log_2K $（四舍五入到最近的整数）</li>
+<li>当 $K&#x3D;2,3$ 以及 $10$ 时，压缩为原来的比例分别为4%，8%，17%</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
 
