@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  最大流和最小割问题 流网络  一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$ $(V,E)$ 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$ 对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$     最大流问">
+  <meta name="description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  最大流和最小割问题  流网络  一个流网络是一个图 \(G&#x3D;(V,E,s,t,c)\)  \((V,E)\) 为一个有向图，起点为 \(s\in V\) ，终点为 \(t \in V\) 对每一条边 \(e\in E\) ，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法之网络流">
 <meta property="og:url" content="http://example.com/2022/03/14/%E7%AE%97%E6%B3%95%E4%B9%8B%E7%BD%91%E7%BB%9C%E6%B5%81/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  最大流和最小割问题 流网络  一个流网络是一个图 $G&#x3D;(V,E,s,t,c)$ $(V,E)$ 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$ 对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$     最大流问">
+<meta property="og:description" content="本章大纲：  理解最大流、任意流、最小割、任意割之间的关系； 掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。  最大流和最小割问题  流网络  一个流网络是一个图 \(G&#x3D;(V,E,s,t,c)\)  \((V,E)\) 为一个有向图，起点为 \(s\in V\) ，终点为 \(t \in V\) 对每一条边 \(e\in E\) ，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-14T15:24:24.000Z">
 <meta property="article:modified_time" content="2022-03-14T15:58:39.382Z">
@@ -217,210 +217,259 @@
 
       
         <p>本章大纲：</p>
-<ol>
+<ol type="1">
 <li>理解最大流、任意流、最小割、任意割之间的关系；</li>
 <li>掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。</li>
 </ol>
-<h2 id="最大流和最小割问题"><a href="#最大流和最小割问题" class="headerlink" title="最大流和最小割问题"></a>最大流和最小割问题</h2><ol>
+<h2 id="最大流和最小割问题">最大流和最小割问题</h2>
+<ol type="1">
 <li><p>流网络</p>
-<ol>
-<li>一个流网络是一个图 $G=(V,E,s,t,c)$<ol>
-<li>$(V,E)$ 为一个有向图，起点为 $s\in V$ ，终点为 $t \in V$</li>
-<li>对每一条边 $e\in E$ ，容量 $c(e) &gt; 0$</li>
-</ol>
-</li>
-</ol>
-</li>
+<ol type="1">
+<li>一个流网络是一个图 <span
+class="math inline">\(G=(V,E,s,t,c)\)</span>
+<ol type="1">
+<li><span class="math inline">\((V,E)\)</span> 为一个有向图，起点为
+<span class="math inline">\(s\in V\)</span> ，终点为 <span
+class="math inline">\(t \in V\)</span></li>
+<li>对每一条边 <span class="math inline">\(e\in E\)</span> ，容量 <span
+class="math inline">\(c(e) &gt; 0\)</span></li>
+</ol></li>
+</ol></li>
 <li><p>最大流问题</p>
-<ol>
-<li>一个流网络 $f$ 是一个函数，满足<ol>
-<li>对于每一条边 $e \in E$ ： $0 \le f(e)\le c(e)$ </li>
-<li>对于每一个结点 $v \in V-\lbrace s, t \rbrace$ ： $\sum_{e \in \ to \ v } f(e)=\sum_{e \ out \ of \ v}$</li>
-</ol>
-</li>
-<li>流值 $val(f)=\sum_{e \ out \ of \ s}  f(e) - \sum_{e \ in \  to \  s}$</li>
+<ol type="1">
+<li>一个流网络 <span class="math inline">\(f\)</span> 是一个函数，满足
+<ol type="1">
+<li>对于每一条边 <span class="math inline">\(e \in E\)</span> ： <span
+class="math inline">\(0 \le f(e)\le c(e)\)</span></li>
+<li>对于每一个结点 <span class="math inline">\(v \in V-\lbrace s, t
+\rbrace\)</span> ： <span class="math inline">\(\sum_{e \in \ to \ v }
+f(e)=\sum_{e \ out \ of \ v}\)</span></li>
+</ol></li>
+<li>流值 <span class="math inline">\(val(f)=\sum_{e \ out \ of \ s} f(e)
+- \sum_{e \ in \  to \  s}\)</span></li>
 <li>最大流问题：找到一个流的最大流值。</li>
-</ol>
-</li>
+</ol></li>
 <li><p>最小割问题</p>
-<ol>
-<li><p>一个割集是一个划分 $(A,B)$ ，满足 $s \in A$ 和 $t\in B$</p>
-</li>
-<li><p>割集的容量是从 $A$ 到 $B$​ 的所有边的容量之和</p>
-<script type="math/tex; mode=display">
-cap(A,B)=\sum_{e \ out \ of \ A}c(e)</script></li>
-<li><p>最小割问题：找到一个割的最小容量</p>
-</li>
+<ol type="1">
+<li><p>一个割集是一个划分 <span class="math inline">\((A,B)\)</span>
+，满足 <span class="math inline">\(s \in A\)</span> 和 <span
+class="math inline">\(t\in B\)</span></p></li>
+<li><p>割集的容量是从 <span class="math inline">\(A\)</span> 到 <span
+class="math inline">\(B\)</span>​ 的所有边的容量之和 <span
+class="math display">\[
+cap(A,B)=\sum_{e \ out \ of \ A}c(e)
+\]</span></p></li>
+<li><p>最小割问题：找到一个割的最小容量</p></li>
+</ol></li>
 </ol>
-</li>
-</ol>
-<h2 id="Ford–Fulkerson算法"><a href="#Ford–Fulkerson算法" class="headerlink" title="Ford–Fulkerson算法"></a>Ford–Fulkerson算法</h2><ol>
+<h2 id="fordfulkerson算法">Ford–Fulkerson算法</h2>
+<ol type="1">
 <li><p>贪心算法</p>
-<ol>
-<li>对每一条边  $e \in E$ ，最开始初始化 $f(e)=0$ ，即每一条边上的流量为0</li>
-<li>找到从起点 $s$ 到终点 $t$ 的路径 $P$ ，满足 $f(e)&lt;c(e)$ ，即找到从起点到终点流量小于容量的路径</li>
-<li>将 $P$ 作为增广路径进行增广</li>
+<ol type="1">
+<li>对每一条边 <span class="math inline">\(e \in E\)</span>
+，最开始初始化 <span class="math inline">\(f(e)=0\)</span>
+，即每一条边上的流量为0</li>
+<li>找到从起点 <span class="math inline">\(s\)</span> 到终点 <span
+class="math inline">\(t\)</span> 的路径 <span
+class="math inline">\(P\)</span> ，满足 <span
+class="math inline">\(f(e)&lt;c(e)\)</span>
+，即找到从起点到终点流量小于容量的路径</li>
+<li>将 <span class="math inline">\(P\)</span> 作为增广路径进行增广</li>
 <li>一直重复知道算法终止</li>
-</ol>
-</li>
+</ol></li>
 <li><p>贪心算法不能得到最优解</p>
-<ol>
+<ol type="1">
 <li>贪心算法无法撤销那些“坏”的操作</li>
-</ol>
-</li>
+</ol></li>
 <li><p>残量网络</p>
-<ol>
-<li><p>原来的边 $e\ = (u,v )\in E$</p>
-<ol>
-<li>边上的流为 $f(e)$</li>
-<li>边上的容量为 $c(e)$</li>
-</ol>
-</li>
-<li><p>反向边 $e^{reverse}=(v,u)$</p>
-<ol>
+<ol type="1">
+<li><p>原来的边 <span class="math inline">\(e\ = (u,v )\in
+E\)</span></p>
+<ol type="1">
+<li>边上的流为 <span class="math inline">\(f(e)\)</span></li>
+<li>边上的容量为 <span class="math inline">\(c(e)\)</span></li>
+</ol></li>
+<li><p>反向边 <span class="math inline">\(e^{reverse}=(v,u)\)</span></p>
+<ol type="1">
 <li>反向边就是对流的撤销操作</li>
-</ol>
-</li>
-<li><p>残留容量</p>
-<script type="math/tex; mode=display">
+</ol></li>
+<li><p>残留容量 <span class="math display">\[
 c_f(e)=
 \begin{cases}
-c(e)-f(e) & if\ e \in E\\ 
-f(e) & if\ e^{reverse}\in E 
-\end{cases}</script></li>
-<li><p>残量网络 $G_f=(V,E_f,s,t,c_f)$</p>
-<ol>
-<li>$E_f=\lbrace e:f(e)<c(e)\rbrace \cup \lbrace e^{reverse}:f(e)>0\rbrace$ ，即残量网络的边集是由流量小于容量的边以及那些有流量的反向边的并集。</li>
-<li>关键性质：$f’$ 是一个在 $G_f$ 中的流，当且仅当 $f+f’$ 是 $G$  上的流。</li>
-</ol>
-</li>
-</ol>
-</li>
+c(e)-f(e) &amp; if\ e \in E\\
+f(e) &amp; if\ e^{reverse}\in E
+\end{cases}
+\]</span></p></li>
+<li><p>残量网络 <span
+class="math inline">\(G_f=(V,E_f,s,t,c_f)\)</span></p>
+<ol type="1">
+<li><span class="math inline">\(E_f=\lbrace e:f(e)&lt;c(e)\rbrace \cup
+\lbrace e^{reverse}:f(e)&gt;0\rbrace\)</span>
+，即残量网络的边集是由流量小于容量的边以及那些有流量的反向边的并集。</li>
+<li>关键性质：<span class="math inline">\(f&#39;\)</span> 是一个在 <span
+class="math inline">\(G_f\)</span> 中的流，当且仅当 <span
+class="math inline">\(f+f&#39;\)</span> 是 <span
+class="math inline">\(G\)</span> 上的流。</li>
+</ol></li>
+</ol></li>
 <li><p>在残量网络中运行贪心算法即为Ford–Fulkerson算法</p>
-<ol>
-<li><p>增广路径是在 $G_f$ 上的一条由 $s\rightarrow t$ 的简单路径</p>
-</li>
-<li><p>瓶颈容量是增广路径 $P$ 上的所有边的最小残留容量。</p>
-</li>
-<li><p>关键性质：令 $f$ 为一个流，$P$ 为 $G_f$ 上的一条增广路径。在调用 $f’\leftarrow AUGMENT(f,c,P) $ 的算法之后，结果 $f’$ 是一个流，同时，$val(f’)=val(f)+bottleneck(G_f,P)$ </p>
-</li>
+<ol type="1">
+<li><p>增广路径是在 <span class="math inline">\(G_f\)</span> 上的一条由
+<span class="math inline">\(s\rightarrow t\)</span> 的简单路径</p></li>
+<li><p>瓶颈容量是增广路径 <span class="math inline">\(P\)</span>
+上的所有边的最小残留容量。</p></li>
+<li><p>关键性质：令 <span class="math inline">\(f\)</span>
+为一个流，<span class="math inline">\(P\)</span> 为 <span
+class="math inline">\(G_f\)</span> 上的一条增广路径。在调用
+$f'AUGMENT(f,c,P) $ 的算法之后，结果 <span
+class="math inline">\(f&#39;\)</span> 是一个流，同时，<span
+class="math inline">\(val(f&#39;)=val(f)+bottleneck(G_f,P)\)</span></p></li>
 <li><p>增加增广路径的伪代码</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AUGMENT(f,c,P)</span><br><span class="line"></span><br><span class="line">δ ← 增广路径P的瓶颈容量</span><br><span class="line">FOREACH P中的边e</span><br><span class="line">	IF (e ∈ E) </span><br><span class="line">		f(e) ← f(e) + δ</span><br><span class="line">	ELSE </span><br><span class="line">		f(e_r) ← f(e_r) - δ</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure>
-<p>注：伪代码中的 e_r 即为 $e^{reverse}$</p>
-</li>
+<p>注：伪代码中的 e_r 即为 <span
+class="math inline">\(e^{reverse}\)</span></p></li>
 <li><p>Ford–Fulkerson算法</p>
-<ol>
-<li>对每一条边  $e \in E$ ，最开始初始化 $f(e)=0$ ，即每一条边上的流量为0</li>
-<li>在 $G_f$ 中找到从起点 $s$ 到终点 $t$ 的路径 $P$ ，满足 $f(e)&lt;c(e)$ ，即找到从起点到终点流量小于容量的路径</li>
-<li>将 $P$ 作为增广路径进行增广</li>
+<ol type="1">
+<li>对每一条边 <span class="math inline">\(e \in E\)</span>
+，最开始初始化 <span class="math inline">\(f(e)=0\)</span>
+，即每一条边上的流量为0</li>
+<li>在 <span class="math inline">\(G_f\)</span> 中找到从起点 <span
+class="math inline">\(s\)</span> 到终点 <span
+class="math inline">\(t\)</span> 的路径 <span
+class="math inline">\(P\)</span> ，满足 <span
+class="math inline">\(f(e)&lt;c(e)\)</span>
+，即找到从起点到终点流量小于容量的路径</li>
+<li>将 <span class="math inline">\(P\)</span> 作为增广路径进行增广</li>
 <li>一直重复直到算法终止</li>
-</ol>
-</li>
+</ol></li>
 <li><p>Ford–Fulkerson算法伪代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Ford–Fulkerson(G)</span><br><span class="line"></span><br><span class="line">FOREACH e∈E</span><br><span class="line">	f(e) ← 0</span><br><span class="line">Gf ← G的残量网络</span><br><span class="line">WHILE (在Gf中存在一条s→t的路径P)</span><br><span class="line">	f ← AUGMENT(f,c,P)</span><br><span class="line">	更新Gf</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-</ol>
-<ol>
-<li><p>正确性证明</p>
-</li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Ford–Fulkerson(G)</span><br><span class="line"></span><br><span class="line">FOREACH e∈E</span><br><span class="line">	f(e) ← 0</span><br><span class="line">Gf ← G的残量网络</span><br><span class="line">WHILE (在Gf中存在一条s→t的路径P)</span><br><span class="line">	f ← AUGMENT(f,c,P)</span><br><span class="line">	更新Gf</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure></li>
+</ol></li>
+<li><p>正确性证明</p></li>
 <li><p>运行时间</p>
-<ol>
-<li>假设每一条边上的容量 $c(e)$ 是一个介于 $1$ 和 $C$ 之间的整数</li>
-<li>经过Ford–Fulkerson算法，每一条边上的流值 $f(e)$ 和残留容量 $c_f(e)$ 是一个整数</li>
-<li>Ford–Fulkerson算法在最多 $ n C$ 条增广路径后停止，且 $val(f^<em>) \le n C$ ，其中 $f^</em>$ 为最大流</li>
-<li>Ford–Fulkerson算法的运行时间为 $O(mnC)$ ，因为使用BFS或DFS寻找增广路径使用$O(m)$ 的时间。</li>
-<li>整数定理：存在一个整数的最大流 $f^*$</li>
+<ol type="1">
+<li>假设每一条边上的容量 <span class="math inline">\(c(e)\)</span>
+是一个介于 <span class="math inline">\(1\)</span> 和 <span
+class="math inline">\(C\)</span> 之间的整数</li>
+<li>经过Ford–Fulkerson算法，每一条边上的流值 <span
+class="math inline">\(f(e)\)</span> 和残留容量 <span
+class="math inline">\(c_f(e)\)</span> 是一个整数</li>
+<li>Ford–Fulkerson算法在最多 $ n C$ 条增广路径后停止，且 <span
+class="math inline">\(val(f^*) \le n C\)</span> ，其中 <span
+class="math inline">\(f^*\)</span> 为最大流</li>
+<li>Ford–Fulkerson算法的运行时间为 <span
+class="math inline">\(O(mnC)\)</span>
+，因为使用BFS或DFS寻找增广路径使用<span
+class="math inline">\(O(m)\)</span> 的时间。</li>
+<li>整数定理：存在一个整数的最大流 <span
+class="math inline">\(f^*\)</span></li>
+</ol></li>
 </ol>
-</li>
-</ol>
-<h2 id="最大流最小割定理"><a href="#最大流最小割定理" class="headerlink" title="最大流最小割定理"></a>最大流最小割定理</h2><ol>
+<h2 id="最大流最小割定理">最大流最小割定理</h2>
+<ol type="1">
 <li><p>流值引理</p>
-<ol>
-<li>令 $f$ 为任意流，$(A,B)$ 为任意割集，那么，流 $f$ 的值 $val(f)$ 等于经过割集 $(A,B)$ 的流</li>
-</ol>
-</li>
+<ol type="1">
+<li>令 <span class="math inline">\(f\)</span> 为任意流，<span
+class="math inline">\((A,B)\)</span> 为任意割集，那么，流 <span
+class="math inline">\(f\)</span> 的值 <span
+class="math inline">\(val(f)\)</span> 等于经过割集 <span
+class="math inline">\((A,B)\)</span> 的流</li>
+</ol></li>
 <li><p>流和割构成弱对偶关系</p>
-<ol>
-<li><p>令  $f$ 为任意流，$(A,B)$ 为任意割集，那么，流 $f$ 的值 $val(f)$ 小于割集 $(A,B)$ 的容量。</p>
-</li>
-<li><p>证明：</p>
-<script type="math/tex; mode=display">
+<ol type="1">
+<li><p>令 <span class="math inline">\(f\)</span> 为任意流，<span
+class="math inline">\((A,B)\)</span> 为任意割集，那么，流 <span
+class="math inline">\(f\)</span> 的值 <span
+class="math inline">\(val(f)\)</span> 小于割集 <span
+class="math inline">\((A,B)\)</span> 的容量。</p></li>
+<li><p>证明： <span class="math display">\[
 \begin{align}
-val(f) &=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}
-\\ &\le \sum_{\text{e out of A}}{f(e)}
-\\ &\le \sum_{\text{e out of A}}{c(e)}
-\\ &= cap(A,B)
-\end{align}</script></li>
-</ol>
-</li>
+val(f) &amp;=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to
+A}}{f(e)}
+\\ &amp;\le \sum_{\text{e out of A}}{f(e)}
+\\ &amp;\le \sum_{\text{e out of A}}{c(e)}
+\\ &amp;= cap(A,B)
+\end{align}
+\]</span></p></li>
+</ol></li>
 <li><p>最优性条件</p>
-<ol>
-<li>令  $f$ 为任意流，$(A,B)$ 为任意割集，那么，当流 $f$ 的值 $val(f)$ 等于割集 $(A,B)$ 的容量时，流 $f$ 为最大流，割集 $(A,B)$ 为最小割。</li>
-</ol>
-</li>
+<ol type="1">
+<li>令 <span class="math inline">\(f\)</span> 为任意流，<span
+class="math inline">\((A,B)\)</span> 为任意割集，那么，当流 <span
+class="math inline">\(f\)</span> 的值 <span
+class="math inline">\(val(f)\)</span> 等于割集 <span
+class="math inline">\((A,B)\)</span> 的容量时，流 <span
+class="math inline">\(f\)</span> 为最大流，割集 <span
+class="math inline">\((A,B)\)</span> 为最小割。</li>
+</ol></li>
 <li><p>最大流和最小割定理</p>
-<ol>
+<ol type="1">
 <li><p>最大流的流值等于最小割的容量</p>
-<ol>
-<li>我们通过一下三个条件来进行命题的证明。<ol>
-<li>存在一个割集 (A,B)，$cap(A,B)=val(f)$</li>
-<li>$f$ 是一个最大流</li>
-<li>$f$ 没有增广路径</li>
+<ol type="1">
+<li>我们通过一下三个条件来进行命题的证明。
+<ol type="1">
+<li>存在一个割集 (A,B)，<span
+class="math inline">\(cap(A,B)=val(f)\)</span></li>
+<li><span class="math inline">\(f\)</span> 是一个最大流</li>
+<li><span class="math inline">\(f\)</span> 没有增广路径</li>
+</ol></li>
+</ol></li>
+</ol></li>
 </ol>
-</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-<h2 id="变尺度算法"><a href="#变尺度算法" class="headerlink" title="变尺度算法"></a>变尺度算法</h2><ol>
-<li><p>如何选择增广路径</p>
-</li>
+<h2 id="变尺度算法">变尺度算法</h2>
+<ol type="1">
+<li><p>如何选择增广路径</p></li>
 <li><p>变尺度算法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CAPACITY-SCALING(G)</span><br><span class="line"></span><br><span class="line">FOREACH e∈E</span><br><span class="line">	f(e) ← 0</span><br><span class="line">Δ ← 2的最大幂次（&lt;= C)</span><br><span class="line">WHILE (Δ &gt;= 1)</span><br><span class="line">	Gf(Δ) ← G关于流f的Δ-残量网络</span><br><span class="line">	WHILE(在Gf(Δ)中存在一条s→t的路径P)</span><br><span class="line">		f ← AUGMENT(f,c,P)</span><br><span class="line">		更新Gf(Δ)</span><br><span class="line">	Δ ← Δ/2</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CAPACITY-SCALING(G)</span><br><span class="line"></span><br><span class="line">FOREACH e∈E</span><br><span class="line">	f(e) ← 0</span><br><span class="line">Δ ← 2的最大幂次（&lt;= C)</span><br><span class="line">WHILE (Δ &gt;= 1)</span><br><span class="line">	Gf(Δ) ← G关于流f的Δ-残量网络</span><br><span class="line">	WHILE(在Gf(Δ)中存在一条s→t的路径P)</span><br><span class="line">		f ← AUGMENT(f,c,P)</span><br><span class="line">		更新Gf(Δ)</span><br><span class="line">	Δ ← Δ/2</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure></li>
 <li><p>正确性证明</p>
-<ol>
+<ol type="1">
 <li>假设，所有边的容量都是介于1到C的整数</li>
-<li>变尺度参数 $\Delta$ 是一个2的幂次</li>
-<li>$\Delta=1$ 时，没有增广路径</li>
-</ol>
-</li>
+<li>变尺度参数 <span class="math inline">\(\Delta\)</span>
+是一个2的幂次</li>
+<li><span class="math inline">\(\Delta=1\)</span> 时，没有增广路径</li>
+</ol></li>
 <li><p>运行时间</p>
-<ol>
-<li><p>引理1：算法最多循环 $1+\left \lfloor  logC\right \rfloor$ 次</p>
-<ol>
-<li>最开始初始化时，$C/2 &lt; \Delta \le C$ ，而 $\Delta$ 在每次循环中会除以 $2$ .</li>
-</ol>
-</li>
-<li><p>引理2：令 $f$ 为一个 $\Delta$-变尺度阶段后的流，则最大流值不超过 $val(f)+m\Delta$</p>
-<ol>
-<li><script type="math/tex; mode=display">
+<ol type="1">
+<li><p>引理1：算法最多循环 <span class="math inline">\(1+\left \lfloor
+logC\right \rfloor\)</span> 次</p>
+<ol type="1">
+<li>最开始初始化时，<span class="math inline">\(C/2 &lt; \Delta \le
+C\)</span> ，而 <span class="math inline">\(\Delta\)</span>
+在每次循环中会除以 <span class="math inline">\(2\)</span> .</li>
+</ol></li>
+<li><p>引理2：令 <span class="math inline">\(f\)</span> 为一个 <span
+class="math inline">\(\Delta\)</span>-变尺度阶段后的流，则最大流值不超过
+<span class="math inline">\(val(f)+m\Delta\)</span></p>
+<ol type="1">
+<li><p><span class="math display">\[
 \begin{align}
-val(f) &=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}
-\\&\ge\sum_{\text{e out of A}}{(c(e)-\Delta)} - \sum_{\text{e in to A}}{\Delta}
-\\&\ge \sum_{\text{e out of A}}c(e) - \sum_{\text{e out of A}}{\Delta} -\sum_{\text{e in to A}}{\Delta}
-\\&\ge cap(A,B)-m\Delta
-\end{align}</script></li>
-<li><p>流出边的流量一定$\le \Delta$ ，流入边的容量一定 $\le \Delta$</p>
-</li>
-</ol>
-</li>
-<li><p>引理3：每个阶段最多进行 $2m$ 次增广</p>
-<ol>
-<li>令 $f$ 为一个 $\Delta$-变尺度阶段<strong>前</strong>的流</li>
-<li>由引理2可知，最大流值不超过 $val(f)+m (2\Delta)$</li>
-<li>而在$\Delta$阶段，每次增广至少$\Delta$的流量。</li>
-</ol>
-</li>
-<li><p>定理：变容算法运行时间为 $O(m^2logC)$</p>
-</li>
-</ol>
-</li>
+val(f) &amp;=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to
+A}}{f(e)}
+\\&amp;\ge\sum_{\text{e out of A}}{(c(e)-\Delta)} - \sum_{\text{e in to
+A}}{\Delta}
+\\&amp;\ge \sum_{\text{e out of A}}c(e) - \sum_{\text{e out of
+A}}{\Delta} -\sum_{\text{e in to A}}{\Delta}
+\\&amp;\ge cap(A,B)-m\Delta
+\end{align}
+\]</span></p></li>
+<li><p>流出边的流量一定<span class="math inline">\(\le \Delta\)</span>
+，流入边的容量一定 <span class="math inline">\(\le
+\Delta\)</span></p></li>
+</ol></li>
+<li><p>引理3：每个阶段最多进行 <span class="math inline">\(2m\)</span>
+次增广</p>
+<ol type="1">
+<li>令 <span class="math inline">\(f\)</span> 为一个 <span
+class="math inline">\(\Delta\)</span>-变尺度阶段<strong>前</strong>的流</li>
+<li>由引理2可知，最大流值不超过 <span class="math inline">\(val(f)+m
+(2\Delta)\)</span></li>
+<li>而在<span
+class="math inline">\(\Delta\)</span>阶段，每次增广至少<span
+class="math inline">\(\Delta\)</span>的流量。</li>
+</ol></li>
+<li><p>定理：变容算法运行时间为 <span
+class="math inline">\(O(m^2logC)\)</span></p></li>
+</ol></li>
 </ol>
 
     </div>
@@ -520,7 +569,7 @@ val(f) &=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to A}}{f(e)}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E5%92%8C%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">最大流和最小割问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ford%E2%80%93Fulkerson%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Ford–Fulkerson算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">最大流最小割定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E5%B0%BA%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">变尺度算法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E5%92%8C%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">最大流和最小割问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fordfulkerson%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Ford–Fulkerson算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">最大流最小割定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E5%B0%BA%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">变尺度算法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
