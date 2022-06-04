@@ -173,6 +173,157 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%9E%84%E5%BB%BA%E6%8A%80%E6%9C%AF%E7%BB%BC%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%9E%84%E5%BB%BA%E6%8A%80%E6%9C%AF%E7%BB%BC%E8%BF%B0/" class="post-title-link" itemprop="url">知识图谱构建技术综述</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-04 14:35:59" itemprop="dateCreated datePublished" datetime="2022-06-04T14:35:59+08:00">2022-06-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/04/%EF%BC%88%E6%9D%8E%E5%AE%8F%E6%AF%85%EF%BC%89%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/04/%EF%BC%88%E6%9D%8E%E5%AE%8F%E6%AF%85%EF%BC%89%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">机器学习之卷积神经网络</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-04 00:00:14 / 修改时间：00:38:01" itemprop="dateCreated datePublished" datetime="2022-06-04T00:00:14+08:00">2022-06-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="convolutional-neural-networkcnn">Convolutional Neural
+Network(CNN)</h1>
+<h1 id="卷积神经网络">卷积神经网络</h1>
+<p>本文章主要记录李宏毅老师在2021-2022年关于卷积神经网络的教学内容，具体可以查看B站的课程，链接为：https://www.bilibili.com/video/BV1Wv411h7kN?p=31.</p>
+<p>本节主要内容讲述的是神经网络架构的设计和思路。</p>
+<h2 id="引入">引入</h2>
+<p>我们引入一个例子：图像分类（Image
+Classification），也就是说，给一张图片给机器，机器需要去决定这张图片里面有什么样的东西。</p>
+<ol type="1">
+<li><p>输入</p>
+<p>在下面的讨论中，我们假设我们的模型输入的图片大小是固定的，比如 <span
+class="math inline">\(100 \times 100\)</span>。</p>
+<p>当然，实际生活中，我们遇到的图像其实大小是不一的。遇到这种情况时，现在比较流行的做法还是把所有图片都先<strong>重新调整（Rescale）</strong>成大小一样再输入。</p></li>
+<li><p>输出</p>
+<p>我们模型的目标是分类，因此，我们会把每一个类别，表示成一个<strong>独热编码（One-hot）</strong>的<strong>向量（Vector）<span
+class="math inline">\(\hat{y}\)</span></strong>
+。如下图所示，如果一张图片对应的是猫的话，那么“猫”所对应的<strong>维度（dimension）</strong>的数值就是1，其余的维度（dimension）的数值就是0。那么这个维度的长度，就代表着你现在的模型可以辨识出多少不同种类的东西。</p></li>
+<li><p>目标</p>
+<p>模型的输出经过Softmax函数之后，我们可以得到一个向量 <span
+class="math inline">\(y&#39;\)</span> 。我们希望 <span
+class="math inline">\(y&#39;\)</span> 和 <span
+class="math inline">\(\hat{y}\)</span> 的交叉熵（Cross
+Entropy）越小越好。</p></li>
+<li><p>问题</p>
+<ol type="1">
+<li><p>如何将一张图像视为一个模型的输入？</p>
+<p>对于计算机系统而言，一张图像其实是一个<strong>三维</strong>的<strong>张量（tensor）</strong>。简单来讲，我们可以将维度大于2的矩阵视为张量。而这三维中，分别代表图片的<strong>宽、高和通道（Channel）的数目</strong>。那么，<strong>通道</strong>的意思是什么呢？一张彩色的图片，它的每一个像素点（Pixel）都是由RGB三种颜色组成，所以三个通道就代表了RGB三种颜色。而图片的宽和高就代表了这张图片的解析度，也就是像素点的数目。</p>
+<p>我们将三维的张量“拉直”，就可以作为神经网络的输入了。对于这个“拉直”的向量，每一维的数值就代表了某一个位置的某一个颜色的强度。</p></li>
+<li><p>在全连接网络（Fully Connected Network）中模型是如何工作的？</p>
+<p>如图所示，我们将刚刚得到的向量（<span class="math inline">\(100
+\times 100\times
+3\)</span>）作为输入，输入到全连接网络中。假设第一层的神经元（Neuron）的数目有1000个，</p></li>
+<li></li>
+</ol></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -196,10 +347,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-03 00:22:00 / 修改时间：01:13:36" itemprop="dateCreated datePublished" datetime="2022-06-03T00:22:00+08:00">2022-06-03</time>
+              <time title="创建时间：2022-06-03 00:22:00" itemprop="dateCreated datePublished" datetime="2022-06-03T00:22:00+08:00">2022-06-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-04 17:49:26" itemprop="dateModified" datetime="2022-06-04T17:49:26+08:00">2022-06-04</time>
+              </span>
 
           
 
@@ -245,6 +402,122 @@ class="math inline">\(E\)</span> 中学习。）</p>
 <li>快速变化的现象。有一些现象会快速变化，在经济领域中有信用评分和财务建模等，在医学领域中有诊断学，在金融领域有欺诈检测等，在这也就意味着需要不断学习新的模型。</li>
 <li>需要定制。对于不同的人，需要定制不同的需求，比如个性化新闻阅读器和电影/书籍推荐。</li>
 </ol>
+<h2 id="机器学习的分类">机器学习的分类</h2>
+<p><strong>机器学习按任务的分类：</strong></p>
+<ol type="1">
+<li><strong>监督学习（Supervised Learning）</strong></li>
+<li><strong>无监督学习（Unsupervised Learning）</strong></li>
+<li><strong>强化学习（Reinforcement Learning）</strong></li>
+</ol>
+<h3 id="监督学习">监督学习</h3>
+<p>监督学习是指通过让机器学习大量<strong>带有标签的样本数据</strong>，训练出一个模型，并使该模型可以根据输入预测相应输出的过程。目标是根据<strong>标记数据（labeled
+data）</strong>学习<strong>特征（feature）与标签（label）</strong>之间的<strong>映射函数（mapping
+function）或关系（relationship）</strong>。</p>
+<img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/image-20220604160144414.png" class="" title="image-20220604160144414">
+<p>监督学习的预测目标为：</p>
+<ul>
+<li>分类（Classification）：输出为离散值</li>
+<li>回归（Regression）：输出为连续值。</li>
+</ul>
+<p>例如对于一个普通的行人在街道行走的图像，如果是分类任务，我们的预测目标可以为行人和非行人，如果是回归任务，我们的预测目标可以是行人的目标。</p>
+<p>常见的监督学习算法有：</p>
+<ul>
+<li>线性回归（Linear Regression）</li>
+<li>罗辑斯特回归（Logistic Regression）</li>
+<li>神经网络（Neural networks)</li>
+<li>支持向量机（Support Vector Machines, SVMs）</li>
+</ul>
+<h3 id="无监督学习">无监督学习</h3>
+<p>无监督学习是直接对输入数据进行建模，提取数据有效信息探索数据的整体结构。</p>
+<p>无监督学习用于：</p>
+<ol type="1">
+<li>聚类（Clustering）</li>
+<li>可视化（Visualization）和降维（Dimensionality reduction）</li>
+<li>……</li>
+</ol>
+<p>常见的无监督学习算法有：</p>
+<ol type="1">
+<li>K均值算法（K-means）（用于聚类）</li>
+<li>主成分分析（Principle Component Analysis, PCA）（用于降维）</li>
+</ol>
+<h3 id="强化学习">强化学习</h3>
+<p>强化学习是通过一个<strong>智能体</strong>在与复杂而不确定的<strong>环境</strong>交互中<strong>最大化总回报</strong>来学习的一种计算方法。智能体以“试错”的方式进行学习，通过与环境交互获得的<strong>奖赏和惩罚</strong>指导行为，目标是使智能体<strong>获得最大的奖赏</strong>。</p>
+<p>典型的应用就是棋子对弈和机器人自动控制。</p>
+<h2 id="机器学习基本流程">机器学习基本流程</h2>
+<p>机器学习是从有限的观测数据中学习（或者猜测）出具有一般性的规律，并且可以将总结出来的规律推广应用到未观测样本上。机器学习方法可以粗略的分为三个基本要素：模型、学习准则、优化算法。</p>
+<p>机器模型的三要素：</p>
+<ol type="1">
+<li>模型
+<ul>
+<li>线性方法：<span
+class="math inline">\(f(\mathbf{x},\theta)=\mathbf{w}^T
+\mathbf{x}+b\)</span></li>
+<li>广义线性方法：<span
+class="math inline">\(f(\mathbf{x},\theta)=\mathbf{w}^T
+\phi(\mathbf{x})+b\)</span> ，这里如果 <span
+class="math inline">\(\phi(\mathbf{x})\)</span>
+为可学习的非线性基函数，<span
+class="math inline">\(f(\mathbf{x},\theta)\)</span>
+就等价于神经网络。</li>
+</ul></li>
+<li>学习准则
+<ul>
+<li>最小化期望风险：<span
+class="math inline">\(\mathcal{R}(f)=\mathbf{E}_{(\mathbf{x},y) \sim
+p(\mathbf{x},y)} [\mathcal{L}(f(\mathbf{x},y)]\)</span></li>
+<li>最大似然估计</li>
+<li>最大后验估计</li>
+</ul></li>
+<li>优化：梯度下降</li>
+</ol>
+<h3 id="学习准则">学习准则</h3>
+<p>令训练集 <span class="math inline">\(\mathcal{D}={\lbrace
+\mathbf{x}^{(n)},y^{(n)} \rbrace}^N_{n=1}\)</span> 是由 <span
+class="math inline">\(N\)</span>
+个<strong>独立同分布</strong>的（Identically and Independently
+Distributed, IID）样本组成，即每个样本 <span
+class="math inline">\((\mathbf{x},y)\)</span> 是从输入空间 <span
+class="math inline">\(\mathcal{X}\)</span> 和 输出空间 <span
+class="math inline">\(\mathcal{Y}\)</span>
+的联合空间中按照某个未知分布独立地随机产生的。这里要求样本分布必须是固定的（虽然可以是未知的），不会随着时间而变化。</p>
+<p>一个好的模型 <span
+class="math inline">\(f(\mathbf{x},\theta^*)\)</span> 应该在所有 <span
+class="math inline">\((\mathbf{x},y)\)</span>
+的可能取值上都与真实映射函数 <span
+class="math inline">\(y=g(\mathbf{x})\)</span> 一致，即 <span
+class="math display">\[
+|f(\mathbf{x},\theta^*)-y| &lt; \epsilon ,\forall(\mathbf{x},y) \in
+\mathcal{X}\times\mathcal{Y}
+\]</span> 或与真实条件概率分布 <span
+class="math inline">\(p_r(y|\mathbf{x})\)</span> 一致，即 <span
+class="math display">\[
+|f_y(\mathbf{x},\theta^*)-p_r(y|\mathbf{x})| &lt; \epsilon
+,\forall(\mathbf{x},y) \in \mathcal{X}\times\mathcal{Y}
+\]</span> 其中，<span class="math inline">\(\epsilon\)</span>
+是一个很小的正数，<span
+class="math inline">\(f_y(\mathbf{x},\theta^*)\)</span>
+为模型预测的条件概率分布中 <span class="math inline">\(y\)</span>
+对应的概率。</p>
+<p>模型 <span class="math inline">\(f(\mathbf{x},\theta)\)</span>
+的好坏可以通过期望风险（Expected Risk）<span
+class="math inline">\(\mathcal{R}(\theta)\)</span>​ 来衡量，其定义为
+<span class="math display">\[
+\mathcal{R}(\theta) = \mathbf{E}_{(\mathbf{x},y) \sim p_r(\mathbf{x},y)}
+[\mathcal{L}(y,f(\mathbf{x};\theta)]
+\]</span> 其中，<span class="math inline">\(p_r(\mathbf{x},y)\)</span>
+为真实的数据分布，<span
+class="math inline">\(\mathcal{L}(y,f(\mathbf{x};\theta)\)</span>
+为损失函数，用于量化两个变量之间的差异。</p>
+<h3 id="损失函数">损失函数</h3>
+<p><strong>损失函数是一个非负实数函数，用来量化模型预测和真实标签之间的差异。</strong></p>
+<p>下面介绍几种常用的损失函数：</p>
+<ul>
+<li>0-1 损失函数</li>
+<li>平方损失函数</li>
+<li>感知器损失函数</li>
+<li>Hinge损失函数</li>
+<li>交叉熵损失函数</li>
+</ul>
 
       
     </div>
@@ -1963,14 +2236,14 @@ class="math inline">\(O(m^2logC)\)</span></p></li>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
