@@ -173,6 +173,815 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Python机器学习基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-09 20:49:37" itemprop="dateCreated datePublished" datetime="2022-06-09T20:49:37+08:00">2022-06-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-10 21:52:09" itemprop="dateModified" datetime="2022-06-10T21:52:09+08:00">2022-06-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="python机器学习基础">Python机器学习基础</h1>
+<h2 id="numpy-数值计算基础">NumPy 数值计算基础</h2>
+<h3
+id="数组对象ndarray常用属性">数组对象<code>ndarray</code>常用属性</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">属性名称</th>
+<th style="text-align: center;">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>dtype</code></td>
+<td style="text-align: center;">返回数组元素的类型</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>shape</code></td>
+<td style="text-align: center;">返回以元组(tuple)表示的数组形状</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>ndim</code></td>
+<td style="text-align: center;">返回数组的维度</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>size</code></td>
+<td style="text-align: center;">返回数组中元素的个数</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>itemsize</code></td>
+<td style="text-align: center;">返回数组中元素的内存所占字节数</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>T</code></td>
+<td style="text-align: center;">返回数组的转置</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>nbytes</code></td>
+<td style="text-align: center;">返回数组占用的存储空间</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="数组对象ndarray常用方法">数组对象<code>ndarray</code>常用方法</h3>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">方法名称</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>reshape()</code></td>
+<td
+style="text-align: center;">返回一个给定大小(shape)的数组的副本，原数组的大小不变</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>resize()</code></td>
+<td
+style="text-align: center;">返回一个给定大小(shape)的数组，原数组的大小改变</td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;"><code>flatten()</code>/<code>ravel()</code></td>
+<td style="text-align: center;">返回展平的数组，原数组不变</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>astype(dtype)</code></td>
+<td style="text-align: center;">返回指定数据类型(dtype)的数组副本</td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;"><code>sum()</code>/<code>prod()</code></td>
+<td style="text-align: center;">返回所有数组元素的和/积</td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;"><code>mean()</code>/<code>var()</code>/<code>std()</code></td>
+<td style="text-align: center;">返回数组元素的均值/方差/标准差</td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: center;"><code>max()</code>/<code>min()</code>/<code>ptp()</code>/<code>median()</code></td>
+<td
+style="text-align: center;">返回数组元素的最大值/最小值/取值范围/中位数</td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;"><code>argmax()</code>/<code>argmin()</code></td>
+<td style="text-align: center;">返回最大值/最小值的索引</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>sort()</code></td>
+<td
+style="text-align: center;">对数组进行排序，其中axis指定排序的轴，kind指定排序算法，默认快速排序</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>compress()</code></td>
+<td style="text-align: center;">返回由满足条件元素构成的数组</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="数组创建函数numpy.array">数组创建函数<code>numpy.array()</code></h3>
+<p><code>numpy.array()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.array(<span class="built_in">object</span>, dtype = <span class="literal">None</span>, copy = <span class="literal">True</span>, order = <span class="literal">None</span>, subok = <span class="literal">False</span>, ndmin = <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">属性名称</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>.shape</code></td>
+<td style="text-align: center;">数组的形状，如行数，列数</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>.ndim</code></td>
+<td style="text-align: center;">数组的维数</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>.size</code></td>
+<td style="text-align: center;">数组中元素的数量</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>.itemsize</code></td>
+<td style="text-align: center;">数组中元素的长度，按字节计</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>.nbytes</code></td>
+<td style="text-align: center;">数组全部元素占用的字节数</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="等差数列创建函数numpy.arangenumpy.linspace">等差数列创建函数<code>numpy.arange()</code>,<code>numpy.linspace()</code></h3>
+<p><code>numpy.arange()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.arange([start,] stop, [step,] dtype = <span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>[start,]</code></td>
+<td
+style="text-align: center;">接收浮点数，表示数组的起始值，可选，默认为0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>stop</code></td>
+<td
+style="text-align: center;">接收浮点数，表示数组的终止值(<strong>不包含在数组之内</strong>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>[step,]</code></td>
+<td
+style="text-align: center;">接收浮点数，表示数组的步长值，可选，默认为1</td>
+</tr>
+</tbody>
+</table>
+<p>由于<code>numpy.arange()</code>函数并未指定元素个数，因此，若需要指定元素个数，则需要使用<code>numpy.linspace()</code>函数。</p>
+<p>函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.linspace(start, stop, num = <span class="number">50</span>, endpoint = <span class="literal">True</span>, retstep = <span class="literal">False</span>, dtype = <span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>start</code></td>
+<td style="text-align: center;">接收浮点数，表示数组的起始值</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>stop</code></td>
+<td style="text-align: center;">接收浮点数，表示数组的终止值</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>num</code></td>
+<td
+style="text-align: center;">接收整数，表示数组的元素数量，默认为50。</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="等比数列创建函数numpy.logspace">等比数列创建函数<code>numpy.logspace()</code></h3>
+<p>函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.logspace(start, stop, num = <span class="number">50</span>, endpoint = <span class="literal">True</span>, base = <span class="number">10.0</span>, dtype = <span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>start</code></td>
+<td
+style="text-align: center;">接收浮点数，表示数组起始值的指数，指定的数组起始值为
+<span class="math inline">\(\text{base}^{\text{start}}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>stop</code></td>
+<td
+style="text-align: center;">接收浮点数，表示数组终止值的指数，指定的数组终止值为
+<span class="math inline">\(\text{base}^{\text{stop}}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>num</code></td>
+<td
+style="text-align: center;">接收整数，表示数组的元素数量，默认为50。</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>base</code></td>
+<td
+style="text-align: center;">接收浮点数，以幂形式表示数组起始值、终止值的底数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="特殊值数组创建函数">特殊值数组创建函数</h3>
+<h4
+id="数组元素值全为0的函数numpy.zeros">数组元素值全为0的函数<code>numpy.zeros()</code></h4>
+<p><code>numpy.zeros()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.zeros(shape, dtype = <span class="built_in">float</span>, order = <span class="string">&#x27;C&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>shape</code></td>
+<td style="text-align: center;">数组的形状</td>
+</tr>
+</tbody>
+</table>
+<h4
+id="对角线全为1其余为0的函数numpy.eye">对角线全为1，其余为0的函数<code>numpy.eye()</code></h4>
+<p><code>numpy.eye()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.eye(N, M = <span class="literal">None</span>, k = <span class="number">0</span>, dtype = &lt;<span class="keyword">class</span><span class="string">&#x27;float&#x27;</span>&gt;, order = <span class="string">&#x27;c&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>N</code></td>
+<td style="text-align: center;">接收整数，表示数组的行形状</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>M</code></td>
+<td
+style="text-align: center;">接收整数，表示数组的列形状，可选，默认等于<code>N</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>k</code></td>
+<td
+style="text-align: center;">接收整数，表示选择的对角线位置，可选，默认为0，表示选择主对角线，<br /><code>k</code>
+为正值表示选择上方次对角线，<code>k</code>
+为负值表示选择下方次对角线，</td>
+</tr>
+</tbody>
+</table>
+<h4
+id="行列形状相同指定对角线元素值的函数numpy.diag">行列形状相同，指定对角线元素值的函数<code>numpy.diag()</code></h4>
+<p><code>numpy.diag()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.diag(v,k = <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>v</code></td>
+<td
+style="text-align: center;">接收<strong>数组</strong>，表示指定对角线上自左上方至右下方的元素值</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>k</code></td>
+<td
+style="text-align: center;">接收整数，表示选择的对角线位置，可选，默认为0，表示选择主对角线，<br /><code>k</code>
+为正值表示选择上方次对角线，<code>k</code>
+为负值表示选择下方次对角线，</td>
+</tr>
+</tbody>
+</table>
+<h4 id="数组元素值全为1的函数-numpy.ones">数组元素值全为1的函数
+<code>numpy.ones()</code></h4>
+<p><code>numpy.ones()</code> 的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.ones(shape, dtype = <span class="literal">None</span>, order = <span class="string">&#x27;C&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>shape</code></td>
+<td style="text-align: center;">数组的形状</td>
+</tr>
+</tbody>
+</table>
+<h4
+id="随机数组创建函数-numpy.random.random-numpy.random.rand-numpy.random.randn-numpy.random.randint">随机数组创建函数
+<code>numpy.random.random()</code>, <code>numpy.random.rand()</code>,
+<code>numpy.random.randn()</code>,
+<code>numpy.random.randint()</code></h4>
+<p><code>numpy.random.random()</code> ，该方法用于创建指定元素数量的在
+<span class="math inline">\([0.0,1.0]\)</span>
+区间连续均匀分布的随机数组，函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.random.random(size = <span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p><code>numpy.random.rand()</code> ，该方法用于创建 <span
+class="math inline">\(n\)</span> 维数组，其中每一维的元素在 <span
+class="math inline">\([0.0,1.0]\)</span>
+区间连续均匀分布，函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.random.rand(d0,d1,...,dn)</span><br></pre></td></tr></table></figure>
+<p><code>numpy.random.randn()</code>
+，该方法用于创建标准正态分布的数组，函数格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.random.randn(d0,d1,...,dn)</span><br></pre></td></tr></table></figure>
+<p><code>numpy.random.randint()</code>
+，该方法用于创建在指定范围内正态分布的整数(离散)数组，函数格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.random.randint(low, high = None, size = None, dytpe = &#x27;1&#x27;)</span><br></pre></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>low</code></td>
+<td style="text-align: center;">数组指定范围 <span
+class="math inline">\([low,high)\)</span> 的下限</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>high</code></td>
+<td style="text-align: center;">数组指定范围 <span
+class="math inline">\([low,high)\)</span>
+的上限(不包括上限)，默认无。<br />当不指定 <span
+class="math inline">\(high\)</span> 时，默认范围为 <span
+class="math inline">\([0,low)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>size</code></td>
+<td style="text-align: center;">数组形状</td>
+</tr>
+</tbody>
+</table>
+<h3 id="索引数组元素">索引数组元素</h3>
+<h4 id="一维数组元素的索引方法">一维数组元素的索引方法</h4>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">方法</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n]</code></td>
+<td style="text-align: center;">索引数组的第 <span
+class="math inline">\(n\)</span> 个元素， <span
+class="math inline">\(n\)</span> 从 <span
+class="math inline">\(0\)</span> 开始</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[n:m]</code></td>
+<td style="text-align: center;">索引数组的第 <span
+class="math inline">\(n\)</span> 到 <span
+class="math inline">\(m\)</span> 的元素， 不包括第 <span
+class="math inline">\(m\)</span> 个元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[:m]</code></td>
+<td style="text-align: center;">索引数组的第 <span
+class="math inline">\(0\)</span> 到 <span
+class="math inline">\(m\)</span> 的元素， 不包括第 <span
+class="math inline">\(m\)</span> 个元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[-1]</code></td>
+<td style="text-align: center;">索引数组的倒数第 <span
+class="math inline">\(1\)</span> 个元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n:m:k]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 个元素开始，每隔 <span
+class="math inline">\(k-1\)</span> 个元素，一直到第 <span
+class="math inline">\(m\)</span> 个元素之间的元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[m:n:-k]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(m\)</span> 个元素开始，每隔 <span
+class="math inline">\(k-1\)</span> 个元素，一直到第 <span
+class="math inline">\(n\)</span> 个元素之间的元素，<span
+class="math inline">\(m &gt; n\)</span></td>
+</tr>
+</tbody>
+</table>
+<h4 id="二维数组元素的索引方法">二维数组元素的索引方法</h4>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">方法</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n,m]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 行，第 <span
+class="math inline">\(m\)</span> 列的一个元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[n,i:j]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 行，第 <span
+class="math inline">\(i\)</span> 到 <span
+class="math inline">\(j-1\)</span> 列的连续多个元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n,:]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 行元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[i:j,:]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(i\)</span> 到 <span
+class="math inline">\(j-1\)</span> 行的连续整行元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[:,i:j]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(i\)</span> 到 <span
+class="math inline">\(j-1\)</span> 列的连续整列元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[n:m,i:j]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 到 <span
+class="math inline">\(m-1\)</span> 行，第 <span
+class="math inline">\(i\)</span> 到 <span
+class="math inline">\(j-1\)</span> 列的元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n:,m:]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 到最后1行，第 <span
+class="math inline">\(m\)</span> 到最后1列的元素</td>
+</tr>
+<tr class="even">
+<td
+style="text-align: center;"><code>数组名[(n1,n2,n3),(m1,m2,m3)]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n1\)</span> 行 <span
+class="math inline">\(m1\)</span> 列、第 <span
+class="math inline">\(n2\)</span> 行 <span
+class="math inline">\(m2\)</span> 列、第 <span
+class="math inline">\(n3\)</span> 行 <span
+class="math inline">\(m3\)</span> 列的多个元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n,(m1,m2)]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n\)</span> 行 <span
+class="math inline">\(m1\)</span> 和 <span
+class="math inline">\(m2\)</span> 列的多个元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[(n1,n2),m]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(m\)</span> 列 <span
+class="math inline">\(n1\)</span> 和 <span
+class="math inline">\(n2\)</span> 行的多个元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[n1:n2,(m1,m2)]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n1\)</span> 到 <span
+class="math inline">\(n2-1\)</span> 行 <span
+class="math inline">\(m1\)</span> 列、<span
+class="math inline">\(m2\)</span> 列的多个元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[(n1,n2),m1:m2]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(m1\)</span> 到 <span
+class="math inline">\(m2\)</span> 列 <span
+class="math inline">\(n1\)</span> 行、<span
+class="math inline">\(n2\)</span> 行的多个元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>数组名[:,(m1,m2)]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(m1\)</span> 列、第 <span
+class="math inline">\(m2\)</span> 列的整列元素</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>数组名[(n1,n2),:]</code></td>
+<td style="text-align: center;">索引数组中第 <span
+class="math inline">\(n1\)</span> 行、第 <span
+class="math inline">\(n2\)</span> 行的整行元素</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>numpy.bool</code></td>
+<td style="text-align: center;">索引 (1) 或不索引 (0) 某行/列元素</td>
+</tr>
+</tbody>
+</table>
+<h3 id="改变数组形状">改变数组形状</h3>
+<h4
+id="多维数组展平为一维数组-numpy.ravelnumpy.flatten">多维数组展平为一维数组
+<code>numpy.ravel()</code>/<code>numpy.flatten()</code></h4>
+<p><code>numpy.ravel()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.ravel(a, order = <span class="string">&#x27;C&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>a</code></td>
+<td style="text-align: center;">需要展平的数组</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>order</code></td>
+<td style="text-align: center;">展平顺序，<code>'C'</code>
+表示按行展平，<code>'F'</code> 表示按列展平</td>
+</tr>
+</tbody>
+</table>
+<p><code>numpy.flatten()</code>的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.ndarray.flatten(order = <span class="string">&#x27;C&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="组合数组">组合数组</h3>
+<h4
+id="将两个或多个行数相等的数组横向组合为一个数组numpy.hstack">将两个或多个行数相等的数组横向组合为一个数组<code>numpy.hstack()</code></h4>
+<p><code>numpy.hstack()</code> 的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.hstack(tup)</span><br></pre></td></tr></table></figure>
+<h4
+id="将两个或多个列数相等的数组纵向组合为一个数组numpy.vstack">将两个或多个列数相等的数组纵向组合为一个数组<code>numpy.vstack()</code></h4>
+<p><code>numpy.vstack()</code> 的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.vstack(tup)</span><br></pre></td></tr></table></figure>
+<h4
+id="可指定数组为横向组合还是列向组合numpy.concatenate">可指定数组为横向组合还是列向组合<code>numpy.concatenate()</code></h4>
+<p><code>numpy.concatenate()</code> 的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.concatenate((a1,a2,...), axis = <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h4
+id="将两个或多个行数相等的数组横向组合numpy.c_">将两个或多个行数相等的数组横向组合<code>numpy.c_[]</code></h4>
+<p><code>numpy.c_[]</code> 的函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.c_[a1,a2,...]</span><br></pre></td></tr></table></figure>
+<h3 id="分割数组">分割数组</h3>
+<p><code>numpy.hspilt()</code>
+将数组横向分割为2个或多个形状相同的子数组，或按照指定的分割位置进行分割，函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.hspilt(ary,indices_or_sections)</span><br></pre></td></tr></table></figure>
+<p><code>numpy.vspilt()</code>
+将数组纵向分割为2个或多个形状相同的子数组，或按照指定的分割位置进行分割，函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.vspilt(ary,indices_or_sections)</span><br></pre></td></tr></table></figure>
+<p><code>numpy.spilt()</code>
+将数组沿指定方向分割为2个或多个形状相同的子数组，或按照指定的分割位置进行分割，函数格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.spilt(ary,indices_or_sections,axis = <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">参数</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>ary</code></td>
+<td style="text-align: center;">接收要分割的数组</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>indices_or_sections</code></td>
+<td
+style="text-align: center;">为整数时，表示分割为子数组的数量；<br />为序列
+<span class="math inline">\([n1,n2,...]\)</span>
+时，表示要分割的行(列)位置</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>axis</code></td>
+<td
+style="text-align: center;">表示分割方向，为0时表示纵向分割，为1时表示横向分割</td>
+</tr>
+</tbody>
+</table>
+<h3 id="数组的运算">数组的运算</h3>
+<p>略。</p>
+<h2 id="matplotlib可视化基础">Matplotlib可视化基础</h2>
+<h3 id="绘图元素">绘图元素</h3>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">基本元素</th>
+<th style="text-align: center;">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">x轴和y轴</td>
+<td style="text-align: center;">水平和垂直的轴线</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">x轴和y轴的刻度</td>
+<td
+style="text-align: center;">刻度标示坐标轴的分隔，包括最小刻度和最大刻度</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">x轴和y轴的刻度标签</td>
+<td style="text-align: center;">特定坐标轴的值</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">绘图区域</td>
+<td style="text-align: center;">实际绘图的区域</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">hold属性</td>
+<td
+style="text-align: center;">默认为True，表示允许在一幅图中绘制多条曲线，如果为False，则每一个plot都会覆盖前面的plot</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">grid方法</td>
+<td style="text-align: center;">为图添加网格线</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">xlim和ylim方法</td>
+<td style="text-align: center;">设置坐标轴范围</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">legend方法</td>
+<td style="text-align: center;">设置图例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="散点图">散点图</h3>
+<p>绘制例子如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#导入Numpy模块</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#导入matplotlib.pyplot库</span></span><br><span class="line"><span class="comment">#产生数据</span></span><br><span class="line">x = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">30</span>) <span class="comment">#产生0至10之间的30个元素的等差数列</span></span><br><span class="line">noise = np.random.randn(<span class="number">30</span>) <span class="comment">#产生30个标准正态分布的元素</span></span><br><span class="line">y1 = x**<span class="number">2</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列1（x**2为x的平方）</span></span><br><span class="line">y2 = x**<span class="number">1</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列2</span></span><br><span class="line">y3 = x**<span class="number">1.5</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列3</span></span><br><span class="line">plt.rcParams[<span class="string">&#x27;font.sans-serif&#x27;</span>] = <span class="string">&#x27;SimHei&#x27;</span> <span class="comment">#设置字体为SimHei以显示中文</span></span><br><span class="line">plt.rc(<span class="string">&#x27;font&#x27;</span>,size = <span class="number">14</span>) <span class="comment">#设置图中字号大小</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>)) <span class="comment">#设置画布</span></span><br><span class="line">plt.scatter(x,y1,marker=<span class="string">&#x27;o&#x27;</span>) <span class="comment">#绘制散点图</span></span><br><span class="line">plt.scatter(x,y2,marker=<span class="string">&#x27;*&#x27;</span>) <span class="comment">#绘制散点图</span></span><br><span class="line">plt.scatter(x,y3,marker=<span class="string">&#x27;^&#x27;</span>) <span class="comment">#绘制散点图</span></span><br><span class="line">plt.title(<span class="string">&#x27;散点图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.legend([<span class="string">&#x27;数据集y1&#x27;</span>,<span class="string">&#x27;数据集y2&#x27;</span>,<span class="string">&#x27;数据集y3&#x27;</span>]) <span class="comment">#添加图例</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line"><span class="keyword">import</span> os <span class="comment">#导入os库</span></span><br><span class="line"><span class="comment">#创建或访问一个文件夹</span></span><br><span class="line">path = <span class="string">&#x27;D:\\Blog\\source\\_posts\\Python机器学习基础\\&#x27;</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">    os.makedirs(path)</span><br><span class="line">plt.savefig(path + <span class="string">&#x27;scatter.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/scatter.jpg" class="" title="scatter">
+<h3 id="折线图和点线图">折线图和点线图</h3>
+<p>绘制例子如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#导入Numpy模块</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#导入matplotlib.pyplot库</span></span><br><span class="line"><span class="comment">#产生数据</span></span><br><span class="line">x = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">30</span>) <span class="comment">#产生0至10之间的30个元素的等差数列</span></span><br><span class="line">noise = np.random.randn(<span class="number">30</span>) <span class="comment">#产生30个标准正态分布的元素</span></span><br><span class="line">y1 = x**<span class="number">2</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列1（x**2为x的平方）</span></span><br><span class="line">y2 = x**<span class="number">1</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列2</span></span><br><span class="line">y3 = x**<span class="number">1.5</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列3</span></span><br><span class="line">plt.rcParams[<span class="string">&#x27;font.sans-serif&#x27;</span>] = <span class="string">&#x27;SimHei&#x27;</span> <span class="comment">#设置字体为SimHei以显示中文</span></span><br><span class="line">plt.rc(<span class="string">&#x27;font&#x27;</span>,size = <span class="number">14</span>) <span class="comment">#设置图中字号大小</span></span><br><span class="line"><span class="comment">#绘制折线图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.plot(x,y1,color=<span class="string">&#x27;r&#x27;</span>,linestyle=<span class="string">&#x27;--&#x27;</span>) <span class="comment">#&#x27;r&#x27;表示红色</span></span><br><span class="line">plt.plot(x,y2,color=<span class="string">&#x27;g&#x27;</span>,linestyle=<span class="string">&#x27;-&#x27;</span>) <span class="comment">#&#x27;g&#x27;表示绿色</span></span><br><span class="line">plt.plot(x,y3,color=<span class="string">&#x27;b&#x27;</span>,linestyle=<span class="string">&#x27;-.&#x27;</span>) <span class="comment">#&#x27;b&#x27;表示蓝色</span></span><br><span class="line">plt.title(<span class="string">&#x27;折线图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.legend([<span class="string">&#x27;曲线y1&#x27;</span>,<span class="string">&#x27;曲线y2&#x27;</span>,<span class="string">&#x27;曲线y3&#x27;</span>]) <span class="comment">#添加图例</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line"><span class="keyword">import</span> os <span class="comment">#导入os库</span></span><br><span class="line"><span class="comment">#创建或访问一个文件夹</span></span><br><span class="line">path = <span class="string">&#x27;D:\\Blog\\source\\_posts\\Python机器学习基础\\&#x27;</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">    os.makedirs(path)</span><br><span class="line">plt.savefig(path + <span class="string">&#x27;plot.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/plot.jpg" class="" title="plot">
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#绘制点线图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.plot(x,y1,color=<span class="string">&#x27;r&#x27;</span>,linestyle=<span class="string">&#x27;--&#x27;</span>,marker=<span class="string">&#x27;o&#x27;</span>)</span><br><span class="line">plt.plot(x,y2,color=<span class="string">&#x27;g&#x27;</span>,linestyle=<span class="string">&#x27;-&#x27;</span>,marker=<span class="string">&#x27;*&#x27;</span>)</span><br><span class="line">plt.plot(x,y3,color=<span class="string">&#x27;b&#x27;</span>,linestyle=<span class="string">&#x27;-.&#x27;</span>,marker=<span class="string">&#x27;^&#x27;</span>) </span><br><span class="line">plt.title(<span class="string">&#x27;点线图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.legend([<span class="string">&#x27;曲线y1&#x27;</span>,<span class="string">&#x27;曲线y2&#x27;</span>,<span class="string">&#x27;曲线y3&#x27;</span>]) <span class="comment">#添加图例</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line">plt.savefig(path + <span class="string">&#x27;plot1.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/plot1.jpg" class="" title="plot1">
+<h3 id="柱状图">柱状图</h3>
+<h4 id="绘制数据系列的柱状图">绘制数据系列的柱状图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#导入Numpy模块</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#导入matplotlib.pyplot库</span></span><br><span class="line"><span class="comment">#产生数据</span></span><br><span class="line">x = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">30</span>) <span class="comment">#产生0至10之间的30个元素的等差数列</span></span><br><span class="line">noise = np.random.randn(<span class="number">30</span>) <span class="comment">#产生30个标准正态分布的元素</span></span><br><span class="line">y1 = x**<span class="number">2</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列1（x**2为x的平方）</span></span><br><span class="line">y2 = x**<span class="number">1</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列2</span></span><br><span class="line">y3 = x**<span class="number">1.5</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列3</span></span><br><span class="line">plt.rcParams[<span class="string">&#x27;font.sans-serif&#x27;</span>] = <span class="string">&#x27;SimHei&#x27;</span> <span class="comment">#设置字体为SimHei以显示中文</span></span><br><span class="line">plt.rc(<span class="string">&#x27;font&#x27;</span>,size = <span class="number">14</span>) <span class="comment">#设置图中字号大小</span></span><br><span class="line"><span class="comment">#绘制柱状图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.bar(x,y1,width=<span class="number">0.2</span>)<span class="comment">#绘制柱状图</span></span><br><span class="line">plt.title(<span class="string">&#x27;柱状图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line"><span class="keyword">import</span> os <span class="comment">#导入os库</span></span><br><span class="line"><span class="comment">#创建或访问一个文件夹</span></span><br><span class="line">path = <span class="string">&#x27;D:\\Blog\\source\\_posts\\Python机器学习基础\\&#x27;</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">    os.makedirs(path)</span><br><span class="line">plt.savefig(path + <span class="string">&#x27;bar.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/bar.jpg" class="" title="bar">
+<h4 id="绘制数据系列和的柱状图">绘制数据系列和的柱状图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#绘制三个数据系列各自的和的柱状图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.bar([<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>],[np.<span class="built_in">sum</span>(y1),np.<span class="built_in">sum</span>(y2),np.<span class="built_in">sum</span>(y3)],width=<span class="number">0.5</span>)<span class="comment">#绘制柱状图</span></span><br><span class="line">plt.title(<span class="string">&#x27;柱状图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">labels=[<span class="string">&#x27;y1的和&#x27;</span>,<span class="string">&#x27;y2的和&#x27;</span>,<span class="string">&#x27;y3的和&#x27;</span>]</span><br><span class="line">plt.xlabel(<span class="string">&#x27;数据系列y&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;数据系列y的和&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line">plt.xticks(<span class="built_in">range</span>(<span class="number">3</span>),labels) <span class="comment">#横轴刻度与标签对准</span></span><br><span class="line">plt.savefig(path + <span class="string">&#x27;bar1.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/bar1.jpg" class="" title="bar1">
+<h4 id="绘制堆叠柱状图">绘制堆叠柱状图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#绘制堆叠柱状图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.bar(x,y1,width=<span class="number">0.2</span>)<span class="comment">#绘制柱状图</span></span><br><span class="line">plt.bar(x,y2,width=<span class="number">0.2</span>,bottom=y1)<span class="comment">#绘制柱状图，堆叠到y1上方</span></span><br><span class="line">plt.title(<span class="string">&#x27;堆叠柱状图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line">plt.legend([<span class="string">&#x27;y1&#x27;</span>,<span class="string">&#x27;y2&#x27;</span>])</span><br><span class="line">plt.savefig(path + <span class="string">&#x27;bar2.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/bar2.jpg" class="" title="bar2">
+<h4 id="绘制水平柱状图">绘制水平柱状图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#绘制水平柱状图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.barh(x,width=y1,height=<span class="number">0.2</span>)<span class="comment">#绘制水平柱状图</span></span><br><span class="line">plt.title(<span class="string">&#x27;水平柱状图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line">plt.savefig(path + <span class="string">&#x27;bar3.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/bar3.jpg" class="" title="bar3">
+<h4 id="绘制水平堆叠柱状图">绘制水平堆叠柱状图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#绘制水平堆叠柱状图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">plt.barh(x,width=y1,height=<span class="number">0.2</span>)<span class="comment">#绘制水平柱状图</span></span><br><span class="line">plt.barh(x,width=y2,height=<span class="number">0.2</span>,left=y1)<span class="comment">#绘制水平柱状图，堆叠到y1右侧</span></span><br><span class="line">plt.barh(x,width=y3,height=<span class="number">0.2</span>,left=y1+y2)<span class="comment">#绘制水平柱状图，堆叠到y1+y2右侧</span></span><br><span class="line">plt.title(<span class="string">&#x27;水平堆叠柱状图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;y&#x27;</span>) <span class="comment">#添加横轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">&#x27;x&#x27;</span>) <span class="comment">#添加纵轴标签</span></span><br><span class="line">plt.legend([<span class="string">&#x27;y1&#x27;</span>,<span class="string">&#x27;y2&#x27;</span>,<span class="string">&#x27;y3&#x27;</span>])</span><br><span class="line">plt.savefig(path + <span class="string">&#x27;bar4.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/bar4.jpg" class="" title="bar4">
+<h3 id="饼图">饼图</h3>
+<h4 id="绘制饼图">绘制饼图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment">#导入Numpy模块</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment">#导入matplotlib.pyplot库</span></span><br><span class="line"><span class="comment">#产生数据</span></span><br><span class="line">x = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">30</span>) <span class="comment">#产生0至10之间的30个元素的等差数列</span></span><br><span class="line">noise = np.random.randn(<span class="number">30</span>) <span class="comment">#产生30个标准正态分布的元素</span></span><br><span class="line">y1 = x**<span class="number">2</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列1（x**2为x的平方）</span></span><br><span class="line">y2 = x**<span class="number">1</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列2</span></span><br><span class="line">y3 = x**<span class="number">1.5</span>+<span class="number">2</span>*noise <span class="comment">#产生叠加噪声的数据系列3</span></span><br><span class="line">plt.rcParams[<span class="string">&#x27;font.sans-serif&#x27;</span>] = <span class="string">&#x27;SimHei&#x27;</span> <span class="comment">#设置字体为SimHei以显示中文</span></span><br><span class="line">plt.rc(<span class="string">&#x27;font&#x27;</span>,size = <span class="number">14</span>) <span class="comment">#设置图中字号大小</span></span><br><span class="line"><span class="comment">#绘制饼图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">labels=[<span class="string">&#x27;y1的和&#x27;</span>,<span class="string">&#x27;y2的和&#x27;</span>,<span class="string">&#x27;y3的和&#x27;</span>] <span class="comment">#设置标签</span></span><br><span class="line">plt.pie([np.<span class="built_in">sum</span>(y1),np.<span class="built_in">sum</span>(y2),np.<span class="built_in">sum</span>(y3)],labels=labels,autopct=<span class="string">&#x27;%1.1f%%&#x27;</span>)<span class="comment">#绘制柱状图</span></span><br><span class="line">plt.title(<span class="string">&#x27;饼图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line"><span class="keyword">import</span> os <span class="comment">#导入os库</span></span><br><span class="line"><span class="comment">#创建或访问一个文件夹</span></span><br><span class="line">path = <span class="string">&#x27;D:\\Blog\\source\\_posts\\Python机器学习基础\\&#x27;</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">    os.makedirs(path)</span><br><span class="line">plt.savefig(path + <span class="string">&#x27;pie.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/pie.jpg" class="" title="pie">
+<h4 id="绘制分离饼图">绘制分离饼图</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#绘制分离饼图</span></span><br><span class="line">plt.figure(figsize = (<span class="number">6</span>,<span class="number">4</span>))<span class="comment">#设置画布</span></span><br><span class="line">labels=[<span class="string">&#x27;y1的和&#x27;</span>,<span class="string">&#x27;y2的和&#x27;</span>,<span class="string">&#x27;y3的和&#x27;</span>] <span class="comment">#设置标签</span></span><br><span class="line">plt.pie([np.<span class="built_in">sum</span>(y1),np.<span class="built_in">sum</span>(y2),np.<span class="built_in">sum</span>(y3)],</span><br><span class="line">        explode=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>),labels=labels,</span><br><span class="line">        autopct=<span class="string">&#x27;%1.1f%%&#x27;</span>,shadow=<span class="literal">True</span>)<span class="comment">#绘制柱状图</span></span><br><span class="line">plt.title(<span class="string">&#x27;分离饼图&#x27;</span>) <span class="comment">#添加标题</span></span><br><span class="line">plt.savefig(path + <span class="string">&#x27;pie1.jpg&#x27;</span>)<span class="comment">#保存图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>显示的图如下：</p>
+<img src="/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/pie1.jpg" class="" title="pie1">
+<h3 id="箱线图">箱线图</h3>
+<h3 id="子图">子图</h3>
+<h2 id="seaborn统计数据可视化">Seaborn统计数据可视化</h2>
+<h3 id="特征关系可视化">特征关系可视化</h3>
+<h3 id="特征分类别可视化">特征分类别可视化</h3>
+<h3 id="特征分布可视化">特征分布可视化</h3>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -204,7 +1013,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-08 11:07:01" itemprop="dateModified" datetime="2022-06-08T11:07:01+08:00">2022-06-08</time>
+                <time title="修改时间：2022-06-09 09:57:13" itemprop="dateModified" datetime="2022-06-09T09:57:13+08:00">2022-06-09</time>
               </span>
 
           
@@ -2736,14 +3545,14 @@ class="math inline">\(O(m^2logC)\)</span></p></li>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
