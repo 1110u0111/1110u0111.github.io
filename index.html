@@ -173,6 +173,904 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/" class="post-title-link" itemprop="url">每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-09 22:42:18 / 修改时间：23:06:46" itemprop="dateCreated datePublished" datetime="2022-07-09T22:42:18+08:00">2022-07-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="每日论文manifolde">每日论文：ManifoldE</h1>
+<h2 id="问题">问题</h2>
+<p>在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系
+<span class="math inline">\(\approx\)</span>
+尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。</p>
+<h3 id="方法">方法</h3>
+<p>对于预测实体链接问题，针对基于逻辑规则的知识推理计算复杂度过高的问题，可以使用基于平移的方法以及本文提出的ManifoldE方法，通过嵌入表示，将数据结构转化为向量化的表示，使用明确的目标函数，将实体和关系投影到连续的高维向量空间中。基于平移的方法将尾实体映射为一个点，而ManifoldE方法将尾实体映射到流形上。</p>
+<ul>
+<li>基于平移的方法：知识图谱中的事实通常表示为一个三元组 <span
+class="math inline">\((h,r,t)\)</span>，其中，<span
+class="math inline">\(h,r,t\)</span> 分别表示头实体，关系以及尾实体。
+<ul>
+<li>TransE方法：将三元组视为头实体到尾实体的一个特定关系的平移，即 <span
+class="math inline">\(h + r = t\)</span>，计算分数的打分方法为 <span
+class="math inline">\(||h+r-t||^2_2\)</span>，TransE就是希望头实体的向量表示加上关系的向量表示尽量接近于尾实体的向量表示，得分越高越合理。TransE模型的优点在于直观且可解释性强。</li>
+<li>PTransE方法：TransE方法只能进行单步推理，PTransE方法改进了TransE方法，考虑了路径相关因素，将原来的三元组
+<span class="math inline">\((h,r,t)\)</span> 视为 <span
+class="math inline">\((h,r_1,e_1),(e_1,r_2,t),(h,r_1\circ
+r_2,t)\)</span>。PTransE模型的优点在于可以进行多步推理。</li>
+<li>KG2E方法：一种概率嵌入方法，用于对知识图谱中未确定的实体或关系进行建模。KG2E方法使用高斯分布来表示实体和关系，其中高斯分布的均值表示的是实体或关系在语义空间中的中心位置，高斯分布的协方差表示该实体或关系的不确定度。KG2E模型的优点在于，考虑了知识图谱中，关系和实体的语义本身就具有不确定性的性质。</li>
+</ul></li>
+</ul>
+<p>以上基于平移的方法的原理都是 <span class="math inline">\(h + r =
+t\)</span>
+，存在两个问题：一是不适定问题。不适定问题指的是一个方程组中，方程式个数远大于变量个数，可能会导致不存在稳定的唯一解，而这也是以往方法无法准确进行精准的链接预测的原因之一。二是采用过于严格的几何形状，难以解决两个实体之间关系的多对多问题，因为多个尾实体竞争一个点，势必会造成损失。</p>
+<ul>
+<li>ManifoldE方法</li>
+</ul>
+<p>对于TransE采用过于严格的几何形状问题，Manifold方法的解决思路是，对于三元组，采用的是基于流形的准则
+<span class="math inline">\(M(h,r,t)=D_r^2\)</span> 来代替 <span
+class="math inline">\(h+r=t\)</span>，且用于衡量三元组距离的打分方法为
+<span
+class="math inline">\(f_r(h,t)=||M(h,r,t)-D_r^2||^2\)</span>。该方法可以将多个尾实体映射到流形上来缓解多个尾实体竞争一个点的问题。对于
+<span class="math inline">\(M\)</span> 的定义，若以球体为流形，流形函数
+<span class="math inline">\(M\)</span> 则可表示为 <span
+class="math inline">\(M(h,r,t)=||h+r-t||_2^2\)</span>，将球体放置在希尔伯特空间来更高效的表征流形；考虑到两个球体只有在某些严格条件下才能相交，也可以以超平面为流形，则流形函数
+<span class="math inline">\(M\)</span> 则可表示为 <span
+class="math inline">\(M(h,r,t)=(h+r_{head})^T(t+r_{tail})\)</span>，亦可以使用核技巧。</p>
+<p>为了解决TransE的不适定问题，以球形为例，本文对于每个三元组只对应一个等式
+<span class="math inline">\(\sum_{i=1}^d
+(h_i+r_i-t_i)^2=D_r^2\)</span>，所以只要满足 <span
+class="math inline">\(d \ge \frac{T}{E+R}\)</span>，等式数量 <span
+class="math inline">\(T\)</span> 就不会大于自由变量 <span
+class="math inline">\(((E+R)*d)\)</span>，即将嵌入维度增加即可解决该问题。</p>
+<h2 id="项目应用">项目应用</h2>
+<p>对于链接任务，ManifoldE方法在数据集WN18上的HITS@1达到了55%，相比TransE提升了85.1%，在FB15K上的HITS@1达到了64.1%，相比TransE提升了162.7%；对于三元组分类任务，ManifoldE方法在数据集WN11和FB13的准确率达到了87.5%（基于球形）和87.3（基于超平面）。不过，另一篇论文提出，FB15K和WN18存在测试泄露，即大部分测试三元组是训练集中包含的三元组的逆，可能会有影响。</p>
+<p>ManifoldE方法相比简单的TransE系列的基于平移的方法，加入了流形操作和核技巧，但是其计算复杂性只有
+<span class="math inline">\(O(\lambda \times
+O(\text{TransE}))\)</span>，其效率更高，因此，比其他TransE系列的基于平移的方法更快。在项目中，如果知识图谱中的关系存在一对多的关系，则可以考虑使用ManifoldE方法来进行精确的关系预测。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/01/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E7%9F%A5%E8%AF%86%E8%A1%A8%E7%A4%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/01/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E7%9F%A5%E8%AF%86%E8%A1%A8%E7%A4%BA/" class="post-title-link" itemprop="url">知识图谱-知识表示</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-01 10:39:22 / 修改时间：10:49:32" itemprop="dateCreated datePublished" datetime="2022-07-01T10:39:22+08:00">2022-07-01</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述">概述</h2>
+<h3 id="知识定义">知识定义</h3>
+<p>Feigenbaum:
+知识是经过削减、塑造、解释和转换的信息。简单地说，知识是经过加工的信息。
+Bernstein: 知识是由特定领域的描述、关系和过程组成的。 Hayes-Roth:
+知识是事实、信念和启发式规则。从知识库的观点看，知识是某领域中所涉及的各有关方面的一种符号表示。</p>
+<h3 id="知识分类">知识分类</h3>
+<p>陈述性知识(declarativeknowledge)：用于描述领域内有关概念、事实、事物的属性和状态等。</p>
+<ul>
+<li>太阳从东方升起</li>
+<li>一年有春夏秋冬四个季节</li>
+</ul>
+<p>过程性知识(proceduralknowledge)：用于指出如何处理与领域相关的信息，以求得问题的解。</p>
+<ul>
+<li>菜谱中的炒菜步骤</li>
+<li>如果信道畅通，请发绿色信号</li>
+</ul>
+<p>元知识(metaknowledge)：关于知识的知识，包括怎样使用规则、解释规则、校验规则、解释程序结构等知识。</p>
+<h3 id="知识表示">知识表示</h3>
+<p>知识表示：把人类知识表示成机器能处理的数据结构。对知识进行表示的过程就是把知识编码成某种数据结构的过程。</p>
+<p>知识表示方法：</p>
+<ul>
+<li>陈述性知识表示：将知识表示与知识的运用分开处理，在知识表示时，并不涉及如何运用知识的问题，是一种静态的描述方法。</li>
+<li>过程性知识表示：将知识表示与知识的运用相结合，知识寓于程序中，是一种动态的描述方法。</li>
+</ul>
+<p>知识表示准则：</p>
+<ul>
+<li>表示知识的范围是否广泛</li>
+<li>是否适于推理</li>
+<li>是否适于加入启发信息</li>
+<li>是否适于计算机处理</li>
+<li>是否有高效的求解算法</li>
+<li>陈述性表示还是过程性表示</li>
+<li>能否表示不精确知识</li>
+<li>能否在同一层次上和不同层次上模块化</li>
+<li>知识和元知识能否用统一的形式表示</li>
+<li>表示方法是否自然</li>
+</ul>
+<h2 id="一阶谓词逻辑表示法">一阶谓词逻辑表示法</h2>
+<h3 id="基本概念命题与联结词">基本概念：命题与联结词</h3>
+<p>一阶谓词逻辑是最早用在人工智能领域的知识表示方法之一。它以数理逻辑为基础，是到目前为止能够表达人类思维和推理的一种最精确的形式语言。其表现方式和人类自然语言也非常接近，容易为计算机理解和操作，并支持精确推理。</p>
+<ul>
+<li>命题(proposition)：具有真假意义的陈述句。
+<ul>
+<li>太阳从东方升起</li>
+<li>一年有春夏秋冬四个季节</li>
+</ul></li>
+<li>逻辑联结词(logicalconnective)：用于将多个原子命题组合成复合命题。
+<ul>
+<li>¬：否定联结词，¬𝑃表示对原命题的否定。</li>
+<li>∨：析取联结词，𝑃∨𝑄表示两个命题存在“或”的关系。</li>
+<li>∧：合取联结词，𝑃∧𝑄表示两个命题存在“与”的关系。</li>
+<li>→：蕴含联结词，𝑃→𝑄表示“如果𝑃，则𝑄”。</li>
+<li>↔︎：等价联结词，𝑃↔︎𝑄表示“𝑃当且仅当𝑄”。</li>
+</ul></li>
+<li>复合命题与原子命题的真值关系表</li>
+</ul>
+<h3 id="基本概念个体词谓词与量词">基本概念：个体词、谓词与量词</h3>
+<ul>
+<li>个体词：领域内可以独立存在的具体或抽象的客体。
+<ul>
+<li>太阳从东方升起：太阳</li>
+<li>小王与小张同岁：小王、小张</li>
+</ul></li>
+<li>在谓词逻辑中，个体可以是常量也可以是变量（变元）。
+<ul>
+<li>个体常量：表示具体的或特定的个体。</li>
+<li>个体变量：表示抽象的或泛指的个体。</li>
+<li>个体域（论域）：个体变量的取值范围，可以是有限集合，也可以是无穷集合。</li>
+</ul></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" class="post-title-link" itemprop="url">知识图谱</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-29 21:30:00" itemprop="dateCreated datePublished" datetime="2022-06-29T21:30:00+08:00">2022-06-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-01 10:41:52" itemprop="dateModified" datetime="2022-07-01T10:41:52+08:00">2022-07-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引入">引入</h1>
+<p>知识图谱其实涉及的内容非常多，比如数据的来源可能是一些文本型的数据，可能是原来数据库的数据，首先面临的问题是，如何从这些数据中提取数据存储到你的知识库中。那么第一个问题就是，如何进行知识抽取？</p>
+<p>抽取了知识之后，可能会出现冲突，可能会出现多个知识指向的是同一个东西，则这是多个数据源融合的问题。</p>
+<p>构建知识图谱面临着多种数据，如何对知识进行表示？假如你的数据是从互联网中爬虫得到的网页，那么从网页中提取什么来作为知识来存储到知识图谱之中？</p>
+<p>知识图谱在表现形式上，表现为结点和边的图数据库，那么什么是结点？什么是边？</p>
+<p>那么就涉及知识图谱的构建，涉及知识表示、知识抽取、知识融合等问题，还有知识存储、知识推理，以及上层的应用。知识图谱需要基于其上层应用进行构建，上层应用不同，构建方法不同。如果知识图谱仅仅为了问答，则整个知识图谱则会根据问答来构建。为了现在有一些问题在于，构建完自己的知识图谱之后发现不是很好用，原因就是，它并没有基于其上层的应用。比如美团构建知识图谱是根据其业务————检索和推荐来构建的。知识图谱是需要围绕着需求来构建的。</p>
+<p>知识图谱并不是一个结构型数据库，是一个图数据库，所以其构建非常关键。它的来源就是数据，并不是知识。我们需要知道，数据变成知识需要的过程，也就是实例变成上层抽象的过程。</p>
+<p>知识图谱在表达形式上，表现为结点和边构成的图，这些结点被称之为实体，边被称之为关系，那么，在数据中，哪些是实体？哪些是关系？涉及的属性是什么？这就涉及到知识抽取问题。</p>
+<p>在关系型数据库中，查询语言是SQL，但是在图数据库中，又有不同的语言。同时，它应该涉及语义搜索。</p>
+<h1 id="知识图谱">知识图谱</h1>
+<p>知识图谱是一种基于图(Graph,G=(V,E))的数据结构，由节点(node)和边(Edge)组成，每个节点表示一个“实体”，每条边为实体与实体之间的“关系”，知识图谱本质上是语义网络。</p>
+<p>知识图谱描述显示世界中存在的实体以及实体之间的关系，已被广泛应用于智能搜索、智能问答、个性化推荐、内容分发等领域。</p>
+<p>基本形式为(实体1-关系-实体2),(实体-属性-属性值)</p>
+<ul>
+<li>实体：有区别性且独立存在的事物。如某个国家：中国、英国等；某个城市：北京、伦敦等。</li>
+<li>属性值：实体指向的属性的值。例如中国(实体)面积(属性)960万平方公里(属性值)</li>
+<li>关系：把图节点(实体、语义类、属性值)映射到布尔值的函数。</li>
+</ul>
+<p>Node: 值(Value)</p>
+<ul>
+<li>实体(Entity)
+<ul>
+<li>(姚明,出生地,上海市)</li>
+</ul></li>
+<li>字符串(String)
+<ul>
+<li>(北京大学,学术传统,兼容并包、思想自由)</li>
+</ul></li>
+<li>数字(Number)
+<ul>
+<li>平方公里：(北京市,面积,1.641万)</li>
+<li>公斤：(姚明,体重,140公斤)</li>
+<li>米：(姚明,身高,2.29米)</li>
+</ul></li>
+<li>时间(Date)
+<ul>
+<li>(姚明，出生年份，1981年)</li>
+</ul></li>
+<li>枚举(Enumerate)
+<ul>
+<li>(姚明,性别,男)</li>
+</ul></li>
+</ul>
+<p>边：关系</p>
+<ul>
+<li>Type: 类型</li>
+<li>Subclass: 子类</li>
+<li>Relation: 关系</li>
+<li>Property, Attribute: 属性</li>
+</ul>
+<p>Node: 高阶三元组</p>
+<ul>
+<li>与时间、地点相关
+<ul>
+<li>((每个))</li>
+</ul></li>
+<li>事件</li>
+</ul>
+<h2 id="领域知识">领域知识</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">股票; tags[行业,地区,板块,股票种类]</span><br><span class="line">&#123;</span><br><span class="line">  基本属性:&#123;</span><br><span class="line">    股票代码(ID)[String](六位整形数字):</span><br><span class="line">    股票种类    </span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">  发行属性:&#123;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>知识图谱中的知识</p>
+<ul>
+<li>事实性知识
+<ul>
+<li>(乔布斯, CEO, 苹果)</li>
+</ul></li>
+<li>主观性知识
+<ul>
+<li>“我今天入手诺基亚5800，把玩不到24小时，目前感觉……，但是……”</li>
+</ul></li>
+<li>场景知识</li>
+<li>语言知识</li>
+<li>常识知识</li>
+</ul>
+<h2 id="典型的知识图谱">典型的知识图谱</h2>
+<p>WordNet/HowNet</p>
+<ul>
+<li>一部在线词典数据库系统，采用了与传统词典不同的方式，即按照词义而不是词形来组织，</li>
+<li>词语被聚类为词义簇(synset)</li>
+</ul>
+<p>Cyc</p>
+<ul>
+<li>由术语Terms和断言Assertions组成。</li>
+</ul>
+<h3 id="微软知识图谱">微软知识图谱</h3>
+<ul>
+<li>Concept
+Graph是以概念层次体系为中心的知识图谱。与Freebase等知识图谱不同，Concept
+Graph是以概念定义和概念之间的IsA关系为主。</li>
+<li>给定一个概念如“Microsoft”，Concept
+Graph返回一组与“微软”有IsA关系概念组，如“Company”，“Software
+Company”，“Largest OS
+Vender”等。这就成为概念化“Conceptualization”。</li>
+<li>Concept
+Graph可以用于短文本理解和语义消歧中。例如，给定一个短文本“the engineer
+is eating the apple”，可以利用Concept
+Graph来正确理解其中“apple”的含义是“吃的苹果”还是“苹果公司”。微软发布的第一个版本包含超过540万的概念。1255万的实体，和8760万的关系。Concept
+Graph主要通过从互联网和网络日志中挖掘来构建。</li>
+</ul>
+<h3 id="facebook知识图谱">Facebook知识图谱</h3>
+<h3 id="亚马逊知识图谱">亚马逊知识图谱</h3>
+<p><a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/neptune"
+class="uri">https://aws.amazon.com/cn/neptune</a></p>
+<h3 id="路透社知识图谱">路透社知识图谱</h3>
+<p><a
+target="_blank" rel="noopener" href="http://financial-risk-solutions.thomsonreuters.info/KnowledgeGraphFeed"
+class="uri">http://financial-risk-solutions.thomsonreuters.info/KnowledgeGraphFeed</a></p>
+<h3 id="linkedln知识图谱">Linkedln知识图谱</h3>
+<h3 id="阿里巴巴知识图谱">阿里巴巴知识图谱</h3>
+<h3 id="美团知识图谱">美团知识图谱</h3>
+<h3 id="百度知识图谱">百度知识图谱</h3>
+<ul>
+<li>实体图谱：用于精准回答</li>
+<li>关注点图谱：用于文本理解</li>
+<li>意图图谱：用于对话</li>
+</ul>
+<h3 id="金融知识图谱">金融知识图谱</h3>
+<h3 id="中文开放知识图谱">中文开放知识图谱</h3>
+<h2 id="应用">应用</h2>
+<h3 id="问答">问答</h3>
+<h3 id="精准语义搜索">精准语义搜索</h3>
+<h3 id="关系搜索">关系搜索</h3>
+<h3 id="推荐">推荐</h3>
+<h3 id="医疗">医疗</h3>
+<h3 id="辅助情报研判">辅助情报研判</h3>
+<h3 id="辅助智能制造">辅助智能制造</h3>
+<p>Siemens</p>
+<ul>
+<li>Challenges in our industry
+<ul>
+<li>Isolated data silos</li>
+<li>Data inaccessibility</li>
+<li>Inefficient workflows</li>
+<li>Low data quality</li>
+</ul></li>
+<li>Industrial Knowledge Graph
+<ul>
+<li>Isolated Data Silos with hand-crafted expert systems</li>
+<li>Domain</li>
+</ul></li>
+<li>Example
+<ul>
+<li>09:00</li>
+<li>Question: What's the MTTF distribution across turbines with coating
+loss last FY?</li>
+<li>Machine: I will compile the relevant data and visualize it in your
+favourite BI tool.</li>
+<li>Chanllenge:
+<ul>
+<li>Required data is distributed across multiple databases.</li>
+<li>Source systems have highly complex schemas.</li>
+<li>Need to include unstructured information into analyses.</li>
+<li>Reactivity and effciency needs call for end-user access to
+data.</li>
+</ul></li>
+<li>Solution:
+<ul>
+<li>NLP to make information from documents accessible for
+analytics.</li>
+<li>Physical and virtual data integration to provide unifined view.</li>
+<li>Access using a domain ontology and intelligent query construction
+support.</li>
+<li>Connections providing data to existing tools in legacy format.</li>
+</ul></li>
+<li>Value Generation
+<ul>
+<li>Unified Data Hub: All information accessible from one systems,
+independent of source and type.</li>
+<li>Empower domain experts: Subject matter experts can use domain
+language to access data.</li>
+<li>Enabler for analytics: Foundation for fleet-level analytics.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h1 id="知识图谱生命周期">知识图谱生命周期</h1>
+<h2 id="知识图谱的生命周期">知识图谱的生命周期</h2>
+<ul>
+<li>知识建模：建模领域知识结构</li>
+<li>知识获取：获取领域内的事实知识</li>
+<li>知识集成：估计知识的可信度，将碎片知识组装成知识网络</li>
+<li>知识存储/查询/应用：提供高性能知识服务</li>
+</ul>
+<h2 id="领域知识建模">领域知识建模</h2>
+<ul>
+<li>输入：
+<ul>
+<li>领域（医疗、金融……）</li>
+<li>应用场景</li>
+</ul></li>
+<li>输出：领域知识本体
+<ul>
+<li>领域实体类别体系</li>
+<li>实体属性</li>
+<li>领域语义关系</li>
+<li>语义关系之间的关系</li>
+</ul></li>
+<li>关键技术：
+<ul>
+<li>Ontology Engineering</li>
+</ul></li>
+</ul>
+<h3 id="知识抽取">知识抽取</h3>
+<ul>
+<li>输入
+<ul>
+<li>领域知识本体</li>
+<li>海量数据：文本</li>
+</ul></li>
+<li>输出</li>
+<li>主要技术</li>
+</ul>
+<h3 id="知识集成">知识集成</h3>
+<ul>
+<li>输入
+<ul>
+<li>抽取出来的知识</li>
+<li>现有知识库</li>
+<li>知识本体</li>
+</ul></li>
+<li>输出
+<ul>
+<li>知识置信度</li>
+<li>统一知识库</li>
+</ul></li>
+<li>关键技术
+<ul>
+<li>Ontology Matching</li>
+<li>Entity Linking</li>
+</ul></li>
+</ul>
+<h3 id="知识查询推理存储">知识查询、推理、存储</h3>
+<ul>
+<li>输入
+<ul>
+<li>大规模知识库知识</li>
+</ul></li>
+<li>输出
+<ul>
+<li>知识库存储/查询/推理服务</li>
+</ul></li>
+<li>主要技术
+<ul>
+<li>知识表示</li>
+<li>知识查询语言</li>
+<li>存储/检索引擎</li>
+<li>推理引擎</li>
+</ul></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/" class="post-title-link" itemprop="url">每周论文w1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-27 14:09:36" itemprop="dateCreated datePublished" datetime="2022-06-27T14:09:36+08:00">2022-06-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-29 21:32:10" itemprop="dateModified" datetime="2022-06-29T21:32:10+08:00">2022-06-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="每周论文总结-week1">每周论文总结 week1</h1>
+<p>主题：命名实体识别</p>
+<p>知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。</p>
+<p>知识图谱的技术架构如下图所示。</p>
+<p>命名实体识别(Named Entity Recognition,
+NER)，目标是识别文本中的实体，并且取得其边界以及所属的类别。其方法有传统机器学习方法和深度学习方法。深度学习方法为现在主流应用方法。</p>
+<h2 id="lstm-crf">LSTM-CRF</h2>
+<p>HUANG等人提出了双向长短期记忆网络(Bidirectional long short term
+memory, Bi-LSTM)和条件随机场(Conditional random
+field,CRF)结合的方法，用于进行命名实体识别。</p>
+<p>HUANG Z，XU W，YU K. Bidirectional LSTM-CRF models for sequence
+tagging[J]. arXiv preprint arXiv：.01991，2015.</p>
+<p>LSTM是基于循环神经网络(Recurrent Neural Network,
+RNN)的基础上进行改进的一种模型。</p>
+<p>RNN的基本思想是，对输入的序列中的每一个位置都进行同样的循环单元计算，每一个循环单元不仅接受该位置的信息，也接收上一个循环单元的输出进行输入。因此，与卷积神经网络(Convolutional
+Neural Network, CNN)相比，RNN保留了长距离的上下文信息。</p>
+<p>LSTM是在简单RNN的基础上，添加了细胞状态(cell
+state)，同时，加入了采用Sigmoid激活函数的门控机制(遗忘门、输入门、输出门)。添加了细胞状态之后，可以缓解梯度消失问题，添加了门控机制之后，可以实现对信息的长短期记忆。</p>
+<p>CRF是一种判别式无向图模型，其条件分布为： <span
+class="math display">\[
+\begin{aligned}
+P(Y|X) &amp;= \frac{1}{Z} \prod_c \phi_c (y_c |x) \\
+\phi_c (y_c |x) &amp;= e^{\sum_k \lambda_k f_k (y_t,y_{t-1},x_t) + \mu_k
+s_k (y_t,x_t)} \\
+Z &amp;= \sum_y \prod_c \phi_c (y_c |x)
+\end{aligned}
+\]</span> 其中，<span class="math inline">\(\phi_c (y_c |x)\)</span>
+为团势函数，<span class="math inline">\(Z\)</span> 为归一化函数，<span
+class="math inline">\(\lambda\)</span> 和 <span
+class="math inline">\(\mu\)</span> 是权重，为待学习的参数。</p>
+<p>针对实体识别任务，使用Bi-LSTM可以在任意时刻获得前后的信息。其步骤如下：</p>
+<ul>
+<li>训练出每个单词的词向量，将处理为单词索引的句子作为输入，经过嵌入层(Embedding)层转换为对应的特征张量(bs,len,dim)，并提供给Bi-LSTM层。</li>
+<li>Bi-LSTM层接受将这个张量作为输入，叠加正反两个循环神经网络，并计算序列输出张量(bs,len,hidden)，该输出张量进一步通过Softmax层计算得到输入概率(bs,len,1).</li>
+<li>通过这个概率与利用BIOES等方式标注好的标签来计算交叉熵损失。</li>
+</ul>
+<p>使用Bi-LSTM预测的前后两个标注是相互独立的，也就是说，可能出现序列前后两个字都预测为“Begin”，也就是词首，因此引入CRF层。</p>
+<p>CRF层替换了Bi-LSTM层中的Softmax层。</p>
+<h2 id="空洞卷积加强模型">空洞卷积加强模型</h2>
+<h2
+id="加入了注意力机制的transformer模型">加入了注意力机制的Transformer模型</h2>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/12/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%BB%A5%E5%8F%8APython%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/12/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%BB%A5%E5%8F%8APython%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">数据预处理以及Python实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-12 17:08:09" itemprop="dateCreated datePublished" datetime="2022-06-12T17:08:09+08:00">2022-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-15 00:29:46" itemprop="dateModified" datetime="2022-06-15T00:29:46+08:00">2022-06-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="数据预处理的基础知识">数据预处理的基础知识</h1>
+<h2 id="一般流程和常用方法">一般流程和常用方法</h2>
+<p>一般流程：</p>
+<ol type="1">
+<li>去除唯一属性。</li>
+<li>缺失值插补。</li>
+<li>特征编码。</li>
+<li>特征二值化。</li>
+<li>特征标准化。</li>
+<li>特征正则化。</li>
+<li>主成分分析。</li>
+</ol>
+<h3 id="去除唯一属性">去除唯一属性</h3>
+<p>唯一属性并不能刻画样本本身的分布规律，是指类似于身份证号之类的ID属性。</p>
+<h3 id="缺失值插补">缺失值插补</h3>
+<p>方法：</p>
+<ul>
+<li>均值插补。</li>
+<li>同类均值插补。</li>
+<li>众数插补。</li>
+<li>建模预测。</li>
+<li>高维映射。</li>
+<li>多重插补。</li>
+</ul>
+<h3 id="特征二值化">特征二值化</h3>
+<p>特征二值化是将数值型的属性按照<strong>阈值</strong>转换为<strong>布尔值(0或1)</strong>的属性。</p>
+<h3 id="特征编码">特征编码</h3>
+<p>许多数据库的字段不是数值型的，而是分类型的，而这些字段不能简单地用数值对分类属性值进行编码，不然，机器学习的学习器会认为这些属性值是有序的。</p>
+<p>将分类特征转换为能够被机器学习模型使用的编码是<strong>one-of-K或one-hot编码</strong>，称为<strong>独热编码</strong>，又称为<strong>一位有效编码</strong>。</p>
+<p>优点：能够处理非数值属性，在一定程度上扩充了特征。</p>
+<p>缺点：编码后的属性是稀疏的，存在大量的零元分量。</p>
+<h2 id="标准化和正则化">标准化和正则化</h2>
+<p><strong>数据的标准化</strong>用于消除不同变量之间性质、量纲、数量级等特征属性的差异，将其转化为一个无量纲的相对数值，也就是标准化数值。</p>
+<p>常用的数据标准化方法有：极差标准化、Z-score标准化、对数函数标准化、反正切函数标准化。</p>
+<ol type="1">
+<li><p>极差标准化</p>
+<p>极差标准化是消除变量纲和变异范围影响最简单的方法，其计算方法如下：
+<span class="math display">\[
+x&#39;=\frac{x-x_{\text{min}}}{x_{\text{max}}-x_{\text{min}}}
+\]</span> 经过极差标准化处理后，该变量各个观察值的数值变化范围均满足
+<span class="math inline">\(0 \le x&#39; \le 1\)</span> 。</p></li>
+<li><p>Z-score标准化</p>
+<p>当某个指标的<strong>最大值和最小值未知</strong>，或者有超出取值范围的<strong>离群数值</strong>的时候，就不再适宜计算极差了。此时可以采用Z-score标准化，其计算方法如下：
+<span class="math display">\[
+x&#39; = \frac{x-\bar{x}}{\sigma}
+\]</span> 其中，各参数的含义为：</p>
+<ul>
+<li><span class="math inline">\(\bar{x}\)</span> ：数据系列 <span
+class="math inline">\(X\)</span> 的<strong>平均值</strong>；</li>
+<li><span class="math inline">\(\sigma\)</span> ：数据系列 <span
+class="math inline">\(X\)</span> 的<strong>标准差</strong>。</li>
+</ul>
+<p>经过Z-score标准化后，数据的均值变为0，标准差变为1。因此，Z-score标准化的本质是去中心化，使均值为0，并进行缩放，缩放至标准差为1。</p></li>
+<li><p>对数函数标准化</p>
+<p>对数函数的优点：</p>
+<ul>
+<li>对数函数在定义域内为单调增函数，取对数后不会改变数据的相对关系；</li>
+<li>取对数后，能够缩小数据的绝对数值，方便计算；</li>
+<li>取对数后，可以将乘法计算转换为加法计算；</li>
+<li>某些情况下，在数据的整个值域中，不同区间带来的影响不同，对数函数自变量
+<span class="math inline">\(x\)</span> 的值越小，函数值 <span
+class="math inline">\(y\)</span>
+的变化就越快。也就是说，对数值小的部分差异的敏感度比对数值大的部分差异敏感度更高；</li>
+<li>取对数后，不会改变数据的性质和相关关系，但压缩了变量的尺度，使数据更加平稳，削弱了模型的共线性、异方差性等。</li>
+</ul>
+<p>对数函数标准化的计算方法如下： <span class="math display">\[
+x&#39;=\frac{\log_{10}x}{\log_{10}x_{\max}}
+\]</span></p></li>
+<li><p>反正切函数标准化</p>
+<p>三角函数种的反正切函数与对数函数具有相似的特性，因此也可以使用反正切函数来实现数据的标准化转换，其计算方法如下：
+<span class="math display">\[
+\pi x&#39; = \frac{2\arctan(x)}{\pi}
+\]</span></p></li>
+</ol>
+<p><strong>正则化</strong>是把数据变换到 <span
+class="math inline">\([0,1]\)</span>
+区间的过程，将数据映射到0~1范围内进行处理。</p>
+<h2 id="特征选择">特征选择</h2>
+<p>从给定的特征集合中选出相关特征子集的过程称为<strong>特征选择</strong>，主要目的是<strong>去除特征中的无关特征和冗余特征所增加的学习任务难度</strong>。</p>
+<p>常见的特征选择类型包括<strong>过滤式</strong>、<strong>包裹式</strong>、<strong>嵌入式</strong>。</p>
+<p>对学习器的评价准则一般有5个，即<strong>距离度量</strong>、<strong>信息增益度量</strong>、<strong>依赖性度量</strong>、<strong>一致性度量</strong>和<strong>分类器错误率度量</strong>。</p>
+<h2
+id="特征降维主成分分析线性判别分析">特征降维——主成分分析、线性判别分析</h2>
+<p>特征降维方法一般可分为<strong>线性降维方法</strong>和<strong>非线性降维方法</strong>。</p>
+<p>线性降维方法主要包括：</p>
+<ul>
+<li><strong>主成分分析(PCA)</strong></li>
+<li><strong>独立成分分析(ICA)</strong></li>
+<li><strong>线性判别分析(LDA)</strong></li>
+<li><strong>局部保留投影(LPP)</strong></li>
+</ul>
+<p>非线性降维方法主要包括：</p>
+<ul>
+<li>基于核函数的非线性降维方法
+<ul>
+<li><strong>核主成分分析(KPCA)</strong></li>
+<li><strong>核独立分量分析(KICA)</strong></li>
+</ul></li>
+<li>基于特征值的非线性降维方法(流形学习)
+<ul>
+<li><strong>等距特征映射(ISOMAP)</strong></li>
+<li><strong>局部线性嵌入(LLE)</strong></li>
+<li><strong>拉普拉斯特征映射(LE)</strong></li>
+<li><strong>局部保持映射(LPP)</strong></li>
+<li><strong>局部切空间排列算法(LTSA)</strong></li>
+<li><strong>最大差异展开(MVU)</strong></li>
+</ul></li>
+</ul>
+<h3 id="主成分分析">主成分分析</h3>
+<h3 id="线性判别分析">线性判别分析</h3>
+<h2
+id="pandas与scikit-learn数据预处理概述">Pandas与scikit-learn数据预处理概述</h2>
+<h1
+id="使用scikit-learn进行数据预处理">使用scikit-learn进行数据预处理</h1>
+<h1 id="特征降维">特征降维</h1>
+<h1 id="综合实例breast_cancer-数据集预处理">综合实例——breast_cancer
+数据集预处理</h1>
+<p>对 breast_cancer 数据集进行特征关系分析、标准化、降维</p>
+<h2
+id="加载scikit-learn自带数据集breast_cancer">加载scikit-learn自带数据集breast_cancer。</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#breast_cancer 数据集特征关系分析、标准化、降维</span></span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="comment">#加载scikit-learn自带数据集breast_cancer</span></span><br><span class="line">breast_cancer = datasets.load_breast_cancer()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;breast_cancer.data的形状为&quot;</span>,breast_cancer.data.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;breast_cancer的特征名称为&quot;</span>,breast_cancer.feature_names)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;breast_cancer.target的形状为&quot;</span>,breast_cancer.target.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;breast_cancer.target的目标名称为&quot;</span>,breast_cancer.target_names)</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">breast_cancer.data的形状为 (<span class="number">569</span>, <span class="number">30</span>)</span><br><span class="line">breast_cancer的特征名称为 [<span class="string">&#x27;mean radius&#x27;</span> <span class="string">&#x27;mean texture&#x27;</span> <span class="string">&#x27;mean perimeter&#x27;</span> <span class="string">&#x27;mean area&#x27;</span></span><br><span class="line"> <span class="string">&#x27;mean smoothness&#x27;</span> <span class="string">&#x27;mean compactness&#x27;</span> <span class="string">&#x27;mean concavity&#x27;</span></span><br><span class="line"> <span class="string">&#x27;mean concave points&#x27;</span> <span class="string">&#x27;mean symmetry&#x27;</span> <span class="string">&#x27;mean fractal dimension&#x27;</span></span><br><span class="line"> <span class="string">&#x27;radius error&#x27;</span> <span class="string">&#x27;texture error&#x27;</span> <span class="string">&#x27;perimeter error&#x27;</span> <span class="string">&#x27;area error&#x27;</span></span><br><span class="line"> <span class="string">&#x27;smoothness error&#x27;</span> <span class="string">&#x27;compactness error&#x27;</span> <span class="string">&#x27;concavity error&#x27;</span></span><br><span class="line"> <span class="string">&#x27;concave points error&#x27;</span> <span class="string">&#x27;symmetry error&#x27;</span> <span class="string">&#x27;fractal dimension error&#x27;</span></span><br><span class="line"> <span class="string">&#x27;worst radius&#x27;</span> <span class="string">&#x27;worst texture&#x27;</span> <span class="string">&#x27;worst perimeter&#x27;</span> <span class="string">&#x27;worst area&#x27;</span></span><br><span class="line"> <span class="string">&#x27;worst smoothness&#x27;</span> <span class="string">&#x27;worst compactness&#x27;</span> <span class="string">&#x27;worst concavity&#x27;</span></span><br><span class="line"> <span class="string">&#x27;worst concave points&#x27;</span> <span class="string">&#x27;worst symmetry&#x27;</span> <span class="string">&#x27;worst fractal dimension&#x27;</span>]</span><br><span class="line">breast_cancer.target的形状为 (<span class="number">569</span>,)</span><br><span class="line">breast_cancer.target的目标名称为 [<span class="string">&#x27;malignant&#x27;</span> <span class="string">&#x27;benign&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/11/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%BB%A5%E5%8F%8APython%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/11/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%BB%A5%E5%8F%8APython%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">统计分析数学基础以及Python实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-11 21:36:43" itemprop="dateCreated datePublished" datetime="2022-06-11T21:36:43+08:00">2022-06-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/09/Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1820,1856 +2718,11 @@ Entropy）越小越好。</p></li>
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">机器学习之简要介绍</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-06-03 00:22:00" itemprop="dateCreated datePublished" datetime="2022-06-03T00:22:00+08:00">2022-06-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-04 17:49:26" itemprop="dateModified" datetime="2022-06-04T17:49:26+08:00">2022-06-04</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/%E5%BC%95%E5%85%A5.png" class="" title="引入">
-<h1 id="引入">引入</h1>
-<h2 id="机器学习是什么">机器学习是什么？</h2>
-<p>在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？</p>
-<p>简单来说，机器学习其实相当于构建一个映射函数。例如，在语音识别任务中，输入为语音片段，函数输出该语音片段对应的语言；在图像识别任务中，输入为一张图像，函数输出为该图像中的类别……</p>
-<p>Tom Mitchell在1998年提出，"A computer problem is said to
-<strong>learn</strong> from <strong>experience <span
-class="math inline">\(E\)</span></strong> w.r.t. some <strong>task <span
-class="math inline">\(T\)</span></strong> and some <strong>performance
-measure <span class="math inline">\(P\)</span></strong>, if its
-performance on <span class="math inline">\(T\)</span>, as measured by
-<span class="math inline">\(P\)</span>, <strong>improves</strong> with
-experience <span
-class="math inline">\(E\)</span>."（对计算机系统而言，以<strong>性能量度
-<span class="math inline">\(P\)</span>
-</strong>进行衡量，如果一个计算机程序在<strong>某类任务 <span
-class="math inline">\(T\)</span> </strong>上的性能，随着<strong>经验
-<span class="math inline">\(E\)</span>
-</strong>而提升，那么我们称这个计算机程序从经验 <span
-class="math inline">\(E\)</span> 中学习。）</p>
-<p>与之相比的是，对人类而言，学习是通过<strong>教授或体验</strong>而获得知识、技术、态度或价值的过程，从而导致<strong>可量度</strong>的<strong>稳定</strong>的行为变化。</p>
-<img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/image-20220603004941595.png" class="" title="image-20220603004941595">
-<h2 id="为什么要机器学习">为什么要机器学习？</h2>
-<p>有一个很经典的例子，那就是对手写的数字进行图像识别：我们希望在给一个手写数字的图像给机器后，机器能够帮我们识别出，这个数字属于0~9之间的哪一个。</p>
-<p>我们其实很难去编写一个程序来解决手写数字识别这样的问题。比如，我们如何区分2和7？简单的对每一个像素进行扫描识别他们的走势？这样的计算量极大，同时准确率也很低。而这个任务有一个很重要的特点：我们可以收集大量的包含了手写数字图像和对应数字的样本。</p>
-<p>那么，我们是否可以通过学习这些样本，找到它们之间一些隐藏的特点，来生成一个能进行手写数字识别的程序？这就是机器学习的基本思路，而且，如果我们的工作足够好，这个程序也能识别新的手写数字的输入。</p>
-<p>我们简单将为何要机器学习分为4点：</p>
-<ol type="1">
-<li>缺乏相关的专门知识。对一些任务，我们拥有专门知识，那么就可以用数学工具进行分析，但是还有很多任务，我们缺乏相关的专门知识，因此，我们通过学习大量样本，找到隐含的特征（这些特征可能没有很好的可解释性），然后来预测之后新的样本。</li>
-<li>难以解释的人类经验。比如人脸/手写/语音识别，我们很难去用数学语言解释大脑是如何进行这些任务的，还有开车、坐飞机这种经验也很难解释。</li>
-<li>快速变化的现象。有一些现象会快速变化，在经济领域中有信用评分和财务建模等，在医学领域中有诊断学，在金融领域有欺诈检测等，在这也就意味着需要不断学习新的模型。</li>
-<li>需要定制。对于不同的人，需要定制不同的需求，比如个性化新闻阅读器和电影/书籍推荐。</li>
-</ol>
-<h2 id="机器学习的分类">机器学习的分类</h2>
-<p><strong>机器学习按任务的分类：</strong></p>
-<ol type="1">
-<li><strong>监督学习（Supervised Learning）</strong></li>
-<li><strong>无监督学习（Unsupervised Learning）</strong></li>
-<li><strong>强化学习（Reinforcement Learning）</strong></li>
-</ol>
-<h3 id="监督学习">监督学习</h3>
-<p>监督学习是指通过让机器学习大量<strong>带有标签的样本数据</strong>，训练出一个模型，并使该模型可以根据输入预测相应输出的过程。目标是根据<strong>标记数据（labeled
-data）</strong>学习<strong>特征（feature）与标签（label）</strong>之间的<strong>映射函数（mapping
-function）或关系（relationship）</strong>。</p>
-<img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/image-20220604160144414.png" class="" title="image-20220604160144414">
-<p>监督学习的预测目标为：</p>
-<ul>
-<li>分类（Classification）：输出为离散值</li>
-<li>回归（Regression）：输出为连续值。</li>
-</ul>
-<p>例如对于一个普通的行人在街道行走的图像，如果是分类任务，我们的预测目标可以为行人和非行人，如果是回归任务，我们的预测目标可以是行人的目标。</p>
-<p>常见的监督学习算法有：</p>
-<ul>
-<li>线性回归（Linear Regression）</li>
-<li>罗辑斯特回归（Logistic Regression）</li>
-<li>神经网络（Neural networks)</li>
-<li>支持向量机（Support Vector Machines, SVMs）</li>
-</ul>
-<h3 id="无监督学习">无监督学习</h3>
-<p>无监督学习是直接对输入数据进行建模，提取数据有效信息探索数据的整体结构。</p>
-<p>无监督学习用于：</p>
-<ol type="1">
-<li>聚类（Clustering）</li>
-<li>可视化（Visualization）和降维（Dimensionality reduction）</li>
-<li>……</li>
-</ol>
-<p>常见的无监督学习算法有：</p>
-<ol type="1">
-<li>K均值算法（K-means）（用于聚类）</li>
-<li>主成分分析（Principle Component Analysis, PCA）（用于降维）</li>
-</ol>
-<h3 id="强化学习">强化学习</h3>
-<p>强化学习是通过一个<strong>智能体</strong>在与复杂而不确定的<strong>环境</strong>交互中<strong>最大化总回报</strong>来学习的一种计算方法。智能体以“试错”的方式进行学习，通过与环境交互获得的<strong>奖赏和惩罚</strong>指导行为，目标是使智能体<strong>获得最大的奖赏</strong>。</p>
-<p>典型的应用就是棋子对弈和机器人自动控制。</p>
-<h2 id="机器学习基本流程">机器学习基本流程</h2>
-<p>机器学习是从有限的观测数据中学习（或者猜测）出具有一般性的规律，并且可以将总结出来的规律推广应用到未观测样本上。机器学习方法可以粗略的分为三个基本要素：模型、学习准则、优化算法。</p>
-<p>机器模型的三要素：</p>
-<ol type="1">
-<li>模型
-<ul>
-<li>线性方法：<span
-class="math inline">\(f(\mathbf{x},\theta)=\mathbf{w}^T
-\mathbf{x}+b\)</span></li>
-<li>广义线性方法：<span
-class="math inline">\(f(\mathbf{x},\theta)=\mathbf{w}^T
-\phi(\mathbf{x})+b\)</span> ，这里如果 <span
-class="math inline">\(\phi(\mathbf{x})\)</span>
-为可学习的非线性基函数，<span
-class="math inline">\(f(\mathbf{x},\theta)\)</span>
-就等价于神经网络。</li>
-</ul></li>
-<li>学习准则
-<ul>
-<li>最小化期望风险：<span
-class="math inline">\(\mathcal{R}(f)=\mathbf{E}_{(\mathbf{x},y) \sim
-p(\mathbf{x},y)} [\mathcal{L}(f(\mathbf{x},y)]\)</span></li>
-<li>最大似然估计</li>
-<li>最大后验估计</li>
-</ul></li>
-<li>优化：梯度下降</li>
-</ol>
-<h3 id="学习准则">学习准则</h3>
-<p>令训练集 <span class="math inline">\(\mathcal{D}={\lbrace
-\mathbf{x}^{(n)},y^{(n)} \rbrace}^N_{n=1}\)</span> 是由 <span
-class="math inline">\(N\)</span>
-个<strong>独立同分布</strong>的（Identically and Independently
-Distributed, IID）样本组成，即每个样本 <span
-class="math inline">\((\mathbf{x},y)\)</span> 是从输入空间 <span
-class="math inline">\(\mathcal{X}\)</span> 和 输出空间 <span
-class="math inline">\(\mathcal{Y}\)</span>
-的联合空间中按照某个未知分布独立地随机产生的。这里要求样本分布必须是固定的（虽然可以是未知的），不会随着时间而变化。</p>
-<p>一个好的模型 <span
-class="math inline">\(f(\mathbf{x},\theta^*)\)</span> 应该在所有 <span
-class="math inline">\((\mathbf{x},y)\)</span>
-的可能取值上都与真实映射函数 <span
-class="math inline">\(y=g(\mathbf{x})\)</span> 一致，即 <span
-class="math display">\[
-|f(\mathbf{x},\theta^*)-y| &lt; \epsilon ,\forall(\mathbf{x},y) \in
-\mathcal{X}\times\mathcal{Y}
-\]</span> 或与真实条件概率分布 <span
-class="math inline">\(p_r(y|\mathbf{x})\)</span> 一致，即 <span
-class="math display">\[
-|f_y(\mathbf{x},\theta^*)-p_r(y|\mathbf{x})| &lt; \epsilon
-,\forall(\mathbf{x},y) \in \mathcal{X}\times\mathcal{Y}
-\]</span> 其中，<span class="math inline">\(\epsilon\)</span>
-是一个很小的正数，<span
-class="math inline">\(f_y(\mathbf{x},\theta^*)\)</span>
-为模型预测的条件概率分布中 <span class="math inline">\(y\)</span>
-对应的概率。</p>
-<p>模型 <span class="math inline">\(f(\mathbf{x},\theta)\)</span>
-的好坏可以通过期望风险（Expected Risk）<span
-class="math inline">\(\mathcal{R}(\theta)\)</span>​ 来衡量，其定义为
-<span class="math display">\[
-\mathcal{R}(\theta) = \mathbf{E}_{(\mathbf{x},y) \sim p_r(\mathbf{x},y)}
-[\mathcal{L}(y,f(\mathbf{x};\theta)]
-\]</span> 其中，<span class="math inline">\(p_r(\mathbf{x},y)\)</span>
-为真实的数据分布，<span
-class="math inline">\(\mathcal{L}(y,f(\mathbf{x};\theta)\)</span>
-为损失函数，用于量化两个变量之间的差异。</p>
-<h3 id="损失函数">损失函数</h3>
-<p><strong>损失函数是一个非负实数函数，用来量化模型预测和真实标签之间的差异。</strong></p>
-<p>下面介绍几种常用的损失函数：</p>
-<ul>
-<li>0-1 损失函数</li>
-<li>平方损失函数</li>
-<li>感知器损失函数</li>
-<li>Hinge损失函数</li>
-<li>交叉熵损失函数</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E9%AB%98%E6%96%AF%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E9%AB%98%E6%96%AF%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-22 19:30:46 / 修改时间：20:26:54" itemprop="dateCreated datePublished" datetime="2022-03-22T19:30:46+08:00">2022-03-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="高斯过程">高斯过程</h1>
-<h2 id="准备">准备</h2>
-<h3 id="深度学习的类型">深度学习的类型</h3>
-<p>（1）监督学习</p>
-<p>（2）无监督学习</p>
-<p>（3）增强学习</p>
-<h3 id="与概率之间的关系">与概率之间的关系</h3>
-<p>有监督学习和无监督学习的区别就在于，求x的概率以及给定x求y的概率</p>
-<h3 id="生成模型与判别模型">生成模型与判别模型</h3>
-<p>深度学习和贝叶斯模型的区别在于，深度学习需要大量的数据集，而贝叶斯模型，由于给定了先验概率，所以需要的数据没有那么大。</p>
-<h2 id="介绍">介绍</h2>
-<h3 id="数据不足">数据不足</h3>
-<p>Deterministic/Stochastic ：建立在物理模型上</p>
-<p>Mechanistic/ Emipirical ：建立在经验模型上</p>
-<p>高斯过程是随机过程的一种</p>
-<p>物理模型不是足够精确的，数据不充分且模型不一定精确</p>
-<h3 id="模型-pt-的需求">模型 <span class="math inline">\(p(t)\)</span>
-的需求</h3>
-<h3 id="高斯过程-1">高斯过程</h3>
-<h3 id="高斯分布的优良性质">高斯分布的优良性质</h3>
-<h2 id="高斯过程中的kernel">高斯过程中的Kernel</h2>
-<p>构造核函数，希望能得到无限维的高斯分布来得到高斯过程</p>
-<p>函数族，这些线性函数对应的是一个点</p>
-<p>均值调整到(0,5)^T ，好像加了一些偏置，看起来有斜率了</p>
-<p>20元的高斯分布，这里的每一条线是高斯分布的一个点</p>
-<p>这时和机器学习有什么联系？</p>
-<p>不够平滑，表现力不够强</p>
-<p>平滑性</p>
-<p>随机变量值 基本直觉 平方指数 核函数</p>
-<p>用平方指数核函数来替代高斯分布里面的协方差矩阵 <span
-class="math inline">\(cov(y_i;y_j)=\kappa (x_i;x_j)\)</span></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/" class="post-title-link" itemprop="url">机器学习之K均值、混合高斯模型和期望最大</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-21 10:03:28" itemprop="dateCreated datePublished" datetime="2022-03-21T10:03:28+08:00">2022-03-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-02 17:32:58" itemprop="dateModified" datetime="2022-06-02T17:32:58+08:00">2022-06-02</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1
-id="机器学习之k均值混合高斯模型和期望最大">机器学习之K均值、混合高斯模型和期望最大</h1>
-<p>提纲</p>
-<ul>
-<li>聚类与K均值</li>
-<li>混合高斯模型与期望最大</li>
-<li>期望最大的另一个视角</li>
-<li>期望最大的另一个视角</li>
-<li>期望最大的理论基础</li>
-</ul>
-<h2 id="聚类与k均值">聚类与K均值</h2>
-<h3 id="示例">示例</h3>
-<p>聚类是什么？举个例子，我们想把下图的人物归类，那么我们可以根据衣服样式归类，也可以根据性别、年龄等进行归类。</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092330178.png" class="" title="image-20220321092330178">
-<p>比如，我们想检测视频中的移动目标，这也是聚类的应用场景。</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092356073.png" class="" title="image-20220321092356073">
-<h3 id="聚类">聚类</h3>
-<p>由上面的示例，我们对聚类应该有了一个大致的意识。聚类的基本思想就是将相似的实例分组在一起。什么才叫做相似的实例？如果两个点之间的距离足够近，那我们就认为他们是相似的，就像下图这种2D点的模式。</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321092634112.png" class="" title="image-20220321092634112">
-<p>两个点之间距离的衡量有很多种方法，在这篇文章中，我们取欧式距离，公式如下：
-<span class="math display">\[
-dist(\boldsymbol{x},\boldsymbol{x})=||\boldsymbol{x}-\boldsymbol{y}||_2^2
-\]</span> 其中，<span class="math inline">\(\boldsymbol{x}\)</span>
-是一个向量，<span class="math inline">\(||\cdot||_2\)</span>
-是两个向量之间的二范数，其计算方法为 <span
-class="math inline">\(||\boldsymbol{x}||_2=(\sum \limits_{i=1}^n x_i^2)^
-\frac{1}{2}\)</span> 。</p>
-<p>我们的聚类结果取决于簇内相似度和簇间相似度，一般来说，我们希望簇内相似度更高，簇间相似度更低。</p>
-<h3 id="聚类方法">聚类方法</h3>
-<ul>
-<li>原型聚类——K均值算法、高斯混合聚类</li>
-<li>密度聚类——DBSCAN算法、Mean-Shift算法</li>
-<li>层次聚类——–Agglomerative 算法、Divisive算法、BIRCH 算法</li>
-<li>谱聚类</li>
-</ul>
-<h3 id="聚类例子">聚类例子</h3>
-<p>我们举几个聚类所应用的场景。</p>
-<ul>
-<li><p>图像分割，目标：将图像分割成有意义的或感知上相似的区域</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094023139.png" class="" title="image-20220321094023139"></li>
-<li><p>基因表达数据聚类</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094031460.png" class="" title="image-20220321094031460">
-<p>[^]: Eisen et al,PNAS 1998</p></li>
-<li><p>聚类新闻文章</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094102368.png" class="" title="image-20220321094102368"></li>
-<li><p>进化树</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321094107927.png" class="" title="image-20220321094107927">
-<p>[^]: Lindbald-Toh et al., Nature 2005</p></li>
-</ul>
-<h3 id="k均值聚类">K均值聚类</h3>
-<h4 id="准备">准备</h4>
-<p>在 <span class="math inline">\(D\)</span> 维的欧式空间里，给定数据集
-<span class="math inline">\({x_1,x_2,...,x_n}\)</span> ，将其划分为
-<span class="math inline">\(K\)</span> 个簇（类），这是给定的<span
-class="math inline">\(K\)</span> 个编码之一。同时引入指标变量 <span
-class="math inline">\(r_{nk} \in \lbrace 0,1
-\rbrace\)</span>，表示数据点 <span class="math inline">\(x_n\)</span>
-属于K个聚类中的哪一个。</p>
-<h4 id="失真度量">失真度量</h4>
-<p>K均值算法针对聚类所得簇 <span class="math inline">\(C=\lbrace
-C_1,C_2,...,C_K \rbrace\)</span> ，最小化平方误差和： <span
-class="math display">\[
-J=\sum \limits_{n=1}^N \sum \limits_{k=1}^K r_{nk} ||x_n-\mu_k||^2
-\]</span> 其中，<span class="math inline">\(\mu_k = \frac{1}{|C_k|} \sum
-\limits_{x \in C_k}x\)</span> ，是簇 <span
-class="math inline">\(C_k\)</span> 的均值（<span class="math inline">\(k
-= 1,2,...,K\)</span>）。</p>
-<p>我们的目标其实就是找到 <span class="math inline">\(\lbrace r_{nk}
-\rbrace\)</span> 和 <span class="math inline">\(\lbrace \mu_k
-\rbrace\)</span> 的值，使得 <span class="math inline">\(J\)</span>
-达到最小值。也就是说，我们希望找到对于每个簇 <span
-class="math inline">\(C_k\)</span>
-，找到它的指标变量和均值，使得簇内每个点的距离最小。直观来看，这个式子在一定程度上刻画了簇内样本围绕簇均值向量的紧密程度，<span
-class="math inline">\(J\)</span> 值越小，簇内样本相似度越高。</p>
-<p>我们可以⽤⼀种迭代的⽅法完成这件事，其中每次迭代涉及到两个连续的步骤，分别关于<span
-class="math inline">\(\lbrace r_{nk} \rbrace\)</span> 的最优化和 <span
-class="math inline">\(\lbrace \mu_k \rbrace\)</span> 的最优化。</p>
-<h4
-id="寻找lbrace-r_nk-rbrace-的最优化和-lbrace-mu_k-rbrace-的最优化">寻找<span
-class="math inline">\(\lbrace r_{nk} \rbrace\)</span> 的最优化和 <span
-class="math inline">\(\lbrace \mu_k \rbrace\)</span> 的最优化</h4>
-<ol type="1">
-<li>首先选择 <span class="math inline">\(\lbrace \mu_k \rbrace\)</span>
-的初始值；</li>
-<li>第一阶段：我们关于 <span class="math inline">\(r_{nk}\)</span>
-最小化 <span class="math inline">\(J\)</span>，保持 <span
-class="math inline">\(\mu_k\)</span> 固定；</li>
-<li>第二阶段：我们关于 <span class="math inline">\(\mu_k\)</span> 最小化
-<span class="math inline">\(J\)</span>，保持 <span
-class="math inline">\(r_{nk}\)</span> 固定；</li>
-</ol>
-<p>注：两个阶段分别对应于EM算法中的E（期望）步骤和M（最⼤化）步骤，EM算法稍后会介绍，这里只是引入这样的一个概念。</p>
-<h4 id="e参数-r_nk-的选择">E：参数 <span
-class="math inline">\(r_{nk}\)</span> 的选择</h4>
-<ol type="1">
-<li><p>由于平方误差和 <span class="math inline">\(J=\sum \limits_{n=1}^N
-\sum \limits_{k=1}^K r_{nk} ||x_n-\mu_k||^2\)</span> 是一个关于 <span
-class="math inline">\(r_{nk}\)</span> 的线性函数（这里再次提醒，<span
-class="math inline">\(r_{nk} \in \lbrace 0,1
-\rbrace\)</span>，表示数据点 <span class="math inline">\(x_n\)</span>
-属于 <span class="math inline">\(K\)</span>
-个聚类中的哪一个），因此，这个优化问题存在解析解。</p></li>
-<li><p>而显然，<span class="math inline">\(J=\sum \limits_{n=1}^N \sum
-\limits_{k=1}^K r_{nk} ||x_n-\mu_k||^2 = \sum \limits_{k=1}^K
-r_{1k}||x_1-\mu_k||^2+...+ \sum \limits_{k=1}^K
-r_{Nk}||x_N-\mu_k||^2\)</span> ，其中有不同的 <span
-class="math inline">\(n\)</span> 的项是独立的，因此，我们可以对每个
-<span class="math inline">\(n\)</span> 分别进行最优化，只要 <span
-class="math inline">\(k\)</span> 的值使得 <span
-class="math inline">\(||x_n-\mu_k||^2\)</span> 最小，那么就使 <span
-class="math inline">\(r_{nk}=1\)</span>。其实就是我们对于每一个数据点
-<span class="math inline">\(x_n\)</span> ，都计算 <span
-class="math inline">\(x_n\)</span> 与每个簇 <span
-class="math inline">\(C_k\)</span> 的中心点（即 <span
-class="math inline">\(\mu_k\)</span>）之间的距离，通过距离的比较，找到与
-<span class="math inline">\(x_n\)</span> 最近的簇，将 <span
-class="math inline">\(r_{nk}\)</span> 置为1，表示这个数据点 <span
-class="math inline">\(x_n\)</span> 已经被分到簇 <span
-class="math inline">\(C_k\)</span> 中了。</p></li>
-<li><p>因此，我们可以对参数 <span class="math inline">\(r_{nk}\)</span>
-选择如下： <span class="math display">\[
-   r_{nk} =
-   \begin{cases}
-   1,  &amp; \text{if} \ k= \text{argmin}_j||x_n-\mu_j||^2 \\
-   0, &amp; \text{otherwise}
-   \end{cases}
-   \]</span></p></li>
-<li><p>直观地说，其实就是将 <span class="math inline">\(x_n\)</span>
-分到最近的一个类里面。</p></li>
-</ol>
-<h4 id="m优化-mu_k">M：优化 <span
-class="math inline">\(\mu_k\)</span></h4>
-<ol type="1">
-<li><p>固定 <span class="math inline">\(r_{nk}\)</span> ；</p></li>
-<li><p>由于平方误差和 <span class="math inline">\(J=\sum \limits_{n=1}^N
-\sum \limits_{k=1}^K r_{nk} ||x_n-\mu_k||^2\)</span> 是一个关于 <span
-class="math inline">\(\mu_k\)</span> 的线性函数，（这里提醒一句，<span
-class="math inline">\(\mu_k = \frac{1}{|C_k|} \sum \limits_{x \in
-C_k}x\)</span> ，是簇 <span class="math inline">\(C_k\)</span>
-的均值（<span class="math inline">\(k =
-1,2,...,K\)</span>）因此，我们只要令 <span
-class="math inline">\(J\)</span> 关于 <span
-class="math inline">\(\mu_k\)</span> 的导数等于零，<span
-class="math inline">\(J\)</span> 即可达到最小值。</p></li>
-<li><p>求解过程为： <span class="math display">\[
-2\sum \limits_{n=1}^N r_{nk}(x_n-\mu_k)=0
-\]</span> 解出结果为 <span class="math display">\[
-\mu_k = \frac{\sum_n r_{nk}x_n}{\sum_n r_{nk}}
-\]</span></p></li>
-<li><p>直观地说，其实就是令 <span class="math inline">\(\mu_k\)</span>
-等于类别为 <span class="math inline">\(k\)</span>
-的所有数据点的均值，<span class="math inline">\(\sum_n r_{nk}\)</span>
-为类别为 <span class="math inline">\(k\)</span>
-的所有数据点的数量，<span class="math inline">\(\sum_n
-r_{nk}x_n\)</span> 等于类别为 <span class="math inline">\(k\)</span>
-的所有数据点的总和。</p></li>
-</ol>
-<h4 id="k均值算法终止">K均值算法终止</h4>
-<p>K均值算法，就是重复执行上述的选择 <span
-class="math inline">\(r_{nk}\)</span> 和优化 <span
-class="math inline">\(\mu_k\)</span>
-的步骤，即重复分配数据点给簇（或类）和重复计算簇（或类）中心，直到聚类的分配不改变。由于每个阶段都减小了目标函数
-<span class="math inline">\(J\)</span>
-的值，因此算法的收敛性得到了保证。</p>
-<h4 id="示例来自prml">示例（来自PRML）</h4>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321210022034.png" class="" title="image-20220321210022034">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321210028211.png" class="" title="image-20220321210028211">
-<ul>
-<li><span class="math inline">\(J\)</span>
-是老忠实间歇喷泉数据的代价函数。</li>
-<li>我们故意将聚类中⼼选择了较差的初始值，从⽽算法在收敛之前执⾏了若⼲步。更好的选择是将聚类中⼼选择为由k个随机数据点组成的⼦集。</li>
-<li>K均值算法本身经常被用于在EM算法之前初始化高斯混合模型的参数。（这里出现了一个新概念：混合高斯模型，什么是混合高斯模型，这就是接下来要介绍的。）</li>
-</ul>
-<h3 id="局部最小值">局部最小值</h3>
-<p>K均值算法的目标函数 <span class="math inline">\(J=\sum
-\limits_{n=1}^N \sum \limits_{k=1}^K r_{nk} ||x_n-\mu_k||^2\)</span>
-是非凸的，因此，并不能保证 <span class="math inline">\(J\)</span>
-上的坐标下降收敛到全局最小值，没有什么办法能够阻止K均值陷入局部极小值。我们可以尝试更多随机初始化的点，或者尝试非局部拆分和合并操作，非局部拆分就是同时合并相邻的两个簇，合并操作就是将一个大的簇分为两个。</p>
-<h3 id="k均值算法的性质">K均值算法的性质</h3>
-<ol type="1">
-<li>保证在有限次迭代中收敛。</li>
-<li>每次迭代的训练时间：将数据点分配到最近的簇中心是 <span
-class="math inline">\(O(KN)\)</span> 时间，根据分配的点改变聚类中心是
-<span class="math inline">\(O(N)\)</span> 时间。</li>
-</ol>
-<h3 id="k均值的局限">K均值的局限</h3>
-<ul>
-<li>在每⼀次迭代中，每个数据点被分配到⼀个唯⼀的聚类中（“硬”分配）<br />
-</li>
-<li>某些点可能到两个聚类中心的距离相等</li>
-<li>通过使⽤概率的⽅法，我们得到对数据点聚类的“软”分配，它反映出在最合适聚类分配上的不确定性</li>
-</ul>
-<h4 id="图像分割与压缩">图像分割与压缩</h4>
-<p>之前提到，聚类算法其实可以用于图像分割与压缩。我们的目标是，将图像分割成若干的区域，每个区域有⼀个相对相似的视觉外观，或者对应于某个物体，或物体的⼀部分。在计算机图像中，每个像素是⼀个3维空间中的⼀个点，三维空间由{红、绿、蓝}
-通道的三个亮度值构成，每个值由8比特的精度存储。</p>
-<p>K均值聚类与K个颜色的调色板一起使用，该方法没有考虑不同像素的空间上的近似性。</p>
-<h5 id="图像分割">（1）图像分割</h5>
-<p>以下是选择2、3和10种颜色对彩色图像进行编码的两个示例：</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220321210941474.png" class="" title="image-20220321210941474">
-<p>（2）数据压缩</p>
-<ul>
-<li><p>无损数据压缩：能够从压缩的表⽰中精确地重建原始数据。</p></li>
-<li><p>有损数据压缩：接受重建过程中出现的⼀些错误。</p></li>
-<li><p>K-Means应用于有损数据压缩</p>
-<ul>
-<li>对于 $ N $ 个数据点中的每一个，我们只存储它被分配的聚类种类 <span
-class="math inline">\(k\)</span>。</li>
-<li>我们还存储了 <span class="math inline">\(K\)</span>个聚类中心 <span
-class="math inline">\(μ_k\)</span>
-的值，这通常需要存储小得多的数据,其中我们假定 <span
-class="math inline">\(K ≪ N\)</span>。这样，每个数据点都根据它最近的中心
-<span class="math inline">\(μ_k\)</span>
-确定。新的数据点可以类似地压缩。</li>
-<li>首先找到最近的 <span
-class="math inline">\(μ_k\)</span>，然后存储标签 <span
-class="math inline">\(k\)</span> 而不是原始的数据向量</li>
-</ul>
-<p>这个框架被称为向量量子化(vector quantization)，向量 <span
-class="math inline">\(μ_k\)</span> 被称为编码书向量 (code-book
-vector)。</p></li>
-<li><p>上面讨论的图像分割问题也说明了数据压缩中聚类的使用。</p>
-<ul>
-<li>假设原始图像有 $ N $ 个像素，每个像素由$ {R, G, B} <span
-class="math inline">\(三个值组成，每个值由\)</span> 8 <span
-class="math inline">\(比特的精度存储。这样，直接传递整幅图像需要\)</span>
-24N $比特。</li>
-<li>现在假设我们首先在图像数据上运行K均值算法，然后，我们不直接传递原始像素亮度向量，而是传递最近的向量$
-_k <span class="math inline">\(的亮度。由于有\)</span> K <span
-class="math inline">\(个这样的向量，因此每个像素需要\)</span> _2K
-$比特。</li>
-<li>我们还必须传送$ K <span class="math inline">\(个编码书向量\)</span>
-_k <span class="math inline">\(，这需要\)</span> 24K $比特</li>
-<li>因此传递这个图像所需的比特总数为$ 24K + N _2K
-$（四舍五入到最近的整数）</li>
-<li>当 <span class="math inline">\(K=2,3\)</span> 以及 <span
-class="math inline">\(10\)</span>
-时，压缩为原来的比例分别为4%，8%，17%</li>
-</ul></li>
-</ul>
-<h2 id="混合高斯模型与期望最大">混合高斯模型与期望最大</h2>
-<h3 id="单高斯模型">单高斯模型</h3>
-<p>一维高斯（正态）分布的概率密度函数如下： <span
-class="math display">\[
-f(x)=\frac{1}{\sqrt{2 \pi} \sigma}
-\text{exp}(-\frac{(x-\mu)^2}{2\sigma^2})
-\]</span> 其中，<span class="math inline">\(\mu\)</span> 和 <span
-class="math inline">\(\sigma^2\)</span> 分别是高斯分布的均值和方差。</p>
-<h3 id="二维高斯模型">二维高斯模型</h3>
-<p>多维变量 <span class="math inline">\(X=\lbrace x_1,x_2,...,x_n
-\rbrace\)</span> 的联合概率密度函数为： <span class="math display">\[
-f(X)=\frac{1}{(2\pi)^{d/2}|\Sigma|^{1/2}}\exp[-\frac{1}{2}(X-\mu)^T
-\Sigma ^{-1}(X-\mu)],X=(x_1,x_2,...,x_n)
-\]</span> 其中，<span class="math inline">\(d\)</span>
-为变量维度，对于二维高斯分布，有 <span
-class="math inline">\(d=2\)</span> ；<span class="math inline">\(u =
-\begin{pmatrix} u_1 \\ u_2 \\ ...\\ u_n\end{pmatrix}\)</span>
-，为各维变量的均值，<span class="math inline">\(\Sigma\)</span>
-为协方差矩阵，描述各维变量之间的相关度，对于二维高斯分布，有 <span
-class="math display">\[
-\Sigma = \begin{bmatrix} \delta_{11} \ \delta_{12} \\ \delta_{21} \
-\delta_{22}\end{bmatrix}
-\]</span></p>
-<h3 id="高斯混合模型-gmm">高斯混合模型 (GMM)</h3>
-<p>一个高斯混合模型能表示成如下分布： <span class="math display">\[
-p(x) = \sum\limits_{k=1}^K\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)
-\]</span> 其中 <span
-class="math inline">\(\mathcal{N}(x|\mu_k,\Sigma_k)\)</span>
-就是上面的多维变量的高斯模型。而混合系数 <span
-class="math inline">\(\pi_k\)</span> 满足 <span class="math inline">\(0
-\le \pi_k \le 1\)</span> 和 <span class="math inline">\(\sum
-\limits_{k=1}^K \pi_k = 1\)</span> 。</p>
-<p>某个混合高斯模型融合的高斯模型个数足够多，它们之间的权重设定得足够合理，这个混合模型可以拟合任意分布的样本。</p>
-<h3 id="一维高斯混合函数的边缘分布">一维高斯混合函数的边缘分布</h3>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220328224144606.png" class="" title="image-20220328224144606">
-<p>⾼斯混合概率分布可以写成高斯分布的线性叠加的形式</p>
-<h3 id="二维高斯混合函数的边缘分布">二维高斯混合函数的边缘分布</h3>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BK%E5%9D%87%E5%80%BC%E3%80%81%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%9C%9F%E6%9C%9B%E6%9C%80%E5%A4%A7/image-20220328224207091.png" class="" title="image-20220328224207091">
-<h3 id="gmms-和隐变量">GMMs 和隐变量</h3>
-<p>我们引入离散潜在变量 <span class="math inline">\(z\)</span>
-来描述高斯混合模型，更加深刻地认识这个重要的分布，开始了解期望最大化算法。</p>
-<p>首先，我们已经知道，<span class="math inline">\(K\)</span>
-个高斯分布的线性叠加 <span class="math display">\[
-p(x) = \sum\limits_{k=1}^K\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)
-\]</span> 然后，我们可以引入一个 <span class="math inline">\(K\)</span>
-维的二维随机变量 <span class="math inline">\(z\)</span> ，用 1-of-K
-表示（one-hot 变量），即 <span class="math inline">\(z = \lbrace
-z_1,z_2,...,z_k \rbrace\)</span> ，其中 <span class="math inline">\(z_k
-\in \lbrace 0,1 \rbrace\)</span> 且 <span class="math inline">\(\sum_k
-z_k=1\)</span> ，向量 <span class="math inline">\(z\)</span> 有 <span
-class="math inline">\(K\)</span> 种可能的状态。</p>
-<p>那么，我们就可以确定边缘概率分布 <span
-class="math inline">\(p(z)\)</span> 了。</p>
-<h3 id="确定边缘概率分布-pz">确定边缘概率分布 <span
-class="math inline">\(p(z)\)</span></h3>
-<p>我们将概率与每个组件 <span class="math inline">\(z_k\)</span>
-相关联。那么它们的关系要怎么连接呢？将 <span
-class="math inline">\(z\)</span> 的边缘概率分布根据混合系数<span
-class="math inline">\(π_k\)</span> 进⾏赋值，即 <span
-class="math display">\[
-p(z_k = 1)=\pi_k
-\]</span> 其中 <span class="math inline">\(k\)</span> 满足 <span
-class="math inline">\(0 \le \pi_k \le 1\)</span> 且 <span
-class="math inline">\(\sum_k \pi_k = 1\)</span> 。</p>
-<p>由于 <span class="math inline">\(z\)</span> 使用了“ 1-of-K ”
-的表示方法，因此 <span class="math inline">\(z\)</span>
-的边缘概率分布也可以写成 <span class="math display">\[
-p(z)=\prod \limits_{k=1}^K \pi_k^{z_k}
-\]</span> 当有1个分量时，<span class="math inline">\(p(z_1) =
-\pi_k^{z_1}\)</span> ；当有2个分量时，<span
-class="math inline">\(p(z_1,z_2)=\pi_1^{z_1}\pi_2^{z_2}\)</span> 。</p>
-<h3 id="确定条件概率-pxz">确定条件概率 $p(x|z) $</h3>
-<p>给定 <span class="math inline">\(z\)</span> 的⼀个特定的值，<span
-class="math inline">\(x\)</span> 的条件概率分布是⼀个高斯分布 <span
-class="math display">\[
-p(x|z_k=1) = \mathcal{N}(x|\mu_k,\Sigma_k)
-\]</span> 因此，条件概率 $p(x|z) $可以写成如下形式： <span
-class="math display">\[
-p(x|z) = \prod \limits_{k=1}^K \mathcal{N}(x|\mu_k,\Sigma_k)^{z_k}
-\]</span> 由于指数 <span class="math inline">\(z_k\)</span>
-的存在，这个连乘中除了一个乘积项之外其余的都等于1.</p>
-<h3 id="联合分布">联合分布</h3>
-<p>定义隐变量 <span class="math inline">\(z\)</span> 和观测变量 <span
-class="math inline">\(x\)</span> 的联合分布 <span
-class="math display">\[
-p(x, z)=p(z)p(x|z)
-\]</span> 其中，<span class="math inline">\(x\)</span> 为观测变量，<span
-class="math inline">\(z\)</span> 为隐变量，<span
-class="math inline">\(p(z)\)</span> 为边缘分布，<span
-class="math inline">\(p(x|z)\)</span>为条件分布。</p>
-<h3 id="边缘概率分布px">边缘概率分布p(x)</h3>
-<p>由于联合分布是 <span class="math inline">\(p(x,
-z)=p(z)p(x|z)\)</span> ，因此，<span class="math inline">\(x\)</span>
-的边缘分布可以通过将联合概率分布对所有可能的 <span
-class="math inline">\(z\)</span> 求和的方式得到，即 <span
-class="math display">\[
-\begin{aligned}
-p(x) &amp; = \sum\limits_zp(z)p(x|z) \\
-&amp; = \sum\limits_z(\prod \limits_{k=1}^K \pi_k^{z_k}
-\mathcal{N}(x|\mu_k,\Sigma_k)^{z_k}) \\
-&amp; = \sum\limits_{k=1}^K\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)
-\end{aligned}
-\]</span> <span class="math inline">\(x\)</span>
-的分布是高斯混合模型的标准形式。</p>
-<p>对联合概率分布 <span class="math inline">\(p(x, z)\)</span>
-操作，⽽不是对边缘概率分布 <span class="math inline">\(p(x)\)</span>
-操作，这会产⽣极⼤的计算上的简化。</p>
-<h3 id="另一个条件概率-responsibilitypzx">另一个条件概率
-(Responsibility)<span class="math inline">\(p(z|x)\)</span></h3>
-<p>另一个起着重要作用的量是给定$ x <span
-class="math inline">\(的条件下，\)</span> z <span
-class="math inline">\(的条件概率。我们会用\)</span> (z_k) <span
-class="math inline">\(表示\)</span> p(z_k=1|x)
-$，它的值可以使用贝叶斯定理求出 $ <span
-class="math display">\[\begin{eqnarray} \gamma(z_k) \equiv p(z_k = 1|x)
-&amp; = &amp; \frac{p(z_k = 1)p(x|z_k =
-1)}{\sum\limits_{j=1}^Kp(z_j=1)p(x|z_j = 1)} \ &amp; = &amp;
-\frac{\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)}{\sum\limits_{j=1}^K\pi_j\mathcal{N}(x|\mu_j,\Sigma_k)}\end{eqnarray}\]</span>
-$ 我们将 $ _k $ 看成 $ z_k = 1 $ 的先验概率，将 $ (z_k) $ 看成观测到$ x
-<span
-class="math inline">\(之后，对应的后验概率。正如我们将看到的那样，\)</span>
-(z_k) $ 也可以被看做分量 $ k $ 对于“解释”观测值 <span
-class="math inline">\(x\)</span> 的“责任”（responsibility）。</p>
-<h3 id="gmm的最大似然">GMM的最大似然</h3>
-<p>假设我们有⼀个观测的数据集 <span
-class="math inline">\(x_1,x_2,...,x_N\)</span>
-，我们希望使用混合高斯模型来对数据进行建模（ <span
-class="math inline">\(N\)</span> 条数据，维度都为 <span
-class="math inline">\(D\)</span> ），则数据集可以表示成 <span
-class="math inline">\(N×D\)</span> 的矩阵 <span class="math inline">\(X
-= \begin{bmatrix} \mathbf{x}_1 \\ \mathbf{x}_2 \\ ...
-\\\mathbf{x}_N\end{bmatrix}\)</span> ， <span
-class="math inline">\(\mathbf{x}_n = [\mathbf{x}_{n1} \ \mathbf{x}_{n2}
-\ ...\  \mathbf{x}_{nD}]\)</span> 。对应隐含变量会被表示为⼀个 <span
-class="math inline">\(N×K\)</span> 的矩阵 <span class="math inline">\(Z
-= \begin{bmatrix} \mathbf{z}_1 \\ \mathbf{z}_2 \\ ...
-\\\mathbf{z}_N\end{bmatrix}\)</span>， <span
-class="math inline">\(\mathbf{z}_n = [\mathbf{z}_{n1} \ \mathbf{z}_{n2}
-\ ...\  \mathbf{z}_{nK}]\)</span>。</p>
-<p>目标是表示这个似然函数，从而通过最大化似然函数来估计这三组参数 <span
-class="math inline">\(\pi_k,\mu_k,\Sigma_k\)</span></p>
-<p>混合密度函数为 <span class="math display">\[
-p(x) = \sum\limits_{k=1}^K\pi_k\mathcal{N}(x|\mu_k,\Sigma_k)
-\]</span> 因此，对数似然函数为 <span class="math display">\[
-\ln p(\boldsymbol{X} \mid \boldsymbol{\pi}, \boldsymbol{\mu},
-\boldsymbol{\Sigma})=\sum_{n=1}^{N} \ln \left\{\sum_{k=1}^{K} \pi_{k}
-\mathcal{N}\left(\boldsymbol{x}_{n} \mid \boldsymbol{\mu}_{k},
-\boldsymbol{\Sigma}_{k}\right)\right\}
-\]</span> 这是一个比单一高斯更难的问题。</p>
-<h3 id="最大化对数似然函数">最大化对数似然函数</h3>
-<p>目标是估计以下三个参数集 <span
-class="math inline">\(\pi_k,\mu_k,\Sigma_k\)</span>​
-，Ø在保持其他导数不变的情况下，依次求导数，但是没有解析解。这项任务并不简单，因为对k的求和出现在对数计算内部，从而对数函数不再直接作用于高斯分布。虽然基于梯度的优化是可能的，我们考虑更一般的迭代EM算法。</p>
-<h3 id="gmm-最大似然估计的一些问题">GMM 最大似然估计的一些问题</h3>
-<p>在最大化似然函数之前，简单地提两个技术问题：</p>
-<p>• 病态解，即高斯混合的奇异性问题。</p>
-<p>• 混合的可区分问题</p>
-<h4 id="病态解">病态解</h4>
-<p>我们考虑一个高斯混合模型，它的分量的协方差矩阵为 $ _k = _k^2I <span
-class="math inline">\(，其中\)</span> I
-$是一个单位矩阵，结论对于一般的协方差矩阵仍然成立。假设混合模型的第 $ j
-$ 个分量的均值 $ _j $ 与某个数据点完全相同，即对于某个 $ n $ 值，$ _j =
-x_n $ 。这样，这个数据点会为似然函数贡献一项，形式为</p>
-<p><span class="math display">\[
-\mathcal{N}(x_n|x_n,\sigma_j^2I) =
-\frac{1}{(2\pi)^{D/2}}\frac{1}{\sigma_j^D}
-\]</span> 如果我们考虑极限$ _j
-$，那么我们看到这一项趋于无穷大，因此对数似然函数也会趋于无穷大。</p>
-<p>回忆一下，这个问题在单一的高斯分布中没有出现。为了理解不同之处，我们注意到，如果单一的高斯分布退化到了一个数据点上，那么它总会给由其他数据点产生的似然函数贡献可乘的因子，这些因子会以指数的速度趋于0，从而使得整体的似然函数趋于零而不是无穷大。</p>
-<p>使⽤合适的启发式⽅法可以避免这个问题：重置均值或协方差。</p>
-<h4 id="可区分问题">可区分问题</h4>
-<p>对于任意给定的最大似然解，一个由 <span
-class="math inline">\(K\)</span> 个分量混合而成的概率分布总共会有 <span
-class="math inline">\(K!\)</span> 个等价的解，对应于 <span
-class="math inline">\(K!\)</span> 种将 <span
-class="math inline">\(K\)</span> 个参数集合分配到 <span
-class="math inline">\(K\)</span>
-个分量上的方式。换句话说，对于参数值空间中任意给定的点，都会有 <span
-class="math inline">\(K!−1\)</span>
-个其他的点给出完全相同的概率分布。这个问题被称为可区分（identifiability）问题。但是，这个问题与找到一个好的概率模型无关，因为任意等价的解互相之间都一样好。</p>
-<h3 id="用于高斯混合模型的em">用于高斯混合模型的EM</h3>
-<p>终于突入这个问题了！</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" class="post-title-link" itemprop="url">机器学习之线性回归</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-21 00:07:10 / 修改时间：21:22:23" itemprop="dateCreated datePublished" datetime="2022-03-21T00:07:10+08:00">2022-03-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="机器学习之线性回归">机器学习之线性回归</h1>
-<p>在准备华为昇腾RCNN的课程设计，暂时没有时间打公式，凑活着看吧=。=</p>
-<p>之后会解释每个式子的直观解释的！</p>
-<h2 id="线性回归">线性回归</h2>
-<h3 id="线性模型">线性模型</h3>
-<p>回归问题的最简单模型是输入变量的线性组合。 <span
-class="math display">\[
-y(\boldsymbol{x},\boldsymbol{w})=w_0+w_1x_1+...+w_Dx_D
-\]</span> 其中，<span
-class="math inline">\(\boldsymbol{x}=(x_1,...,x_D)^T\)</span></p>
-<p>称为线性回归（linear regression）。</p>
-<p>这个模型的关键性质：是参数 <span class="math inline">\(w_0,
-…,w_D\)</span> 的⼀个线性函数。</p>
-<h3 id="一般形式">一般形式</h3>
-<ul>
-<li>线性模型一般形式</li>
-<li>向量形式</li>
-</ul>
-<h3 id="模型">模型</h3>
-<p><span class="math display">\[
-f(\boldsymbol{x};\boldsymbol{w},b)=\boldsymbol{w}^T\boldsymbol{x}+b
-\]</span></p>
-<ul>
-<li>增广权重向量和增广特征向量 <span
-class="math inline">\(f(\boldsymbol{x};\hat{\boldsymbol{w}})=\hat{\boldsymbol{w}}^T\hat{\boldsymbol{x}}\)</span></li>
-</ul>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234627441.png" class="" title="image-20220316234627441">
-<h3 id="优点">优点</h3>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234640197.png" class="" title="image-20220316234640197">
-<h3 id="一元线性回归">一元线性回归</h3>
-<ul>
-<li><p>一元线性回归 <span class="math display">\[
-f(x)=wx_i+b \text{使得}f(x_i)\simeq y_i
-\]</span></p></li>
-<li><p>参数/模型估计：最小二乘法（least square method）</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234834443.png" class="" title="image-20220316234834443"></li>
-<li><p>最小化均方误差</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234848017.png" class="" title="image-20220316234848017"></li>
-<li><p>分别对w和b求导</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234858233.png" class="" title="image-20220316234858233"></li>
-<li><p>得到闭式解</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234908998.png" class="" title="image-20220316234908998">
-<p>其中，</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234919459.png" class="" title="image-20220316234919459"></li>
-</ul>
-<h3 id="多元线性回归">多元线性回归</h3>
-<ul>
-<li><p>给定数据集</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234952472.png" class="" title="image-20220316234952472">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316234959106.png" class="" title="image-20220316234959106">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235004841.png" class="" title="image-20220316235004841"></li>
-<li><p>多元线性回归目标 <span class="math display">\[
-f(\boldsymbol{x}_i)=\boldsymbol{w}^T\boldsymbol{x}_i+b
-\text{使得}f(\boldsymbol{x}_i)\simeq y_i
-\]</span></p></li>
-<li><p>把 w 和 b 吸收进入向量形式，数据集表示为</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235125794.png" class="" title="image-20220316235125794">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235133775.png" class="" title="image-20220316235133775"></li>
-<li><p>最小二乘法（least square method）</p>
-<ul>
-<li><p><span class="math display">\[
-\hat{\boldsymbol{w}}^{*}= \text{argmin}_{\hat{w}} \left( \boldsymbol{y}-
-\mathbf{X} \hat{ \boldsymbol{w}}^{ \boldsymbol{T}} \right) \left(
-\boldsymbol{y} - \mathbf{X} \hat{ \boldsymbol{w}} \right)
-\]</span></p></li>
-<li><p>令 <span
-class="math inline">\(E_{\hat{\boldsymbol{w}}}=\left(\boldsymbol{y}-\mathbf{X}\hat{\boldsymbol{w}}\right)^{\boldsymbol{T}}
-\left(\boldsymbol{y}-\mathbf{X}\hat{\boldsymbol{w}}\right)\)</span> ，对
-<span class="math inline">\(\hat{\boldsymbol{w}}\)</span> 求导得到 <span
-class="math display">\[
-\frac{\partial E_{\hat{\boldsymbol{w}}}}{\partial \hat{\boldsymbol{w}}}
-=
-2\mathbf{X}^{\rm{T}}\left(\mathbf{X}\hat{\boldsymbol{w}}-\boldsymbol{y}\right)
-\]</span></p></li>
-<li><p>令上式为零可得 <span
-class="math inline">\(\hat{\boldsymbol{w}}\)</span> 最优解的闭式解 <span
-class="math display">\[
-\hat{\boldsymbol{w}}^{*}=\left(\mathbf{X}^{\rm{T}}\mathbf{X}\right)^{-1}
-\mathbf{X}^{\boldsymbol{T}}\boldsymbol{y}
-\]</span> 又称伪逆。</p></li>
-</ul></li>
-</ul>
-<h3 id="满秩讨论">满秩讨论</h3>
-<ul>
-<li><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220316235812685.png" class="" title="image-20220316235812685"></li>
-<li>$^{} $ 不是满秩矩阵：
-<ul>
-<li>奇异值分解（SVD）</li>
-<li>引入正则化</li>
-</ul></li>
-<li>并不是所有的函数都能通过输入变量直接线性地近似</li>
-<li><img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000002862.png" class="" title="image-20220317000002862"></li>
-<li>这样的情况下，我们需要采用输入变量的多项式或其它项来拟合函数，这样还是线性回归吗？</li>
-<li>是的，只要对于系数是线性的就仍然是线性回归问题。</li>
-</ul>
-<h3 id="基函数">基函数</h3>
-<ul>
-<li>在一些应用中，我们对原始数据变量进行一些预处理或特征提取。</li>
-<li>比如原始变量为x，特征可以表示为基函数的形式{φ(x)}。</li>
-<li>通过采用基函数，我们使得线性模型可以是输入变量的非线性函数。</li>
-</ul>
-<h3 id="扩展模型">扩展模型</h3>
-<ul>
-<li><p>将输⼊变量的固定的⾮线性函数进⾏线性组合</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000139983.png" class="" title="image-20220317000139983">
-<p><span class="math inline">\(\phi_j(\boldsymbol{x})\)</span>
-被称为基函数（basis function）。</p></li>
-<li><p>模型中的参数总数为 <span class="math inline">\(M\)</span></p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000231536.png" class="" title="image-20220317000231536">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000236259.png" class="" title="image-20220317000236259">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000243397.png" class="" title="image-20220317000243397"></li>
-</ul>
-<h3 id="基函数的选择">基函数的选择</h3>
-<p>多项式曲线拟合</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000339208.png" class="" title="image-20220317000339208">
-<p>其中，<span class="math inline">\(M\)</span>
-是多项式的阶数（order），<span class="math inline">\(x^j\)</span> 表⽰
-<span class="math inline">\(x\)</span> 的 <span
-class="math inline">\(j\)</span> 次幂，多项式系数 <span
-class="math inline">\(w_0 ,…,w_M\)</span> 整体记作向量 <span
-class="math inline">\(\boldsymbol{w}\)</span>，多项式函数 <span
-class="math inline">\(y(x,\boldsymbol{w})\)</span> 是 <span
-class="math inline">\(x\)</span> 的⼀个⾮线性函数，是系数 <span
-class="math inline">\(\boldsymbol{w}\)</span> 的⼀个线性函数。</p>
-<ul>
-<li><p>多项式基函数</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000607775.png" class="" title="image-20220317000607775">
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000617476.png" class="" title="image-20220317000617476"></li>
-<li><p>“高斯”基函数</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000625242.png" class="" title="image-20220317000625242">
-<ul>
-<li>参数μj控制了基函数在输⼊空间中的位置，</li>
-<li>参数s控制了基函数的空间⼤⼩</li>
-</ul></li>
-<li><p>sigmoid基函数</p>
-<img src="/2022/03/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/image-20220317000650443.png" class="" title="image-20220317000650443"></li>
-</ul>
-<h2 id="最大似然与最小平方">最大似然与最小平方</h2>
-<h3 id="最大似然与最小平方-1">最大似然与最小平方</h3>
-<h3 id="最大似然">最大似然</h3>
-<h3 id="boldsymbolw的解"><span
-class="math inline">\(\boldsymbol{w}\)</span>的解</h3>
-<h3 id="偏置参数w_0">偏置参数<span
-class="math inline">\(w_0\)</span></h3>
-<h3 id="噪声精度beta">噪声精度<span
-class="math inline">\(\beta\)</span></h3>
-<h2 id="正则化最小平方">正则化最小平方</h2>
-<h3 id="正则化最小平方-1">正则化最小平方</h3>
-<h3 id="最简单正则化项权值衰减">最简单正则化项——权值衰减</h3>
-<h3 id="岭回归的闭式解">岭回归的闭式解</h3>
-<h3 id="正则化项的几何解释">正则化项的几何解释</h3>
-<h3 id="岭回归的最优解">岭回归的最优解</h3>
-<h3 id="更加般的正则化项">更加⼀般的正则化项</h3>
-<h3 id="正则化方法结论">正则化方法结论</h3>
-<h2 id="偏置-方差分解">偏置-方差分解</h2>
-<h3 id="回顾回归的决策论">回顾回归的决策论</h3>
-<h3 id="偏置-方差分解-1">偏置-方差分解</h3>
-<h3 id="偏置-方差折中">偏置-方差折中</h3>
-<h3 id="偏置">偏置</h3>
-<h3 id="方差">方差</h3>
-<h3 id="监督学习中方差的来源">监督学习中方差的来源</h3>
-<h3 id="偏置-方差之间的权衡">偏置-方差之间的权衡</h3>
-<h2 id="贝叶斯线性回归">贝叶斯线性回归</h2>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/19/LinearProgramming/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/19/LinearProgramming/" class="post-title-link" itemprop="url">LinearProgramming</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-19 17:30:41 / 修改时间：17:38:40" itemprop="dateCreated datePublished" datetime="2022-03-19T17:30:41+08:00">2022-03-19</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="组合设计与组合优化">组合设计与组合优化</h1>
-<h2 id="线性规划">线性规划</h2>
-<h3 id="线性规划问题的数学模型">1 线性规划问题的数学模型</h3>
-<p>线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。</p>
-<p>线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。</p>
-<p>目标函数： <span class="math display">\[
-\text{max(min)} \ y = \sum \limits_{i=1}^r c_ix_i
-\]</span> 约束条件： <span class="math display">\[
-\begin{align}
-s.t. \sum \limits_{i=1}^r a_{1i}x_i &amp; \le(=,\ge) b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i &amp; \le(=,\ge) b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i &amp; \le(=,\ge) b_m \\\\
-\end{align}
-\]</span> 非负约束条件： <span class="math display">\[
-x_i \ge 0,i = 1,2,...,r
-\]</span></p>
-<h4 id="运输问题">（1）运输问题</h4>
-<p>设有两个电视机厂A1,A2，产量分别为23万台与27万台，其产品供应三个城市B1,B2,B3。每个城市的需要量分别为17万台，18万台和15万台，而各厂到各城市的运费单价如下表。</p>
-<table>
-<thead>
-<tr class="header">
-<th></th>
-<th>B₁</th>
-<th>B₂</th>
-<th>B₃</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A₁</td>
-<td>50</td>
-<td>60</td>
-<td>70</td>
-</tr>
-<tr class="even">
-<td>A₂</td>
-<td>60</td>
-<td>110</td>
-<td>160</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr class="header">
-<th></th>
-<th>B₁</th>
-<th>B₂</th>
-<th>B₃</th>
-<th>总发量</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A₁</td>
-<td>X₁₁</td>
-<td>X₁₂</td>
-<td>X₁₃</td>
-<td>23</td>
-</tr>
-<tr class="even">
-<td>A₂</td>
-<td>X₂₁</td>
-<td>X₂₂</td>
-<td>X₂₃</td>
-<td>27</td>
-</tr>
-<tr class="odd">
-<td>总收量</td>
-<td>17</td>
-<td>18</td>
-<td>15</td>
-<td>50</td>
-</tr>
-</tbody>
-</table>
-<p>则我们可以定义其为一个线性规划问题： <span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{min} \ y = 50x_{11}+60x_{12}+70x_{13}+60x_{21}+110x_{22}+160x_{23}
-\\\\
-\begin{aligned}
-s.t. \quad x_{11} + x_{12} + x_{13} &amp; = 23 \\\\
-x_{21} + x_{22} + x_{23} &amp; = 27 \\\\
-x_{11} + x_{21} &amp; = 17 \\\\
-x_{12} + x_{22} &amp; = 18 \\\\
-x_{13} + x_{23} &amp; = 15 \\\\
-\end{aligned}
-\\\\ x_{ij}  \ge 0,i=1,2;j=1,2,3
-\end{split}
-\end{equation}
-\]</span></p>
-<p>（2）生产计划问题</p>
-<p>我们需要加工4种产品，分别为P1,P2,P3,P4，而我们拥有三种机床 A,B,C
-，如果要加工产品就必须同时使用3种机床进行加工。而机床类型，机床数量以及每种机床加工产品的时间如下表：</p>
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 17%" />
-<col style="width: 17%" />
-<col style="width: 17%" />
-<col style="width: 17%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>机床类型</th>
-<th>机床数量</th>
-<th>P1（小时）</th>
-<th>P2（小时）</th>
-<th>P3（小时）</th>
-<th>P4（小时）</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A</td>
-<td>20</td>
-<td>2</td>
-<td>2</td>
-<td>0.5</td>
-<td>1.5</td>
-</tr>
-<tr class="even">
-<td>B</td>
-<td>30</td>
-<td>0.5</td>
-<td>2</td>
-<td>1</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td>C</td>
-<td>15</td>
-<td>1.5</td>
-<td>1</td>
-<td>3</td>
-<td>1.5</td>
-</tr>
-</tbody>
-</table>
-<p>每种产品的利润如下表：</p>
-<table>
-<thead>
-<tr class="header">
-<th>商品</th>
-<th>P1</th>
-<th>P2</th>
-<th>P3</th>
-<th>P4</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>单个利润</td>
-<td>3.5元</td>
-<td>4.2元</td>
-<td>6.5元</td>
-<td>3.8元</td>
-</tr>
-</tbody>
-</table>
-<p>每台机床每周运行不超过60小时，为了使获得的利润达到最大，问每周应制造这些产品各多少件？</p>
-<p>设 <span class="math inline">\(x_i\)</span> 为 每周制造产品 <span
-class="math inline">\(P_i\)</span>
-的数量，我们可以定义其为一个线性规划问题： <span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = 3.5 x_1 + 4.2 x_2 + 6.5 x_3 + 3.8 x_4 \\\\
-\begin{aligned}
-s.t. 2x_{1} + 2x_{2} + 0.5x_{3} + 1.5x_{4} &amp; \le 1200 \\\\
-0.5x_{1} + 2x_{2} + x_{3} + 2x_{4} &amp; \le 1800 \\\\
-1.5x_{1} + x_{2} + 3x_{3} + 1.5x_{4} &amp; \le 800
-\end{aligned}\\\\
-x_{i}  \ge 0,i=1,2,3,4
-\end{split}
-\end{equation}
-\]</span></p>
-<h4 id="网络流问题">（3）网络流问题</h4>
-<p>在之前所讨论的寻求运输网络中最大流的问题，实际上是一个线性规划问题。
-<span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ f_v = \sum \limits_{j \in V} f(s,j) \\\\
-\begin{aligned}
-s.t.\ &amp;  c(i,j) - f(i,j)  \ge 0 \\\\
-&amp; \sum \limits_{\substack{i \in V \\\\ j \neq s,t}} f(i,j) - \sum
-\limits_{ \substack{j \in V \\\\ j \neq s,t}} f(j,k)  = 0 \\\\
-&amp; f(i,j) \ge 0,(i,j) \in E
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span></p>
-<h3 id="线性规划问题的几何意义">2 线性规划问题的几何意义</h3>
-<h4 id="相关概念">（1）相关概念</h4>
-<p><strong>可行解</strong>：满足以下约束条件 <span
-class="math display">\[
-\begin{split}
-\begin{aligned}
-s.t. \sum \limits_{i=1}^r a_{1i}x_i &amp; \le(=,\ge) b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i &amp; \le(=,\ge) b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i &amp; \le(=,\ge) b_m
-\end{aligned}\
-\\\\
-x_i  \ge 0,i = 1,2,...,r
-\end{split}
-\]</span> 的变量 <span
-class="math inline">\(x_1,x_2,...,x_r\)</span>的值。</p>
-<p><strong>最优可行解</strong>：使目标函数 <span
-class="math inline">\(y=\sum \limits_{i=1}^r c_ix_i\)</span>
-取到最大值（或最小值）的可行解</p>
-<p><strong>可行解域：</strong>所有可行解的集合</p>
-<h4 id="例子">（2）例子</h4>
-<p><strong>例1</strong>：给出一个线性规划问题如下： <span
-class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = x_1 + x_2 \\\\
-\begin{aligned}
-s.t. 2x_1+3x_2 &amp; \le 6 \\\\
-3x_1+2x_2 &amp; \le 6 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
-<img src="/2022/03/19/LinearProgramming/image-20220319171444450.png" class="" title="例1-图1">
-<img src="/2022/03/19/LinearProgramming/image-20220319171538409.png" class="" title="例1-图2">
-<p>如图所示，在点 (6/5,6/5) ， <span class="math inline">\(y\)</span>
-取得最大值 12/5 ，即最优可行解为 (6/5,6/5) 。</p>
-<p><strong>例2</strong> 给出一个线性规划问题如下： <span
-class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = 3x_1 + x_2 \\\\
-\begin{aligned}
-s.t. x_1+x_2 &amp; \le 5 \\\\
--x_1+x_2 &amp; \le 0 \\\\
-6x_1+2x_2 &amp; \le 21 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
-<img src="/2022/03/19/LinearProgramming/image-20220318114944778.png" class="" title="image-20220318114944778">
-<img src="/2022/03/19/LinearProgramming/image-20220318115111885.png" class="" title="image-20220318115111885">
-<p>如图所示，<span class="math inline">\(y\)</span> 可取得最大值 21/2
-，但有无穷多个最优可行解。</p>
-<p><strong>例3</strong> 给出一个线性规划问题如下： <span
-class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = 2x_1 + 2x_2\\\\
-\begin{aligned}
-s.t. x_1 - x_2 &amp; \ge 1 \\\\
--x_1+2x_2 &amp; \le 0 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
-<img src="/2022/03/19/LinearProgramming/image-20220318115306288.png" class="" title="image-20220318115306288">
-<p>如图所示，可行解域无穷大，<span class="math inline">\(y\)</span>
-无法取到最大值， 有无穷多个最优可行解。</p>
-<p><strong>例4</strong> 给出一个线性规划问题如下： <span
-class="math display">\[
-\begin{equation}
-\begin{split}
-\text{min} \ y = 3x_1 + 2x_2 \\\\
-\begin{aligned}
-s.t. -x_1 + x_2 &amp; \ge 1 \\\\
-x_1+x_2 &amp; \le -2 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
-<img src="/2022/03/19/LinearProgramming/image-20220318115526464.png" class="" title="image-20220318115526464">
-<p>如图所示，没有可行解，因此 <span class="math inline">\(y\)</span>
-无法取到最大值，没有最优可行解。</p>
-<h4 id="解的4种情况">（3）解的4种情况</h4>
-<p><strong>两个变量的线性规划问题的解可能有以下四种情况：</strong></p>
-<p>1.有唯一的最优可行解。这个唯一的最优可行解一定是可行解域的一个顶点。</p>
-<p>2.有最优可行解，但不唯一。此时最优可行解一定是可行解域的一条边界上的所有点。</p>
-<p>3.有可行解，但没有最优可行解。此时在可行解域上，目标函数的值趋向无穷。</p>
-<p>4.无可行解。此时可行解域为空集。</p>
-<h3 id="凸多边形与凸多面体">3 凸多边形与凸多面体</h3>
-<h4 id="相关概念-1">（1）相关概念</h4>
-<p><strong>凸多边形：</strong>是指没有一个内角超过180。的多边形。或者说，一个多边形是凸的，如果联接这个多边形中任意两个点的线段上的所有点仍在这个多边形中.</p>
-<p><strong>凸多边形的角点x：</strong>它在凸多边形中且不在凸多边形中任何两点（除x点外）的线段上。</p>
-<p>具有两个变量的线性规划问题，其最优可行解如果存在，一定在角点上可以找到最优可行解。</p>
-<p>推广到多维情形：</p>
-<p><strong>凸多面体：</strong>如果联接这个多面体中任意两个点的线段上的所有点仍在这个多面体中。</p>
-<h4 id="r-维空间中的点">（2）<span class="math inline">\(r\)</span>
-维空间中的点</h4>
-<p>在 <span class="math inline">\(r\)</span>
-维空间中，一个点可以用这个点的 <span class="math inline">\(r\)</span>
-个坐标来表示. <span class="math display">\[
-\begin{split}
-a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r=bi\\\\
-a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r&gt;bi\\\\
-a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r&lt;bi
-\end{split}
-\]</span></p>
-<h4 id="线性规划问题的几何表示">（3）线性规划问题的几何表示</h4>
-<p>对一个有 <span class="math inline">\(r\)</span> 个变元和 <span
-class="math inline">\(m\)</span>
-个线性约束条件的线性规划问题，可行解域是 <span
-class="math inline">\(r\)</span>
-维空间中的一个凸多面体，它由对应于线性约束条件的 <span
-class="math inline">\(m\)</span> 个超平面和对应于非负条件的 <span
-class="math inline">\(r\)</span> 个超平面所围成： <span
-class="math display">\[
-\begin{split}
-a_{11}x_1+a_{12}x_2+...+a_{1r}x_r=b_1\\\\
-a_{21}x_1+a_{22}x_2+...+a_{2r}x_r=b_2\\\\
-...\\\\
-a_{m1}x_1+a_{m2}x_2+...+a_{mr}x_r=b_m\\\\
-x_i \ge 0,i = 1,2,...,r
-\end{split}
-\]</span> 对 <span class="math inline">\(r\)</span>
-维空间的线性规划问题，如果存在最优可行解，那么在凸多面体的某个角点上一定能找到最优可行解。</p>
-<p>在二维空间中，互不平行的两条直线相交于一点，在 <span
-class="math inline">\(r\)</span> 维空间中，互不平行的 <span
-class="math inline">\(r\)</span> 个超平面也相交于一个点。</p>
-<h3 id="线性规划问题的标准形式">4 线性规划问题的标准形式</h3>
-<h4 id="标准形式">（1）标准形式</h4>
-<p>给定一个线性规划问题： <span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max(min)} \ y = \sum  \limits_{i=1}^r c_ix_i \\\\
-\begin{aligned}
-s.t. \quad \sum \limits_{i=1}^r a_{1i}x_i &amp; \le(=,\ge) b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i &amp; \le(=,\ge) b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i &amp; \le(=,\ge) b_m \\\\
-\end{aligned}\\\\
-\quad x_i   \ge 0,i  = 1,2,...,r
-\end{split}
-\end{equation}
-\]</span> 将其标准化，为 <span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y  = \sum  \limits_{i=1}^r c_ix_i \\\\
-\begin{aligned}
-s.t.   \sum \limits_{i=1}^r a_{1i}x_i  &amp;= b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i  &amp;= b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i  &amp;= b_m \\\\
-\end{aligned} \\\\
-x_i   \ge 0,i  = 1,2,...,r
-\end{split}
-\end{equation}
-\]</span></p>
-<h4 id="标准化方法">（2）标准化方法</h4>
-<p>（a）如果约束条件中出现了 <span class="math inline">\(&lt;,\le
-,&gt;,\ge\)</span> ，则需要引入松弛变量： <span class="math display">\[
-\begin{align}
-a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r \le b_k \\\\
-\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r
-+x_{r+k}= b_k
-\end{align}
-\]</span></p>
-<p><span class="math display">\[
-\begin{align}
-a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r \ge b_k \\\\
-\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r
--x_{r+k}= b_k
-\end{align}
-\]</span></p>
-<p>（b）如果线性规划问题求最小值，那么我们可以将等式左右取负转为求最大值问题：
-<span class="math display">\[
-\text{min} \ y = \sum  \limits_{i=1}^r c_ix_i \Rightarrow \text{max} \
-y&#39; = -y = -\sum  \limits_{i=1}^r c_ix_i
-\]</span> （c）如果约束条件中的 <span class="math inline">\(b_k
-&lt;0\)</span> ，那么我们可以将等式左右取负将等式后边置为正值： <span
-class="math display">\[
-a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r = b_k \Rightarrow\text{插入}{b_k &lt;
-0}\Rightarrow -a_{k1}x_1-a_{k2}x_2 -...-a_{kr}x_r = -b_k
-\]</span> （d）如果某个变量 <span class="math inline">\(x_i &lt;
-0\)</span> ，做如下变换： <span class="math display">\[
-x_i = x_i&#39;-x_i&#39;&#39;(x_i&#39;&#39; &gt; x_i&#39; \ge 0)
-\]</span> （e）这样我们就可以得到标准化的线性规划问题： <span
-class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = \sum  \limits_{i=1}^r c_ix_i \\\\
-\begin{aligned}
-s.t. \sum \limits_{i=1}^r a_{1i}x_i \pm x_{r+1} &amp; = b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i \pm x_{r+2} &amp; = b_2 \\\\
-......\\\\
-\sum \limits_{i=1}^r a_{2mi}x_i \pm x_{r+m}  &amp; = b_m
-\end{aligned}
-\\\\
-x_i   \ge 0,x_{r+j} \ge 0,i  = 1,2,...,r \\\\  
-b_i  \ge 0,i=1,2,...,m
-\end{split}
-\end{equation}
-\]</span></p>
-<p>观察得到，<span
-class="math inline">\((x_1,x_2,...,x_r,x_{r+1},x_{r+2},...x_{r+m})\)</span>
-= <span class="math inline">\((0,0,...,0,b_1,b_2,...,b_m)\)</span>
-是当前约束条件下</p>
-<p>的一个可行解。</p>
-<h3 id="线性规划问题的基本定理">5 线性规划问题的基本定理</h3>
-<h4
-id="基本可行解的相关概念">（1）<strong>基本可行解的相关概念</strong></h4>
-<p><strong>基本可行解：</strong>一个可行解的 <span
-class="math inline">\(r+m\)</span> 个分量中的 <span
-class="math inline">\(r\)</span> 个分量都是0称为基本可行解；如果有多于
-<span class="math inline">\(r\)</span>
-个0的分量，则为退化的基本可行解。</p>
-<p>基本可行解中，取非0值的变量称为<strong>基本变量</strong>，其他的称为<strong>非基本变量</strong>。</p>
-<p><strong>最优基本可行解：</strong>使目标函数达到最优的基本可行解。</p>
-<h4
-id="最优基本可行解存在定理">（2）<strong>最优基本可行解存在定理</strong></h4>
-<p><strong>最优基本可行解存在定理(线性规划问题基本定理）：</strong>如果线性规划问题存在最优可行解，则一定存在最优基本可行解。</p>
-<p>这个定理的证明是构造性的，我们直接在后面的求解方法中介绍。</p>
-<p><strong>推论：线性规划问题的最优可行解若存在，则必在可行解域的角点上找到。</strong></p>
-<p>只需在可行解域的有限个角点处计算目标函数的值，然后将这些值进行比较，从中挑出最优的值。</p>
-<p>当变量的数目和线性约束条件的数目增加时，可行解域中的角点就会大大增加，从而在每一角点处计算目标函数的值就会花费许多工作量。</p>
-<h3 id="单纯形方法">6 单纯形方法</h3>
-<h4 id="基本思想">（1）基本思想</h4>
-<img src="/2022/03/19/LinearProgramming/image-20220318140958990.png" class="" title="image-20220318140958990">
-<h4 id="存在问题">（2）存在问题</h4>
-<ul>
-<li>计算了目标函数在某一角点处的值之后，如何求得另一角点使得目标函数在该角点的值会更大些？</li>
-<li>当可行解域的相应角点已经达到时，如何知道已经求得最优解？</li>
-</ul>
-<h4 id="例子-1">（3）例子</h4>
-<p><span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = x_1 + 4x_2 \\\\
-\begin{aligned}
-s.t. 4x_1 + 5x_2 &amp; \le 10 \\\\
-5x_1 + 2x_2 &amp; \le 10\\\\
--7x_1+4x_2 &amp; \le 4 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span></p>
-<p>标准化后，为：</p>
-<p><span class="math display">\[
-\begin{equation}
-\begin{split}
-\text{max} \ y = x_1 + 4x_2 \\\\
-\begin{aligned}
-s.t. 4x_1 + 5x_2 + x_3 &amp; = 10 \\\\
-5x_1 + 2x_2 + x_4 &amp; = 10 \\\\
--7x_1+4x_2 +x_5 &amp; = 4 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
-\end{aligned}
-\end{split}
-\end{equation}
-\]</span> 注意这里 <span class="math inline">\(r=2,m=3\)</span></p>
-<img src="/2022/03/19/LinearProgramming/image-20220318143957406.png" class="" title="image-20220318143957406">
-<p>在 <span class="math inline">\(m\)</span> 个约束条件中，令 <span
-class="math inline">\(r+m\)</span> 个变量的 <span
-class="math inline">\(r\)</span> 个(非基本变量)为0，解出其余 <span
-class="math inline">\(m\)</span>
-个变量，就可以得到一个基本可行解，对应一个角点。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/14/%E7%AE%97%E6%B3%95%E4%B9%8B%E7%BD%91%E7%BB%9C%E6%B5%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Rebecca">
-      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rebecca的赛博世界">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/14/%E7%AE%97%E6%B3%95%E4%B9%8B%E7%BD%91%E7%BB%9C%E6%B5%81/" class="post-title-link" itemprop="url">算法之网络流</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-14 23:24:24 / 修改时间：23:58:39" itemprop="dateCreated datePublished" datetime="2022-03-14T23:24:24+08:00">2022-03-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本章大纲：</p>
-<ol type="1">
-<li>理解最大流、任意流、最小割、任意割之间的关系；</li>
-<li>掌握网络最大流问题和最小割问题及其求解算法，给出一个网络能求出它的最大流或者最小割。</li>
-</ol>
-<h2 id="最大流和最小割问题">最大流和最小割问题</h2>
-<ol type="1">
-<li><p>流网络</p>
-<ol type="1">
-<li>一个流网络是一个图 <span
-class="math inline">\(G=(V,E,s,t,c)\)</span>
-<ol type="1">
-<li><span class="math inline">\((V,E)\)</span> 为一个有向图，起点为
-<span class="math inline">\(s\in V\)</span> ，终点为 <span
-class="math inline">\(t \in V\)</span></li>
-<li>对每一条边 <span class="math inline">\(e\in E\)</span> ，容量 <span
-class="math inline">\(c(e) &gt; 0\)</span></li>
-</ol></li>
-</ol></li>
-<li><p>最大流问题</p>
-<ol type="1">
-<li>一个流网络 <span class="math inline">\(f\)</span> 是一个函数，满足
-<ol type="1">
-<li>对于每一条边 <span class="math inline">\(e \in E\)</span> ： <span
-class="math inline">\(0 \le f(e)\le c(e)\)</span></li>
-<li>对于每一个结点 <span class="math inline">\(v \in V-\lbrace s, t
-\rbrace\)</span> ： <span class="math inline">\(\sum_{e \in \ to \ v }
-f(e)=\sum_{e \ out \ of \ v}\)</span></li>
-</ol></li>
-<li>流值 <span class="math inline">\(val(f)=\sum_{e \ out \ of \ s} f(e)
-- \sum_{e \ in \  to \  s}\)</span></li>
-<li>最大流问题：找到一个流的最大流值。</li>
-</ol></li>
-<li><p>最小割问题</p>
-<ol type="1">
-<li><p>一个割集是一个划分 <span class="math inline">\((A,B)\)</span>
-，满足 <span class="math inline">\(s \in A\)</span> 和 <span
-class="math inline">\(t\in B\)</span></p></li>
-<li><p>割集的容量是从 <span class="math inline">\(A\)</span> 到 <span
-class="math inline">\(B\)</span>​ 的所有边的容量之和 <span
-class="math display">\[
-cap(A,B)=\sum_{e \ out \ of \ A}c(e)
-\]</span></p></li>
-<li><p>最小割问题：找到一个割的最小容量</p></li>
-</ol></li>
-</ol>
-<h2 id="fordfulkerson算法">Ford–Fulkerson算法</h2>
-<ol type="1">
-<li><p>贪心算法</p>
-<ol type="1">
-<li>对每一条边 <span class="math inline">\(e \in E\)</span>
-，最开始初始化 <span class="math inline">\(f(e)=0\)</span>
-，即每一条边上的流量为0</li>
-<li>找到从起点 <span class="math inline">\(s\)</span> 到终点 <span
-class="math inline">\(t\)</span> 的路径 <span
-class="math inline">\(P\)</span> ，满足 <span
-class="math inline">\(f(e)&lt;c(e)\)</span>
-，即找到从起点到终点流量小于容量的路径</li>
-<li>将 <span class="math inline">\(P\)</span> 作为增广路径进行增广</li>
-<li>一直重复知道算法终止</li>
-</ol></li>
-<li><p>贪心算法不能得到最优解</p>
-<ol type="1">
-<li>贪心算法无法撤销那些“坏”的操作</li>
-</ol></li>
-<li><p>残量网络</p>
-<ol type="1">
-<li><p>原来的边 <span class="math inline">\(e\ = (u,v )\in
-E\)</span></p>
-<ol type="1">
-<li>边上的流为 <span class="math inline">\(f(e)\)</span></li>
-<li>边上的容量为 <span class="math inline">\(c(e)\)</span></li>
-</ol></li>
-<li><p>反向边 <span class="math inline">\(e^{reverse}=(v,u)\)</span></p>
-<ol type="1">
-<li>反向边就是对流的撤销操作</li>
-</ol></li>
-<li><p>残留容量 <span class="math display">\[
-c_f(e)=
-\begin{cases}
-c(e)-f(e) &amp; if\ e \in E\\
-f(e) &amp; if\ e^{reverse}\in E
-\end{cases}
-\]</span></p></li>
-<li><p>残量网络 <span
-class="math inline">\(G_f=(V,E_f,s,t,c_f)\)</span></p>
-<ol type="1">
-<li><span class="math inline">\(E_f=\lbrace e:f(e)&lt;c(e)\rbrace \cup
-\lbrace e^{reverse}:f(e)&gt;0\rbrace\)</span>
-，即残量网络的边集是由流量小于容量的边以及那些有流量的反向边的并集。</li>
-<li>关键性质：<span class="math inline">\(f&#39;\)</span> 是一个在 <span
-class="math inline">\(G_f\)</span> 中的流，当且仅当 <span
-class="math inline">\(f+f&#39;\)</span> 是 <span
-class="math inline">\(G\)</span> 上的流。</li>
-</ol></li>
-</ol></li>
-<li><p>在残量网络中运行贪心算法即为Ford–Fulkerson算法</p>
-<ol type="1">
-<li><p>增广路径是在 <span class="math inline">\(G_f\)</span> 上的一条由
-<span class="math inline">\(s\rightarrow t\)</span> 的简单路径</p></li>
-<li><p>瓶颈容量是增广路径 <span class="math inline">\(P\)</span>
-上的所有边的最小残留容量。</p></li>
-<li><p>关键性质：令 <span class="math inline">\(f\)</span>
-为一个流，<span class="math inline">\(P\)</span> 为 <span
-class="math inline">\(G_f\)</span> 上的一条增广路径。在调用
-$f'AUGMENT(f,c,P) $ 的算法之后，结果 <span
-class="math inline">\(f&#39;\)</span> 是一个流，同时，<span
-class="math inline">\(val(f&#39;)=val(f)+bottleneck(G_f,P)\)</span></p></li>
-<li><p>增加增广路径的伪代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AUGMENT(f,c,P)</span><br><span class="line"></span><br><span class="line">δ ← 增广路径P的瓶颈容量</span><br><span class="line">FOREACH P中的边e</span><br><span class="line">	IF (e ∈ E) </span><br><span class="line">		f(e) ← f(e) + δ</span><br><span class="line">	ELSE </span><br><span class="line">		f(e_r) ← f(e_r) - δ</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure>
-<p>注：伪代码中的 e_r 即为 <span
-class="math inline">\(e^{reverse}\)</span></p></li>
-<li><p>Ford–Fulkerson算法</p>
-<ol type="1">
-<li>对每一条边 <span class="math inline">\(e \in E\)</span>
-，最开始初始化 <span class="math inline">\(f(e)=0\)</span>
-，即每一条边上的流量为0</li>
-<li>在 <span class="math inline">\(G_f\)</span> 中找到从起点 <span
-class="math inline">\(s\)</span> 到终点 <span
-class="math inline">\(t\)</span> 的路径 <span
-class="math inline">\(P\)</span> ，满足 <span
-class="math inline">\(f(e)&lt;c(e)\)</span>
-，即找到从起点到终点流量小于容量的路径</li>
-<li>将 <span class="math inline">\(P\)</span> 作为增广路径进行增广</li>
-<li>一直重复直到算法终止</li>
-</ol></li>
-<li><p>Ford–Fulkerson算法伪代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Ford–Fulkerson(G)</span><br><span class="line"></span><br><span class="line">FOREACH e∈E</span><br><span class="line">	f(e) ← 0</span><br><span class="line">Gf ← G的残量网络</span><br><span class="line">WHILE (在Gf中存在一条s→t的路径P)</span><br><span class="line">	f ← AUGMENT(f,c,P)</span><br><span class="line">	更新Gf</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure></li>
-</ol></li>
-<li><p>正确性证明</p></li>
-<li><p>运行时间</p>
-<ol type="1">
-<li>假设每一条边上的容量 <span class="math inline">\(c(e)\)</span>
-是一个介于 <span class="math inline">\(1\)</span> 和 <span
-class="math inline">\(C\)</span> 之间的整数</li>
-<li>经过Ford–Fulkerson算法，每一条边上的流值 <span
-class="math inline">\(f(e)\)</span> 和残留容量 <span
-class="math inline">\(c_f(e)\)</span> 是一个整数</li>
-<li>Ford–Fulkerson算法在最多 $ n C$ 条增广路径后停止，且 <span
-class="math inline">\(val(f^*) \le n C\)</span> ，其中 <span
-class="math inline">\(f^*\)</span> 为最大流</li>
-<li>Ford–Fulkerson算法的运行时间为 <span
-class="math inline">\(O(mnC)\)</span>
-，因为使用BFS或DFS寻找增广路径使用<span
-class="math inline">\(O(m)\)</span> 的时间。</li>
-<li>整数定理：存在一个整数的最大流 <span
-class="math inline">\(f^*\)</span></li>
-</ol></li>
-</ol>
-<h2 id="最大流最小割定理">最大流最小割定理</h2>
-<ol type="1">
-<li><p>流值引理</p>
-<ol type="1">
-<li>令 <span class="math inline">\(f\)</span> 为任意流，<span
-class="math inline">\((A,B)\)</span> 为任意割集，那么，流 <span
-class="math inline">\(f\)</span> 的值 <span
-class="math inline">\(val(f)\)</span> 等于经过割集 <span
-class="math inline">\((A,B)\)</span> 的流</li>
-</ol></li>
-<li><p>流和割构成弱对偶关系</p>
-<ol type="1">
-<li><p>令 <span class="math inline">\(f\)</span> 为任意流，<span
-class="math inline">\((A,B)\)</span> 为任意割集，那么，流 <span
-class="math inline">\(f\)</span> 的值 <span
-class="math inline">\(val(f)\)</span> 小于割集 <span
-class="math inline">\((A,B)\)</span> 的容量。</p></li>
-<li><p>证明： <span class="math display">\[
-\begin{align}
-val(f) &amp;=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to
-A}}{f(e)}
-\\ &amp;\le \sum_{\text{e out of A}}{f(e)}
-\\ &amp;\le \sum_{\text{e out of A}}{c(e)}
-\\ &amp;= cap(A,B)
-\end{align}
-\]</span></p></li>
-</ol></li>
-<li><p>最优性条件</p>
-<ol type="1">
-<li>令 <span class="math inline">\(f\)</span> 为任意流，<span
-class="math inline">\((A,B)\)</span> 为任意割集，那么，当流 <span
-class="math inline">\(f\)</span> 的值 <span
-class="math inline">\(val(f)\)</span> 等于割集 <span
-class="math inline">\((A,B)\)</span> 的容量时，流 <span
-class="math inline">\(f\)</span> 为最大流，割集 <span
-class="math inline">\((A,B)\)</span> 为最小割。</li>
-</ol></li>
-<li><p>最大流和最小割定理</p>
-<ol type="1">
-<li><p>最大流的流值等于最小割的容量</p>
-<ol type="1">
-<li>我们通过一下三个条件来进行命题的证明。
-<ol type="1">
-<li>存在一个割集 (A,B)，<span
-class="math inline">\(cap(A,B)=val(f)\)</span></li>
-<li><span class="math inline">\(f\)</span> 是一个最大流</li>
-<li><span class="math inline">\(f\)</span> 没有增广路径</li>
-</ol></li>
-</ol></li>
-</ol></li>
-</ol>
-<h2 id="变尺度算法">变尺度算法</h2>
-<ol type="1">
-<li><p>如何选择增广路径</p></li>
-<li><p>变尺度算法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CAPACITY-SCALING(G)</span><br><span class="line"></span><br><span class="line">FOREACH e∈E</span><br><span class="line">	f(e) ← 0</span><br><span class="line">Δ ← 2的最大幂次（&lt;= C)</span><br><span class="line">WHILE (Δ &gt;= 1)</span><br><span class="line">	Gf(Δ) ← G关于流f的Δ-残量网络</span><br><span class="line">	WHILE(在Gf(Δ)中存在一条s→t的路径P)</span><br><span class="line">		f ← AUGMENT(f,c,P)</span><br><span class="line">		更新Gf(Δ)</span><br><span class="line">	Δ ← Δ/2</span><br><span class="line">RETURN f</span><br></pre></td></tr></table></figure></li>
-<li><p>正确性证明</p>
-<ol type="1">
-<li>假设，所有边的容量都是介于1到C的整数</li>
-<li>变尺度参数 <span class="math inline">\(\Delta\)</span>
-是一个2的幂次</li>
-<li><span class="math inline">\(\Delta=1\)</span> 时，没有增广路径</li>
-</ol></li>
-<li><p>运行时间</p>
-<ol type="1">
-<li><p>引理1：算法最多循环 <span class="math inline">\(1+\left \lfloor
-logC\right \rfloor\)</span> 次</p>
-<ol type="1">
-<li>最开始初始化时，<span class="math inline">\(C/2 &lt; \Delta \le
-C\)</span> ，而 <span class="math inline">\(\Delta\)</span>
-在每次循环中会除以 <span class="math inline">\(2\)</span> .</li>
-</ol></li>
-<li><p>引理2：令 <span class="math inline">\(f\)</span> 为一个 <span
-class="math inline">\(\Delta\)</span>-变尺度阶段后的流，则最大流值不超过
-<span class="math inline">\(val(f)+m\Delta\)</span></p>
-<ol type="1">
-<li><p><span class="math display">\[
-\begin{align}
-val(f) &amp;=\sum_{\text{e out of A}}{f(e)} - \sum_{\text{e in to
-A}}{f(e)}
-\\&amp;\ge\sum_{\text{e out of A}}{(c(e)-\Delta)} - \sum_{\text{e in to
-A}}{\Delta}
-\\&amp;\ge \sum_{\text{e out of A}}c(e) - \sum_{\text{e out of
-A}}{\Delta} -\sum_{\text{e in to A}}{\Delta}
-\\&amp;\ge cap(A,B)-m\Delta
-\end{align}
-\]</span></p></li>
-<li><p>流出边的流量一定<span class="math inline">\(\le \Delta\)</span>
-，流入边的容量一定 <span class="math inline">\(\le
-\Delta\)</span></p></li>
-</ol></li>
-<li><p>引理3：每个阶段最多进行 <span class="math inline">\(2m\)</span>
-次增广</p>
-<ol type="1">
-<li>令 <span class="math inline">\(f\)</span> 为一个 <span
-class="math inline">\(\Delta\)</span>-变尺度阶段<strong>前</strong>的流</li>
-<li>由引理2可知，最大流值不超过 <span class="math inline">\(val(f)+m
-(2\Delta)\)</span></li>
-<li>而在<span
-class="math inline">\(\Delta\)</span>阶段，每次增广至少<span
-class="math inline">\(\Delta\)</span>的流量。</li>
-</ol></li>
-<li><p>定理：变容算法运行时间为 <span
-class="math inline">\(O(m^2logC)\)</span></p></li>
-</ol></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -3736,14 +2789,14 @@ class="math inline">\(O(m^2logC)\)</span></p></li>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

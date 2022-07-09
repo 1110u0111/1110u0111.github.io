@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引入 知识图谱其实涉及的内容非常多，比如数据的来源可能是一些文本型的数据，可能是原来数据库的数据，首先面临的问题是，如何从这些数据中提取数据存储到你的知识库中。那么第一个问题就是，如何进行知识抽取？ 抽取了知识之后，可能会出现冲突，可能会出现多个知识指向的是同一个东西，则这是多个数据源融合的问题。 构建知识图谱面临着多种数据，如何对知识进行表示？假如你的数据是从互联网中爬虫得到的网页，那么从">
+<meta property="og:type" content="article">
+<meta property="og:title" content="知识图谱">
+<meta property="og:url" content="http://example.com/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/index.html">
+<meta property="og:site_name" content="Rebecca的赛博世界">
+<meta property="og:description" content="引入 知识图谱其实涉及的内容非常多，比如数据的来源可能是一些文本型的数据，可能是原来数据库的数据，首先面临的问题是，如何从这些数据中提取数据存储到你的知识库中。那么第一个问题就是，如何进行知识抽取？ 抽取了知识之后，可能会出现冲突，可能会出现多个知识指向的是同一个东西，则这是多个数据源融合的问题。 构建知识图谱面临着多种数据，如何对知识进行表示？假如你的数据是从互联网中爬虫得到的网页，那么从">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-29T13:30:00.000Z">
+<meta property="article:modified_time" content="2022-07-01T02:41:52.170Z">
+<meta property="article:author" content="Rebecca">
+<meta property="article:tag" content="知识图谱">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>知识图谱 | Rebecca的赛博世界</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rebecca的赛博世界</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          知识图谱
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-29 21:30:00" itemprop="dateCreated datePublished" datetime="2022-06-29T21:30:00+08:00">2022-06-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-01 10:41:52" itemprop="dateModified" datetime="2022-07-01T10:41:52+08:00">2022-07-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引入">引入</h1>
+<p>知识图谱其实涉及的内容非常多，比如数据的来源可能是一些文本型的数据，可能是原来数据库的数据，首先面临的问题是，如何从这些数据中提取数据存储到你的知识库中。那么第一个问题就是，如何进行知识抽取？</p>
+<p>抽取了知识之后，可能会出现冲突，可能会出现多个知识指向的是同一个东西，则这是多个数据源融合的问题。</p>
+<p>构建知识图谱面临着多种数据，如何对知识进行表示？假如你的数据是从互联网中爬虫得到的网页，那么从网页中提取什么来作为知识来存储到知识图谱之中？</p>
+<p>知识图谱在表现形式上，表现为结点和边的图数据库，那么什么是结点？什么是边？</p>
+<p>那么就涉及知识图谱的构建，涉及知识表示、知识抽取、知识融合等问题，还有知识存储、知识推理，以及上层的应用。知识图谱需要基于其上层应用进行构建，上层应用不同，构建方法不同。如果知识图谱仅仅为了问答，则整个知识图谱则会根据问答来构建。为了现在有一些问题在于，构建完自己的知识图谱之后发现不是很好用，原因就是，它并没有基于其上层的应用。比如美团构建知识图谱是根据其业务————检索和推荐来构建的。知识图谱是需要围绕着需求来构建的。</p>
+<p>知识图谱并不是一个结构型数据库，是一个图数据库，所以其构建非常关键。它的来源就是数据，并不是知识。我们需要知道，数据变成知识需要的过程，也就是实例变成上层抽象的过程。</p>
+<p>知识图谱在表达形式上，表现为结点和边构成的图，这些结点被称之为实体，边被称之为关系，那么，在数据中，哪些是实体？哪些是关系？涉及的属性是什么？这就涉及到知识抽取问题。</p>
+<p>在关系型数据库中，查询语言是SQL，但是在图数据库中，又有不同的语言。同时，它应该涉及语义搜索。</p>
+<h1 id="知识图谱">知识图谱</h1>
+<p>知识图谱是一种基于图(Graph,G=(V,E))的数据结构，由节点(node)和边(Edge)组成，每个节点表示一个“实体”，每条边为实体与实体之间的“关系”，知识图谱本质上是语义网络。</p>
+<p>知识图谱描述显示世界中存在的实体以及实体之间的关系，已被广泛应用于智能搜索、智能问答、个性化推荐、内容分发等领域。</p>
+<p>基本形式为(实体1-关系-实体2),(实体-属性-属性值)</p>
+<ul>
+<li>实体：有区别性且独立存在的事物。如某个国家：中国、英国等；某个城市：北京、伦敦等。</li>
+<li>属性值：实体指向的属性的值。例如中国(实体)面积(属性)960万平方公里(属性值)</li>
+<li>关系：把图节点(实体、语义类、属性值)映射到布尔值的函数。</li>
+</ul>
+<p>Node: 值(Value)</p>
+<ul>
+<li>实体(Entity)
+<ul>
+<li>(姚明,出生地,上海市)</li>
+</ul></li>
+<li>字符串(String)
+<ul>
+<li>(北京大学,学术传统,兼容并包、思想自由)</li>
+</ul></li>
+<li>数字(Number)
+<ul>
+<li>平方公里：(北京市,面积,1.641万)</li>
+<li>公斤：(姚明,体重,140公斤)</li>
+<li>米：(姚明,身高,2.29米)</li>
+</ul></li>
+<li>时间(Date)
+<ul>
+<li>(姚明，出生年份，1981年)</li>
+</ul></li>
+<li>枚举(Enumerate)
+<ul>
+<li>(姚明,性别,男)</li>
+</ul></li>
+</ul>
+<p>边：关系</p>
+<ul>
+<li>Type: 类型</li>
+<li>Subclass: 子类</li>
+<li>Relation: 关系</li>
+<li>Property, Attribute: 属性</li>
+</ul>
+<p>Node: 高阶三元组</p>
+<ul>
+<li>与时间、地点相关
+<ul>
+<li>((每个))</li>
+</ul></li>
+<li>事件</li>
+</ul>
+<h2 id="领域知识">领域知识</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">股票; tags[行业,地区,板块,股票种类]</span><br><span class="line">&#123;</span><br><span class="line">  基本属性:&#123;</span><br><span class="line">    股票代码(ID)[String](六位整形数字):</span><br><span class="line">    股票种类    </span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">  发行属性:&#123;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>知识图谱中的知识</p>
+<ul>
+<li>事实性知识
+<ul>
+<li>(乔布斯, CEO, 苹果)</li>
+</ul></li>
+<li>主观性知识
+<ul>
+<li>“我今天入手诺基亚5800，把玩不到24小时，目前感觉……，但是……”</li>
+</ul></li>
+<li>场景知识</li>
+<li>语言知识</li>
+<li>常识知识</li>
+</ul>
+<h2 id="典型的知识图谱">典型的知识图谱</h2>
+<p>WordNet/HowNet</p>
+<ul>
+<li>一部在线词典数据库系统，采用了与传统词典不同的方式，即按照词义而不是词形来组织，</li>
+<li>词语被聚类为词义簇(synset)</li>
+</ul>
+<p>Cyc</p>
+<ul>
+<li>由术语Terms和断言Assertions组成。</li>
+</ul>
+<h3 id="微软知识图谱">微软知识图谱</h3>
+<ul>
+<li>Concept
+Graph是以概念层次体系为中心的知识图谱。与Freebase等知识图谱不同，Concept
+Graph是以概念定义和概念之间的IsA关系为主。</li>
+<li>给定一个概念如“Microsoft”，Concept
+Graph返回一组与“微软”有IsA关系概念组，如“Company”，“Software
+Company”，“Largest OS
+Vender”等。这就成为概念化“Conceptualization”。</li>
+<li>Concept
+Graph可以用于短文本理解和语义消歧中。例如，给定一个短文本“the engineer
+is eating the apple”，可以利用Concept
+Graph来正确理解其中“apple”的含义是“吃的苹果”还是“苹果公司”。微软发布的第一个版本包含超过540万的概念。1255万的实体，和8760万的关系。Concept
+Graph主要通过从互联网和网络日志中挖掘来构建。</li>
+</ul>
+<h3 id="facebook知识图谱">Facebook知识图谱</h3>
+<h3 id="亚马逊知识图谱">亚马逊知识图谱</h3>
+<p><a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/neptune"
+class="uri">https://aws.amazon.com/cn/neptune</a></p>
+<h3 id="路透社知识图谱">路透社知识图谱</h3>
+<p><a
+target="_blank" rel="noopener" href="http://financial-risk-solutions.thomsonreuters.info/KnowledgeGraphFeed"
+class="uri">http://financial-risk-solutions.thomsonreuters.info/KnowledgeGraphFeed</a></p>
+<h3 id="linkedln知识图谱">Linkedln知识图谱</h3>
+<h3 id="阿里巴巴知识图谱">阿里巴巴知识图谱</h3>
+<h3 id="美团知识图谱">美团知识图谱</h3>
+<h3 id="百度知识图谱">百度知识图谱</h3>
+<ul>
+<li>实体图谱：用于精准回答</li>
+<li>关注点图谱：用于文本理解</li>
+<li>意图图谱：用于对话</li>
+</ul>
+<h3 id="金融知识图谱">金融知识图谱</h3>
+<h3 id="中文开放知识图谱">中文开放知识图谱</h3>
+<h2 id="应用">应用</h2>
+<h3 id="问答">问答</h3>
+<h3 id="精准语义搜索">精准语义搜索</h3>
+<h3 id="关系搜索">关系搜索</h3>
+<h3 id="推荐">推荐</h3>
+<h3 id="医疗">医疗</h3>
+<h3 id="辅助情报研判">辅助情报研判</h3>
+<h3 id="辅助智能制造">辅助智能制造</h3>
+<p>Siemens</p>
+<ul>
+<li>Challenges in our industry
+<ul>
+<li>Isolated data silos</li>
+<li>Data inaccessibility</li>
+<li>Inefficient workflows</li>
+<li>Low data quality</li>
+</ul></li>
+<li>Industrial Knowledge Graph
+<ul>
+<li>Isolated Data Silos with hand-crafted expert systems</li>
+<li>Domain</li>
+</ul></li>
+<li>Example
+<ul>
+<li>09:00</li>
+<li>Question: What's the MTTF distribution across turbines with coating
+loss last FY?</li>
+<li>Machine: I will compile the relevant data and visualize it in your
+favourite BI tool.</li>
+<li>Chanllenge:
+<ul>
+<li>Required data is distributed across multiple databases.</li>
+<li>Source systems have highly complex schemas.</li>
+<li>Need to include unstructured information into analyses.</li>
+<li>Reactivity and effciency needs call for end-user access to
+data.</li>
+</ul></li>
+<li>Solution:
+<ul>
+<li>NLP to make information from documents accessible for
+analytics.</li>
+<li>Physical and virtual data integration to provide unifined view.</li>
+<li>Access using a domain ontology and intelligent query construction
+support.</li>
+<li>Connections providing data to existing tools in legacy format.</li>
+</ul></li>
+<li>Value Generation
+<ul>
+<li>Unified Data Hub: All information accessible from one systems,
+independent of source and type.</li>
+<li>Empower domain experts: Subject matter experts can use domain
+language to access data.</li>
+<li>Enabler for analytics: Foundation for fleet-level analytics.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h1 id="知识图谱生命周期">知识图谱生命周期</h1>
+<h2 id="知识图谱的生命周期">知识图谱的生命周期</h2>
+<ul>
+<li>知识建模：建模领域知识结构</li>
+<li>知识获取：获取领域内的事实知识</li>
+<li>知识集成：估计知识的可信度，将碎片知识组装成知识网络</li>
+<li>知识存储/查询/应用：提供高性能知识服务</li>
+</ul>
+<h2 id="领域知识建模">领域知识建模</h2>
+<ul>
+<li>输入：
+<ul>
+<li>领域（医疗、金融……）</li>
+<li>应用场景</li>
+</ul></li>
+<li>输出：领域知识本体
+<ul>
+<li>领域实体类别体系</li>
+<li>实体属性</li>
+<li>领域语义关系</li>
+<li>语义关系之间的关系</li>
+</ul></li>
+<li>关键技术：
+<ul>
+<li>Ontology Engineering</li>
+</ul></li>
+</ul>
+<h3 id="知识抽取">知识抽取</h3>
+<ul>
+<li>输入
+<ul>
+<li>领域知识本体</li>
+<li>海量数据：文本</li>
+</ul></li>
+<li>输出</li>
+<li>主要技术</li>
+</ul>
+<h3 id="知识集成">知识集成</h3>
+<ul>
+<li>输入
+<ul>
+<li>抽取出来的知识</li>
+<li>现有知识库</li>
+<li>知识本体</li>
+</ul></li>
+<li>输出
+<ul>
+<li>知识置信度</li>
+<li>统一知识库</li>
+</ul></li>
+<li>关键技术
+<ul>
+<li>Ontology Matching</li>
+<li>Entity Linking</li>
+</ul></li>
+</ul>
+<h3 id="知识查询推理存储">知识查询、推理、存储</h3>
+<ul>
+<li>输入
+<ul>
+<li>大规模知识库知识</li>
+</ul></li>
+<li>输出
+<ul>
+<li>知识库存储/查询/推理服务</li>
+</ul></li>
+<li>主要技术
+<ul>
+<li>知识表示</li>
+<li>知识查询语言</li>
+<li>存储/检索引擎</li>
+<li>推理引擎</li>
+</ul></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Rebecca
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" title="知识图谱">http://example.com/2022/06/29/知识图谱/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag"># 知识图谱</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/" rel="prev" title="每周论文w1">
+      <i class="fa fa-chevron-left"></i> 每周论文w1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/07/01/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E7%9F%A5%E8%AF%86%E8%A1%A8%E7%A4%BA/" rel="next" title="知识图谱-知识表示">
+      知识图谱-知识表示 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.</span> <span class="nav-text">知识图谱</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E7%9F%A5%E8%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">领域知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E7%9A%84%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.</span> <span class="nav-text">典型的知识图谱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E8%BD%AF%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.1.</span> <span class="nav-text">微软知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#facebook%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.2.</span> <span class="nav-text">Facebook知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.3.</span> <span class="nav-text">亚马逊知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E9%80%8F%E7%A4%BE%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.4.</span> <span class="nav-text">路透社知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linkedln%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.5.</span> <span class="nav-text">Linkedln知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.6.</span> <span class="nav-text">阿里巴巴知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BE%8E%E5%9B%A2%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.7.</span> <span class="nav-text">美团知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BE%E5%BA%A6%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.8.</span> <span class="nav-text">百度知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%91%E8%9E%8D%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.9.</span> <span class="nav-text">金融知识图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E5%BC%80%E6%94%BE%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.2.10.</span> <span class="nav-text">中文开放知识图谱</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E7%AD%94"><span class="nav-number">2.3.1.</span> <span class="nav-text">问答</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E5%87%86%E8%AF%AD%E4%B9%89%E6%90%9C%E7%B4%A2"><span class="nav-number">2.3.2.</span> <span class="nav-text">精准语义搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%90%9C%E7%B4%A2"><span class="nav-number">2.3.3.</span> <span class="nav-text">关系搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90"><span class="nav-number">2.3.4.</span> <span class="nav-text">推荐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BB%E7%96%97"><span class="nav-number">2.3.5.</span> <span class="nav-text">医疗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%85%E5%8A%A9%E6%83%85%E6%8A%A5%E7%A0%94%E5%88%A4"><span class="nav-number">2.3.6.</span> <span class="nav-text">辅助情报研判</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%85%E5%8A%A9%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0"><span class="nav-number">2.3.7.</span> <span class="nav-text">辅助智能制造</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">3.</span> <span class="nav-text">知识图谱生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">3.1.</span> <span class="nav-text">知识图谱的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E7%9F%A5%E8%AF%86%E5%BB%BA%E6%A8%A1"><span class="nav-number">3.2.</span> <span class="nav-text">领域知识建模</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E6%8A%BD%E5%8F%96"><span class="nav-number">3.2.1.</span> <span class="nav-text">知识抽取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E9%9B%86%E6%88%90"><span class="nav-number">3.2.2.</span> <span class="nav-text">知识集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E6%9F%A5%E8%AF%A2%E6%8E%A8%E7%90%86%E5%AD%98%E5%82%A8"><span class="nav-number">3.2.3.</span> <span class="nav-text">知识查询、推理、存储</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rebecca"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Rebecca</p>
+  <div class="site-description" itemprop="description">弱小和无知不是生存的障碍，傲慢才是。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-03 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rebecca</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

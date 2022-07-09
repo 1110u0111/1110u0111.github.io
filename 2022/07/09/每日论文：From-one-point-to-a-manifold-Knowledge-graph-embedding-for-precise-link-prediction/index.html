@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="每日论文：ManifoldE 问题 在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 \(\approx\) 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。 方法 对于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction">
+<meta property="og:url" content="http://example.com/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/index.html">
+<meta property="og:site_name" content="Rebecca的赛博世界">
+<meta property="og:description" content="每日论文：ManifoldE 问题 在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 \(\approx\) 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。 方法 对于">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-09T14:42:18.000Z">
+<meta property="article:modified_time" content="2022-07-09T15:06:46.838Z">
+<meta property="article:author" content="Rebecca">
+<meta property="article:tag" content="论文精读">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction | Rebecca的赛博世界</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rebecca的赛博世界</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Rebecca">
+      <meta itemprop="description" content="弱小和无知不是生存的障碍，傲慢才是。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rebecca的赛博世界">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-09 22:42:18 / 修改时间：23:06:46" itemprop="dateCreated datePublished" datetime="2022-07-09T22:42:18+08:00">2022-07-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="每日论文manifolde">每日论文：ManifoldE</h1>
+<h2 id="问题">问题</h2>
+<p>在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系
+<span class="math inline">\(\approx\)</span>
+尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。</p>
+<h3 id="方法">方法</h3>
+<p>对于预测实体链接问题，针对基于逻辑规则的知识推理计算复杂度过高的问题，可以使用基于平移的方法以及本文提出的ManifoldE方法，通过嵌入表示，将数据结构转化为向量化的表示，使用明确的目标函数，将实体和关系投影到连续的高维向量空间中。基于平移的方法将尾实体映射为一个点，而ManifoldE方法将尾实体映射到流形上。</p>
+<ul>
+<li>基于平移的方法：知识图谱中的事实通常表示为一个三元组 <span
+class="math inline">\((h,r,t)\)</span>，其中，<span
+class="math inline">\(h,r,t\)</span> 分别表示头实体，关系以及尾实体。
+<ul>
+<li>TransE方法：将三元组视为头实体到尾实体的一个特定关系的平移，即 <span
+class="math inline">\(h + r = t\)</span>，计算分数的打分方法为 <span
+class="math inline">\(||h+r-t||^2_2\)</span>，TransE就是希望头实体的向量表示加上关系的向量表示尽量接近于尾实体的向量表示，得分越高越合理。TransE模型的优点在于直观且可解释性强。</li>
+<li>PTransE方法：TransE方法只能进行单步推理，PTransE方法改进了TransE方法，考虑了路径相关因素，将原来的三元组
+<span class="math inline">\((h,r,t)\)</span> 视为 <span
+class="math inline">\((h,r_1,e_1),(e_1,r_2,t),(h,r_1\circ
+r_2,t)\)</span>。PTransE模型的优点在于可以进行多步推理。</li>
+<li>KG2E方法：一种概率嵌入方法，用于对知识图谱中未确定的实体或关系进行建模。KG2E方法使用高斯分布来表示实体和关系，其中高斯分布的均值表示的是实体或关系在语义空间中的中心位置，高斯分布的协方差表示该实体或关系的不确定度。KG2E模型的优点在于，考虑了知识图谱中，关系和实体的语义本身就具有不确定性的性质。</li>
+</ul></li>
+</ul>
+<p>以上基于平移的方法的原理都是 <span class="math inline">\(h + r =
+t\)</span>
+，存在两个问题：一是不适定问题。不适定问题指的是一个方程组中，方程式个数远大于变量个数，可能会导致不存在稳定的唯一解，而这也是以往方法无法准确进行精准的链接预测的原因之一。二是采用过于严格的几何形状，难以解决两个实体之间关系的多对多问题，因为多个尾实体竞争一个点，势必会造成损失。</p>
+<ul>
+<li>ManifoldE方法</li>
+</ul>
+<p>对于TransE采用过于严格的几何形状问题，Manifold方法的解决思路是，对于三元组，采用的是基于流形的准则
+<span class="math inline">\(M(h,r,t)=D_r^2\)</span> 来代替 <span
+class="math inline">\(h+r=t\)</span>，且用于衡量三元组距离的打分方法为
+<span
+class="math inline">\(f_r(h,t)=||M(h,r,t)-D_r^2||^2\)</span>。该方法可以将多个尾实体映射到流形上来缓解多个尾实体竞争一个点的问题。对于
+<span class="math inline">\(M\)</span> 的定义，若以球体为流形，流形函数
+<span class="math inline">\(M\)</span> 则可表示为 <span
+class="math inline">\(M(h,r,t)=||h+r-t||_2^2\)</span>，将球体放置在希尔伯特空间来更高效的表征流形；考虑到两个球体只有在某些严格条件下才能相交，也可以以超平面为流形，则流形函数
+<span class="math inline">\(M\)</span> 则可表示为 <span
+class="math inline">\(M(h,r,t)=(h+r_{head})^T(t+r_{tail})\)</span>，亦可以使用核技巧。</p>
+<p>为了解决TransE的不适定问题，以球形为例，本文对于每个三元组只对应一个等式
+<span class="math inline">\(\sum_{i=1}^d
+(h_i+r_i-t_i)^2=D_r^2\)</span>，所以只要满足 <span
+class="math inline">\(d \ge \frac{T}{E+R}\)</span>，等式数量 <span
+class="math inline">\(T\)</span> 就不会大于自由变量 <span
+class="math inline">\(((E+R)*d)\)</span>，即将嵌入维度增加即可解决该问题。</p>
+<h2 id="项目应用">项目应用</h2>
+<p>对于链接任务，ManifoldE方法在数据集WN18上的HITS@1达到了55%，相比TransE提升了85.1%，在FB15K上的HITS@1达到了64.1%，相比TransE提升了162.7%；对于三元组分类任务，ManifoldE方法在数据集WN11和FB13的准确率达到了87.5%（基于球形）和87.3（基于超平面）。不过，另一篇论文提出，FB15K和WN18存在测试泄露，即大部分测试三元组是训练集中包含的三元组的逆，可能会有影响。</p>
+<p>ManifoldE方法相比简单的TransE系列的基于平移的方法，加入了流形操作和核技巧，但是其计算复杂性只有
+<span class="math inline">\(O(\lambda \times
+O(\text{TransE}))\)</span>，其效率更高，因此，比其他TransE系列的基于平移的方法更快。在项目中，如果知识图谱中的关系存在一对多的关系，则可以考虑使用ManifoldE方法来进行精确的关系预测。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Rebecca
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/" title="每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction">http://example.com/2022/07/09/每日论文：From-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" rel="tag"># 论文精读</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/01/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E7%9F%A5%E8%AF%86%E8%A1%A8%E7%A4%BA/" rel="prev" title="知识图谱-知识表示">
+      <i class="fa fa-chevron-left"></i> 知识图谱-知识表示
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87manifolde"><span class="nav-number">1.</span> <span class="nav-text">每日论文：ManifoldE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">项目应用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rebecca"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Rebecca</p>
+  <div class="site-description" itemprop="description">弱小和无知不是生存的障碍，傲慢才是。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-03 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rebecca</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
