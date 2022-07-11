@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="概率图模型 隐马尔可夫模型 定义  概率模型(Probabilistic model)：概率模型提供了一种描述框架，将学习任务归结于计算变量的概率分布。 推断(Inference)：在概率模型中，利用已知变量推测出未知变量的分布称为“推断”(Inference)，其核心是如何基于可观测变量推测出未知变量的条件分布。具体来说，假定所关心的变量集合为 \(Y\),可观测变量集合为 \(O">
+  <meta name="description" content="概率图模型隐马尔可夫模型定义 概率模型(Probabilistic model)：概率模型提供了一种描述框架，将学习任务归结于计算变量的概率分布。 推断(Inference)：在概率模型中，利用已知变量推测出未知变量的分布称为“推断”(Inference)，其核心是如何基于可观测变量推测出未知变量的条件分布。具体来说，假定所关心的变量集合为 $Y$,可观测变量集合为 $O$ ，其他变量的集合为 $">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习之概率图模型">
 <meta property="og:url" content="http://example.com/2022/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="概率图模型 隐马尔可夫模型 定义  概率模型(Probabilistic model)：概率模型提供了一种描述框架，将学习任务归结于计算变量的概率分布。 推断(Inference)：在概率模型中，利用已知变量推测出未知变量的分布称为“推断”(Inference)，其核心是如何基于可观测变量推测出未知变量的条件分布。具体来说，假定所关心的变量集合为 \(Y\),可观测变量集合为 \(O">
+<meta property="og:description" content="概率图模型隐马尔可夫模型定义 概率模型(Probabilistic model)：概率模型提供了一种描述框架，将学习任务归结于计算变量的概率分布。 推断(Inference)：在概率模型中，利用已知变量推测出未知变量的分布称为“推断”(Inference)，其核心是如何基于可观测变量推测出未知变量的条件分布。具体来说，假定所关心的变量集合为 $Y$,可观测变量集合为 $O$ ，其他变量的集合为 $">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/image-20220606230423648.png">
 <meta property="og:image" content="http://example.com/2022/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/image-20220607165747990.png">
@@ -225,208 +225,110 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="概率图模型">概率图模型</h1>
-<h2 id="隐马尔可夫模型">隐马尔可夫模型</h2>
-<h3 id="定义">定义</h3>
-<ol type="1">
-<li>概率模型(Probabilistic
-model)：概率模型提供了一种描述框架，将学习任务归结于<strong>计算变量的概率分布</strong>。</li>
-<li>推断(Inference)：在概率模型中，利用已知变量推测出未知变量的分布称为“推断”(Inference)，其核心是如何基于可观测变量推测出未知变量的<strong>条件分布</strong>。具体来说，假定所关心的变量集合为
-<span class="math inline">\(Y\)</span>,可观测变量集合为 <span
-class="math inline">\(O\)</span> ，其他变量的集合为 <span
-class="math inline">\(R\)</span>， “生成式”模型考虑联合概率分布 <span
-class="math inline">\(P(Y,R,O)\)</span>，判别式模型考虑条件分布 <span
-class="math inline">\(P(Y,R|O)\)</span> 。给定一组观测值，推断就是要由
-<span class="math inline">\(P(Y,R,O)\)</span> 和 <span
-class="math inline">\(P(Y,R|O)\)</span> 得到条件分布 <span
-class="math inline">\(P(Y|O)\)</span> 。</li>
+        <h1 id="概率图模型"><a href="#概率图模型" class="headerlink" title="概率图模型"></a>概率图模型</h1><h2 id="隐马尔可夫模型"><a href="#隐马尔可夫模型" class="headerlink" title="隐马尔可夫模型"></a>隐马尔可夫模型</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ol>
+<li>概率模型(Probabilistic model)：概率模型提供了一种描述框架，将学习任务归结于<strong>计算变量的概率分布</strong>。</li>
+<li>推断(Inference)：在概率模型中，利用已知变量推测出未知变量的分布称为“推断”(Inference)，其核心是如何基于可观测变量推测出未知变量的<strong>条件分布</strong>。具体来说，假定所关心的变量集合为 $Y$,可观测变量集合为 $O$ ，其他变量的集合为 $R$， “生成式”模型考虑联合概率分布 $P(Y,R,O)$，判别式模型考虑条件分布 $P(Y,R|O)$ 。给定一组观测值，推断就是要由 $P(Y,R,O)$ 和  $P(Y,R|O)$ 得到条件分布 $P(Y|O)$ 。</li>
 </ol>
-<h3 id="概率图模型-1">概率图模型</h3>
-<p>概率图模型(Probabilistic graphical
-model)是一类以图来表达变量相关关系的概率模型，其中</p>
+<h3 id="概率图模型-1"><a href="#概率图模型-1" class="headerlink" title="概率图模型"></a>概率图模型</h3><p>概率图模型(Probabilistic graphical model)是一类以图来表达变量相关关系的概率模型，其中</p>
+<div class="table-container">
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: center;">图</th>
-<th style="text-align: center;">表示</th>
+<tr>
+<th style="text-align:center">图</th>
+<th style="text-align:center">表示</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: center;">结点</td>
-<td style="text-align: center;">一个或一组随机变量</td>
+<tr>
+<td style="text-align:center">结点</td>
+<td style="text-align:center">一个或一组随机变量</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">结点之间的边</td>
-<td style="text-align: center;">变量间的概率相关关系</td>
+<tr>
+<td style="text-align:center">结点之间的边</td>
+<td style="text-align:center">变量间的概率相关关系</td>
 </tr>
 </tbody>
 </table>
+</div>
 <p>概率图模型可以大致分为两类：</p>
-<ol type="1">
-<li>使用有向无环图来表示变量间的依赖关系，称为有向无环图或贝叶斯网(Bayesian
-network)。若变量之间存在显式的因果关系，则通常使用贝叶斯网。</li>
-<li>使用无向图来表示变量间的依赖关系，称为无向图模型或马尔可夫网(Markov
-network)。若变量间存在相关关系，但难以获得显式的因果关系，则通常使用马尔可夫网。</li>
+<ol>
+<li>使用有向无环图来表示变量间的依赖关系，称为有向无环图或贝叶斯网(Bayesian network)。若变量之间存在显式的因果关系，则通常使用贝叶斯网。</li>
+<li>使用无向图来表示变量间的依赖关系，称为无向图模型或马尔可夫网(Markov network)。若变量间存在相关关系，但难以获得显式的因果关系，则通常使用马尔可夫网。</li>
 </ol>
-<h3 id="隐马尔可夫模型hidden-markov-model-hmm">隐马尔可夫模型(Hidden
-Markov Model, HMM)</h3>
-<p><strong>隐马尔可夫模型</strong>(Hidden Markov Model,
-HMM)是结构最简单的<strong>动态贝叶斯网</strong>(Dynamic Bayesian
-network)。</p>
+<h3 id="隐马尔可夫模型-Hidden-Markov-Model-HMM"><a href="#隐马尔可夫模型-Hidden-Markov-Model-HMM" class="headerlink" title="隐马尔可夫模型(Hidden Markov Model, HMM)"></a>隐马尔可夫模型(Hidden Markov Model, HMM)</h3><p><strong>隐马尔可夫模型</strong>(Hidden Markov Model, HMM)是结构最简单的<strong>动态贝叶斯网</strong>(Dynamic Bayesian network)。</p>
 <img src="/2022/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/image-20220606230423648.png" class="" title="image-20220606230423648">
 <p>在隐马尔可夫模型中，变量可以分为两组：</p>
 <ul>
-<li><strong>状态变量 <span class="math inline">\(\lbrace y_1,\cdots,y_n
-\rbrace\)</span></strong> ，其中 <span class="math inline">\(y_i \in
-\mathcal{Y}\)</span> 表示第 <span class="math inline">\(i\)</span>
-时刻的系统状态。通常假定状态变量是<strong>隐藏的，不可观测的</strong>，因此，状态变量也称为<strong>隐变量(Hidden
-variable)</strong>。</li>
-<li><strong>观测变量 <span class="math inline">\(\lbrace x_1,\cdots,x_n
-\rbrace\)</span></strong> ，其中 <span class="math inline">\(x_i \in
-\mathcal{X}\)</span> 表示第 <span class="math inline">\(i\)</span>
-时刻的观测值。</li>
+<li><strong>状态变量 $\lbrace y_1,\cdots,y_n \rbrace$</strong> ，其中 $y_i \in \mathcal{Y}$  表示第 $i$ 时刻的系统状态。通常假定状态变量是<strong>隐藏的，不可观测的</strong>，因此，状态变量也称为<strong>隐变量(Hidden variable)</strong>。</li>
+<li><strong>观测变量 $\lbrace x_1,\cdots,x_n \rbrace$</strong> ，其中 $x_i \in \mathcal{X}$  表示第 $i$ 时刻的观测值。</li>
 </ul>
 <p>图1中的箭头表示了变量间的依赖关系。</p>
 <ul>
-<li>在任一时刻，观测变量的取值<strong>仅</strong>依赖于状态变量，即
-<span class="math inline">\(x_t\)</span> 由 <span
-class="math inline">\(y_t\)</span>
-确定，与其他状态变量以及观测变量无关。</li>
-<li><span class="math inline">\(t\)</span> 时刻的状态 <span
-class="math inline">\(y_t\)</span> 仅依赖于 <span
-class="math inline">\(t-1\)</span> 时刻的状态 <span
-class="math inline">\(y_{t-1}\)</span> ，与此前的 <span
-class="math inline">\(t-2\)</span> 个状态无关。</li>
+<li>在任一时刻，观测变量的取值<strong>仅</strong>依赖于状态变量，即 $x_t$ 由 $y_t$ 确定，与其他状态变量以及观测变量无关。</li>
+<li>$t$ 时刻的状态 $y<em>t$ 仅依赖于 $t-1$ 时刻的状态 $y</em>{t-1}$ ，与此前的 $t-2$ 个状态无关。</li>
 </ul>
-<p>基于这种依赖关系，所有变量的联合概率分布为 <span
-class="math display">\[
-P(x_1,y_1,\cdots x_n,y_n)=P(y_1)P(x_1|y_1)
-\prod_{i=2}^nP(y_i|y_{i-1})P(x_i|y_i)
-\]</span>
-除了结构信息，我们要确定一个隐马尔可夫模型还需要以下三个参数：</p>
-<ol type="1">
-<li><p><strong>状态转移概率</strong>。状态转移概率是模型在各个状态之间转换的概率，通常记为矩阵
-<span class="math inline">\(A=[a_{ij}]_{N\times N}\)</span>。其中，
-<span class="math display">\[
-a_{ij}=P(y_{t+1}=s_j|y_t=s_i),1\le i,j \le N
-\]</span> 表示在任意时刻 <span class="math inline">\(t\)</span>
-，若状态为 <span class="math inline">\(s_i\)</span> ，则在下一时刻状态为
-<span class="math inline">\(s_j\)</span> 的概率。</p></li>
-<li><p><strong>输出观测概率</strong>。输出观测概率是模型根据当前状态获得各个观测值的概率，通常记为矩阵
-<span class="math inline">\(B=[b_{ij}]_{N \times M}\)</span> 。其中，
-<span class="math display">\[
-b_{ij}=P(s_t=o_j|y_t=s_i),1 \le i \le N,1 \le j \le M
-\]</span> 表示在任意时刻 <span class="math inline">\(t\)</span>
-，若状态为 <span class="math inline">\(s_i\)</span> ，则观测值 <span
-class="math inline">\(o_j\)</span> 被获取的概率。</p></li>
-<li><p><strong>初始状态概率</strong>。初始状态概率是初始时刻各状态出现的概率，通常记为
-<span class="math inline">\(\pi = (\pi_1,\cdots,\pi_N)\)</span> ，其中
-<span class="math display">\[
-\pi_i = P(y_1=s_i),1 \le i \le N
-\]</span> 表示模型的初始状态为 <span class="math inline">\(s_i\)</span>
-的概率。</p></li>
+<p>基于这种依赖关系，所有变量的联合概率分布为</p>
+<script type="math/tex; mode=display">
+P(x_1,y_1,\cdots x_n,y_n)=P(y_1)P(x_1|y_1) \prod_{i=2}^nP(y_i|y_{i-1})P(x_i|y_i)</script><p>除了结构信息，我们要确定一个隐马尔可夫模型还需要以下三个参数：</p>
+<ol>
+<li><p><strong>状态转移概率</strong>。状态转移概率是模型在各个状态之间转换的概率，通常记为矩阵 $A=[a<em>{ij}]</em>{N\times N}$。其中，</p>
+<script type="math/tex; mode=display">
+a_{ij}=P(y_{t+1}=s_j|y_t=s_i),1\le i,j \le N</script><p>表示在任意时刻 $t$ ，若状态为 $s_i$ ，则在下一时刻状态为 $s_j$ 的概率。</p>
+</li>
+<li><p><strong>输出观测概率</strong>。输出观测概率是模型根据当前状态获得各个观测值的概率，通常记为矩阵 $B=[b<em>{ij}]</em>{N \times M}$ 。其中，</p>
+<script type="math/tex; mode=display">
+b_{ij}=P(s_t=o_j|y_t=s_i),1 \le i \le N,1 \le j \le M</script><p>表示在任意时刻 $t$ ，若状态为 $s_i$ ，则观测值 $o_j$ 被获取的概率。</p>
+</li>
+<li><p><strong>初始状态概率</strong>。初始状态概率是初始时刻各状态出现的概率，通常记为 $\pi = (\pi_1,\cdots,\pi_N)$ ，其中</p>
+<script type="math/tex; mode=display">
+\pi_i = P(y_1=s_i),1 \le i \le N</script><p>表示模型的初始状态为 $s_i$ 的概率。</p>
+</li>
 </ol>
-<p>通过指定状态空间 <span class="math inline">\(\mathcal{Y}\)</span>
-、观测空间 <span class="math inline">\(\mathcal{X}\)</span>
-和上述三组参数，就能确定一个隐马尔可夫模型。</p>
+<p>通过指定状态空间 $\mathcal{Y}$ 、观测空间 $\mathcal{X}$ 和上述三组参数，就能确定一个隐马尔可夫模型。</p>
 <p>在实际应用中，人们常常关注3个基本问题：</p>
-<ol type="1">
+<ol>
 <li>如何评估模型和观测序列之间的匹配程度？</li>
 <li>如何根据观测序列推断出隐藏的模型状态？</li>
 <li>如何训练模型使其能最好的描述观测数据？</li>
 </ol>
-<h2 id="马尔可夫随机场">马尔可夫随机场</h2>
-<h3 id="定义-1">定义</h3>
-<p><strong>马尔科夫随机场(Markov Random Field, MRF)</strong>
-是典型的马尔可夫网，图中每个结点表示一个或一组变量，结点之间的边表示两个变量之间的依赖关系。马尔可夫随机场有一组<strong>势函数(Potential
-functions)</strong>，也叫做因子(Factor)，是定义在变量子集上的非负实函数，主要用于定义概率分布函数。</p>
-<p>对于图中结点的一个子集，若其中任意两个结点之间有边连接，则称该结点子集为一个<strong>“团”(clique)</strong>。若在一个团中加入另外任何一个结点都不再形成团，则称该团为<strong>“极大团”(maximal
-clique)</strong>。下图为一个例子。</p>
+<h2 id="马尔可夫随机场"><a href="#马尔可夫随机场" class="headerlink" title="马尔可夫随机场"></a>马尔可夫随机场</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p><strong>马尔科夫随机场(Markov Random Field, MRF)</strong> 是典型的马尔可夫网，图中每个结点表示一个或一组变量，结点之间的边表示两个变量之间的依赖关系。马尔可夫随机场有一组<strong>势函数(Potential functions)</strong>，也叫做因子(Factor)，是定义在变量子集上的非负实函数，主要用于定义概率分布函数。</p>
+<p>对于图中结点的一个子集，若其中任意两个结点之间有边连接，则称该结点子集为一个<strong>“团”(clique)</strong>。若在一个团中加入另外任何一个结点都不再形成团，则称该团为<strong>“极大团”(maximal clique)</strong>。下图为一个例子。</p>
 <img src="/2022/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/image-20220607165747990.png" class="" title="image-20220607165747990">
-<p>在马尔可夫随机场中，多个变量之间的联合概率分布能基于团分解为多个因子的乘积，每个因子仅与一个团有关。具体来说，对于
-<span class="math inline">\(n\)</span> 个变量 <span
-class="math inline">\(\mathbf{x}=\lbrace x_1,x_2,\cdots,x_n
-\rbrace\)</span> ，所有团构成的集合为 <span
-class="math inline">\(C\)</span> ，与团 <span class="math inline">\(Q
-\in C\)</span> 对应的变量集合记为 <span
-class="math inline">\(\mathbf{x}_Q\)</span> ，则联合概率 <span
-class="math inline">\(P(\mathbf{x})\)</span> 定义为 <span
-class="math display">\[
-P(\mathbf{x})=\frac{1}{Z} \prod_{Q\in C} \psi_Q (\mathbf{x}_Q)
-\]</span> 其中，</p>
+<p>在马尔可夫随机场中，多个变量之间的联合概率分布能基于团分解为多个因子的乘积，每个因子仅与一个团有关。具体来说，对于 $n$ 个变量 $\mathbf{x}=\lbrace x_1,x_2,\cdots,x_n \rbrace$ ，所有团构成的集合为 $C$ ，与团 $Q \in C$ 对应的变量集合记为 $\mathbf{x}_Q$ ，则联合概率 $P(\mathbf{x})$ 定义为</p>
+<script type="math/tex; mode=display">
+P(\mathbf{x})=\frac{1}{Z} \prod_{Q\in C} \psi_Q (\mathbf{x}_Q)</script><p>其中，</p>
 <ul>
-<li><span class="math inline">\(\psi_Q (\mathbf{x}_Q)\)</span> 为与团
-<span class="math inline">\(Q\)</span> 对应的势函数，用于与团 <span
-class="math inline">\(Q\)</span> 中的变量关系进行建模，</li>
-<li><span class="math inline">\(Z=\sum_{\mathbf{x}} \prod_{Q\in C}
-\psi_Q (\mathbf{x}_Q)\)</span> 为规范化因子，以确保 <span
-class="math inline">\(P(\mathbf{x})\)</span> 是被正确定义的概率。</li>
+<li>$\psi_Q (\mathbf{x}_Q)$ 为与团 $Q$ 对应的势函数，用于与团 $Q$ 中的变量关系进行建模，</li>
+<li>$Z=\sum<em>{\mathbf{x}} \prod</em>{Q\in C} \psi_Q (\mathbf{x}_Q)$ 为规范化因子，以确保 $P(\mathbf{x})$ 是被正确定义的概率。</li>
 </ul>
-<p>联合概率 <span class="math inline">\(P(\mathbf{x})\)</span>​
-可基于极大团来定义。假设所有极大团构成的集合为 <span
-class="math inline">\(C^*\)</span>​ ，则 <span class="math display">\[
-P(\mathbf{x})=\frac{1}{Z^*} \prod_{Q\in C^*} \psi_Q (\mathbf{x}_Q)
-\]</span> 其中，</p>
+<p>联合概率 $P(\mathbf{x})$​ 可基于极大团来定义。假设所有极大团构成的集合为 $C^*$​ ，则</p>
+<script type="math/tex; mode=display">
+P(\mathbf{x})=\frac{1}{Z^*} \prod_{Q\in C^*} \psi_Q (\mathbf{x}_Q)</script><p>其中，</p>
 <ul>
-<li><span class="math inline">\(Z=\sum_{\mathbf{x}} \prod_{Q\in C^*}
-\psi_Q (\mathbf{x}_Q)\)</span> 为规范化因子。</li>
+<li>$Z=\sum<em>{\mathbf{x}} \prod</em>{Q\in C^*} \psi_Q (\mathbf{x}_Q)$ 为规范化因子。</li>
 </ul>
-<h3 id="性质">性质</h3>
-<p>对马尔可夫随机场，有</p>
+<h3 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h3><p>对马尔可夫随机场，有</p>
 <ul>
-<li><p>全局马尔可夫性(Global Markov
-property)：给定两个变量子集的分离集，则这两个变量子集<strong>条件独立</strong>。</p></li>
-<li><p>局部马尔可夫性(Local Markov
-property)：给定某变量的<strong>邻接变量</strong>，则该变量条件独立于其他变量。形式化的说，令
-<span class="math inline">\(V\)</span> 为图的结点集，<span
-class="math inline">\(n(v)\)</span> 为结点 <span
-class="math inline">\(v\)</span> 在图上的邻接结点，<span
-class="math inline">\(n^*(v)=n(v) \cup \lbrace v \rbrace\)</span> ，结点
-<span class="math inline">\(v\)</span> 对应的变量集为 <span
-class="math inline">\(\mathbf{x}_v\)</span> ，除去结点 <span
-class="math inline">\(v\)</span> 和其邻接结点的结点集对应的变量集为
-<span class="math inline">\(\mathbf{x}_{V \setminus
-n^*(v)}\)</span>，结点 <span class="math inline">\(v\)</span>
-的邻接结点的结点集对应的变量集为 <span
-class="math inline">\(\mathbf{x}_{n(v)}\)</span>​ ，则有 <span
-class="math display">\[
-\mathbf{x}_v \bot \mathbf{x}_{V \setminus n^*(v)} |\mathbf{x}_{n(v)}
-\]</span> 即 <span class="math inline">\(\mathbf{x}_v\)</span> 和 <span
-class="math inline">\(\mathbf{x}_{V \setminus n^*(v)}\)</span> 在给定
-<span class="math inline">\(\mathbf{x}_{n(v)}\)</span>
-的条件下独立。</p></li>
-<li><p>成对马尔可夫性(Pairwise Markov
-property)：给定所有其他变量，两个<strong>非邻接变量</strong>条件独立。形式化的说，令
-<span class="math inline">\(V\)</span> 为图的结点集，<span
-class="math inline">\(E\)</span> 为图的边集，则对于图中的两个结点 <span
-class="math inline">\(u\)</span> 和 <span
-class="math inline">\(v\)</span> ，若 <span
-class="math inline">\(&lt;u,v&gt; \notin E\)</span> ，则 <span
-class="math display">\[
-\mathbf{x}_v \bot \mathbf{x}_u |\mathbf{x}_{V \setminus &lt;u,v&gt;}
-\]</span></p></li>
+<li><p>全局马尔可夫性(Global Markov property)：给定两个变量子集的分离集，则这两个变量子集<strong>条件独立</strong>。</p>
+</li>
+<li><p>局部马尔可夫性(Local Markov property)：给定某变量的<strong>邻接变量</strong>，则该变量条件独立于其他变量。形式化的说，令 $V$ 为图的结点集，$n(v)$ 为结点 $v$ 在图上的邻接结点，$n^<em>(v)=n(v) \cup \lbrace v \rbrace$ ，结点 $v$ 对应的变量集为 $\mathbf{x}<em>v$ ，除去结点 $v$ 和其邻接结点的结点集对应的变量集为 $\mathbf{x}</em>{V \setminus n^</em>(v)}$，结点 $v$ 的邻接结点的结点集对应的变量集为 $\mathbf{x}_{n(v)}$​ ，则有</p>
+<script type="math/tex; mode=display">
+\mathbf{x}_v \bot \mathbf{x}_{V \setminus n^*(v)} |\mathbf{x}_{n(v)}</script><p>即 $\mathbf{x}<em>v$ 和 $\mathbf{x}</em>{V \setminus n^*(v)}$ 在给定 $\mathbf{x}_{n(v)}$ 的条件下独立。</p>
+</li>
+<li><p>成对马尔可夫性(Pairwise Markov property)：给定所有其他变量，两个<strong>非邻接变量</strong>条件独立。形式化的说，令 $V$ 为图的结点集，$E$ 为图的边集，则对于图中的两个结点 $u$ 和 $v$ ，若 $<u,v> \notin E$ ，则</p>
+<script type="math/tex; mode=display">
+\mathbf{x}_v \bot \mathbf{x}_u |\mathbf{x}_{V \setminus <u,v>}</script></li>
 </ul>
-<h3 id="势函数-psi_qmathbfx_q">势函数 <span
-class="math inline">\(\psi_Q(\mathbf{x}_Q)\)</span></h3>
-<p>势函数 <span class="math inline">\(\psi_Q(\mathbf{x}_Q)\)</span>
-的作用是<strong>定量刻画变量集 <span
-class="math inline">\(\mathbf{x}_Q\)</span>
-中变量之间的相关关系</strong>，因此，它应该满足：</p>
+<h3 id="势函数-psi-Q-mathbf-x-Q"><a href="#势函数-psi-Q-mathbf-x-Q" class="headerlink" title="势函数 $\psi_Q(\mathbf{x}_Q)$"></a>势函数 $\psi_Q(\mathbf{x}_Q)$</h3><p>势函数 $\psi_Q(\mathbf{x}_Q)$ 的作用是<strong>定量刻画变量集 $\mathbf{x}_Q$ 中变量之间的相关关系</strong>，因此，它应该满足：</p>
 <ul>
 <li>是一个<strong>非负函数</strong>；</li>
 <li>在<strong>所偏好的变量</strong>取值上有<strong>较大</strong>函数值。</li>
 </ul>
-<p>为了满足非负性，指数函数常被用于定义势函数，即 <span
-class="math display">\[
-\psi_Q(\mathbf{x}_Q) = e^{-H_Q(\mathbf{x}_Q)}
-\]</span> 其中 <span class="math inline">\(H_Q(\mathbf{x}_Q)\)</span>
-是一个定义在变量 <span class="math inline">\(\mathbf{x}_Q\)</span>​
-上的实值函数，常见形式为 <span class="math display">\[
-H_Q(\mathbf{x}_Q)=\sum_{u,v \in Q,u \ne v} \alpha_{uv}x_ux_v+\sum_{v \in
-Q}\beta_v x_v
-\]</span> 其中 $_{uv} $ 和 <span class="math inline">\(\beta_v\)</span>
-为参数，第一项考虑每一对结点间的关系，第二项仅仅考虑单结点。</p>
+<p>为了满足非负性，指数函数常被用于定义势函数，即</p>
+<script type="math/tex; mode=display">
+\psi_Q(\mathbf{x}_Q) = e^{-H_Q(\mathbf{x}_Q)}</script><p>其中 $H_Q(\mathbf{x}_Q)$ 是一个定义在变量 $\mathbf{x}_Q$​ 上的实值函数，常见形式为</p>
+<script type="math/tex; mode=display">
+H_Q(\mathbf{x}_Q)=\sum_{u,v \in Q,u \ne v} \alpha_{uv}x_ux_v+\sum_{v \in Q}\beta_v x_v</script><p>其中 $\alpha_{uv} $ 和 $\beta_v$ 为参数，第一项考虑每一对结点间的关系，第二项仅仅考虑单结点。</p>
 
     </div>
 
@@ -528,8 +430,7 @@ Q}\beta_v x_v
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">概率图模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">隐马尔可夫模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">1.1.2.</span> <span class="nav-text">概率图模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8Bhidden-markov-model-hmm"><span class="nav-number">1.1.3.</span> <span class="nav-text">隐马尔可夫模型(Hidden
-Markov Model, HMM)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%9A%8F%E6%9C%BA%E5%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">马尔可夫随机场</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%BF%E5%87%BD%E6%95%B0-psi_qmathbfx_q"><span class="nav-number">1.2.3.</span> <span class="nav-text">势函数 \(\psi_Q(\mathbf{x}_Q)\)</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">概率图模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">隐马尔可夫模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">1.1.2.</span> <span class="nav-text">概率图模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B-Hidden-Markov-Model-HMM"><span class="nav-number">1.1.3.</span> <span class="nav-text">隐马尔可夫模型(Hidden Markov Model, HMM)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%9A%8F%E6%9C%BA%E5%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">马尔可夫随机场</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%BF%E5%87%BD%E6%95%B0-psi-Q-mathbf-x-Q"><span class="nav-number">1.2.3.</span> <span class="nav-text">势函数 $\psi_Q(\mathbf{x}_Q)$</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -545,14 +446,14 @@ Markov Model, HMM)</span></a></li></ol></li><li class="nav-item nav-level-2"><a 
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="引入 机器学习是什么？ 在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？ 简单来说，机器学习其实相当于构建一个映射函数。例如，在语音识别任务中，输入为语音片段，函数输出该语音片段对应的语言；在图像识别任务中，输入为一张图像，函数输出为该图像中的类别…… Tom Mitchell在1998年提出，&quot;A computer problem is sai">
+  <meta name="description" content="引入机器学习是什么？在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？ 简单来说，机器学习其实相当于构建一个映射函数。例如，在语音识别任务中，输入为语音片段，函数输出该语音片段对应的语言；在图像识别任务中，输入为一张图像，函数输出为该图像中的类别…… Tom Mitchell在1998年提出，”A computer problem is said to le">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习之简要介绍">
 <meta property="og:url" content="http://example.com/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="引入 机器学习是什么？ 在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？ 简单来说，机器学习其实相当于构建一个映射函数。例如，在语音识别任务中，输入为语音片段，函数输出该语音片段对应的语言；在图像识别任务中，输入为一张图像，函数输出为该图像中的类别…… Tom Mitchell在1998年提出，&quot;A computer problem is sai">
+<meta property="og:description" content="引入机器学习是什么？在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？ 简单来说，机器学习其实相当于构建一个映射函数。例如，在语音识别任务中，输入为语音片段，函数输出该语音片段对应的语言；在图像识别任务中，输入为一张图像，函数输出为该图像中的类别…… Tom Mitchell在1998年提出，”A computer problem is said to le">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/%E5%BC%95%E5%85%A5.png">
 <meta property="og:image" content="http://example.com/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/image-20220603004941595.png">
@@ -227,49 +227,28 @@
 
       
         <img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/%E5%BC%95%E5%85%A5.png" class="" title="引入">
-<h1 id="引入">引入</h1>
-<h2 id="机器学习是什么">机器学习是什么？</h2>
-<p>在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？</p>
+<h1 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h1><h2 id="机器学习是什么？"><a href="#机器学习是什么？" class="headerlink" title="机器学习是什么？"></a>机器学习是什么？</h2><p>在网络上，我们经常听到关于机器学习、人工智能、深度学习的话题，那么，机器学习到底是什么？</p>
 <p>简单来说，机器学习其实相当于构建一个映射函数。例如，在语音识别任务中，输入为语音片段，函数输出该语音片段对应的语言；在图像识别任务中，输入为一张图像，函数输出为该图像中的类别……</p>
-<p>Tom Mitchell在1998年提出，"A computer problem is said to
-<strong>learn</strong> from <strong>experience <span
-class="math inline">\(E\)</span></strong> w.r.t. some <strong>task <span
-class="math inline">\(T\)</span></strong> and some <strong>performance
-measure <span class="math inline">\(P\)</span></strong>, if its
-performance on <span class="math inline">\(T\)</span>, as measured by
-<span class="math inline">\(P\)</span>, <strong>improves</strong> with
-experience <span
-class="math inline">\(E\)</span>."（对计算机系统而言，以<strong>性能量度
-<span class="math inline">\(P\)</span>
-</strong>进行衡量，如果一个计算机程序在<strong>某类任务 <span
-class="math inline">\(T\)</span> </strong>上的性能，随着<strong>经验
-<span class="math inline">\(E\)</span>
-</strong>而提升，那么我们称这个计算机程序从经验 <span
-class="math inline">\(E\)</span> 中学习。）</p>
+<p>Tom Mitchell在1998年提出，”A computer problem is said to <strong>learn</strong> from <strong>experience $E$</strong> w.r.t. some <strong>task $T$</strong> and some <strong>performance measure $P$</strong>, if its performance on $T$, as measured by $P$, <strong>improves</strong> with experience $E$.”（对计算机系统而言，以<strong>性能量度 $P$ </strong>进行衡量，如果一个计算机程序在<strong>某类任务 $T$ </strong>上的性能，随着<strong>经验 $E$ </strong>而提升，那么我们称这个计算机程序从经验 $E$ 中学习。）</p>
 <p>与之相比的是，对人类而言，学习是通过<strong>教授或体验</strong>而获得知识、技术、态度或价值的过程，从而导致<strong>可量度</strong>的<strong>稳定</strong>的行为变化。</p>
 <img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/image-20220603004941595.png" class="" title="image-20220603004941595">
-<h2 id="为什么要机器学习">为什么要机器学习？</h2>
-<p>有一个很经典的例子，那就是对手写的数字进行图像识别：我们希望在给一个手写数字的图像给机器后，机器能够帮我们识别出，这个数字属于0~9之间的哪一个。</p>
+<h2 id="为什么要机器学习？"><a href="#为什么要机器学习？" class="headerlink" title="为什么要机器学习？"></a>为什么要机器学习？</h2><p>有一个很经典的例子，那就是对手写的数字进行图像识别：我们希望在给一个手写数字的图像给机器后，机器能够帮我们识别出，这个数字属于0~9之间的哪一个。</p>
 <p>我们其实很难去编写一个程序来解决手写数字识别这样的问题。比如，我们如何区分2和7？简单的对每一个像素进行扫描识别他们的走势？这样的计算量极大，同时准确率也很低。而这个任务有一个很重要的特点：我们可以收集大量的包含了手写数字图像和对应数字的样本。</p>
 <p>那么，我们是否可以通过学习这些样本，找到它们之间一些隐藏的特点，来生成一个能进行手写数字识别的程序？这就是机器学习的基本思路，而且，如果我们的工作足够好，这个程序也能识别新的手写数字的输入。</p>
 <p>我们简单将为何要机器学习分为4点：</p>
-<ol type="1">
+<ol>
 <li>缺乏相关的专门知识。对一些任务，我们拥有专门知识，那么就可以用数学工具进行分析，但是还有很多任务，我们缺乏相关的专门知识，因此，我们通过学习大量样本，找到隐含的特征（这些特征可能没有很好的可解释性），然后来预测之后新的样本。</li>
 <li>难以解释的人类经验。比如人脸/手写/语音识别，我们很难去用数学语言解释大脑是如何进行这些任务的，还有开车、坐飞机这种经验也很难解释。</li>
 <li>快速变化的现象。有一些现象会快速变化，在经济领域中有信用评分和财务建模等，在医学领域中有诊断学，在金融领域有欺诈检测等，在这也就意味着需要不断学习新的模型。</li>
 <li>需要定制。对于不同的人，需要定制不同的需求，比如个性化新闻阅读器和电影/书籍推荐。</li>
 </ol>
-<h2 id="机器学习的分类">机器学习的分类</h2>
-<p><strong>机器学习按任务的分类：</strong></p>
-<ol type="1">
+<h2 id="机器学习的分类"><a href="#机器学习的分类" class="headerlink" title="机器学习的分类"></a>机器学习的分类</h2><p><strong>机器学习按任务的分类：</strong></p>
+<ol>
 <li><strong>监督学习（Supervised Learning）</strong></li>
 <li><strong>无监督学习（Unsupervised Learning）</strong></li>
 <li><strong>强化学习（Reinforcement Learning）</strong></li>
 </ol>
-<h3 id="监督学习">监督学习</h3>
-<p>监督学习是指通过让机器学习大量<strong>带有标签的样本数据</strong>，训练出一个模型，并使该模型可以根据输入预测相应输出的过程。目标是根据<strong>标记数据（labeled
-data）</strong>学习<strong>特征（feature）与标签（label）</strong>之间的<strong>映射函数（mapping
-function）或关系（relationship）</strong>。</p>
+<h3 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h3><p>监督学习是指通过让机器学习大量<strong>带有标签的样本数据</strong>，训练出一个模型，并使该模型可以根据输入预测相应输出的过程。目标是根据<strong>标记数据（labeled data）</strong>学习<strong>特征（feature）与标签（label）</strong>之间的<strong>映射函数（mapping function）或关系（relationship）</strong>。</p>
 <img src="/2022/06/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/image-20220604160144414.png" class="" title="image-20220604160144414">
 <p>监督学习的预测目标为：</p>
 <ul>
@@ -284,89 +263,46 @@ function）或关系（relationship）</strong>。</p>
 <li>神经网络（Neural networks)</li>
 <li>支持向量机（Support Vector Machines, SVMs）</li>
 </ul>
-<h3 id="无监督学习">无监督学习</h3>
-<p>无监督学习是直接对输入数据进行建模，提取数据有效信息探索数据的整体结构。</p>
+<h3 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h3><p>无监督学习是直接对输入数据进行建模，提取数据有效信息探索数据的整体结构。</p>
 <p>无监督学习用于：</p>
-<ol type="1">
+<ol>
 <li>聚类（Clustering）</li>
 <li>可视化（Visualization）和降维（Dimensionality reduction）</li>
 <li>……</li>
 </ol>
 <p>常见的无监督学习算法有：</p>
-<ol type="1">
+<ol>
 <li>K均值算法（K-means）（用于聚类）</li>
 <li>主成分分析（Principle Component Analysis, PCA）（用于降维）</li>
 </ol>
-<h3 id="强化学习">强化学习</h3>
-<p>强化学习是通过一个<strong>智能体</strong>在与复杂而不确定的<strong>环境</strong>交互中<strong>最大化总回报</strong>来学习的一种计算方法。智能体以“试错”的方式进行学习，通过与环境交互获得的<strong>奖赏和惩罚</strong>指导行为，目标是使智能体<strong>获得最大的奖赏</strong>。</p>
+<h3 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h3><p>强化学习是通过一个<strong>智能体</strong>在与复杂而不确定的<strong>环境</strong>交互中<strong>最大化总回报</strong>来学习的一种计算方法。智能体以“试错”的方式进行学习，通过与环境交互获得的<strong>奖赏和惩罚</strong>指导行为，目标是使智能体<strong>获得最大的奖赏</strong>。</p>
 <p>典型的应用就是棋子对弈和机器人自动控制。</p>
-<h2 id="机器学习基本流程">机器学习基本流程</h2>
-<p>机器学习是从有限的观测数据中学习（或者猜测）出具有一般性的规律，并且可以将总结出来的规律推广应用到未观测样本上。机器学习方法可以粗略的分为三个基本要素：模型、学习准则、优化算法。</p>
+<h2 id="机器学习基本流程"><a href="#机器学习基本流程" class="headerlink" title="机器学习基本流程"></a>机器学习基本流程</h2><p>机器学习是从有限的观测数据中学习（或者猜测）出具有一般性的规律，并且可以将总结出来的规律推广应用到未观测样本上。机器学习方法可以粗略的分为三个基本要素：模型、学习准则、优化算法。</p>
 <p>机器模型的三要素：</p>
-<ol type="1">
-<li>模型
-<ul>
-<li>线性方法：<span
-class="math inline">\(f(\mathbf{x},\theta)=\mathbf{w}^T
-\mathbf{x}+b\)</span></li>
-<li>广义线性方法：<span
-class="math inline">\(f(\mathbf{x},\theta)=\mathbf{w}^T
-\phi(\mathbf{x})+b\)</span> ，这里如果 <span
-class="math inline">\(\phi(\mathbf{x})\)</span>
-为可学习的非线性基函数，<span
-class="math inline">\(f(\mathbf{x},\theta)\)</span>
-就等价于神经网络。</li>
-</ul></li>
-<li>学习准则
-<ul>
-<li>最小化期望风险：<span
-class="math inline">\(\mathcal{R}(f)=\mathbf{E}_{(\mathbf{x},y) \sim
-p(\mathbf{x},y)} [\mathcal{L}(f(\mathbf{x},y)]\)</span></li>
+<ol>
+<li>模型<ul>
+<li>线性方法：$f(\mathbf{x},\theta)=\mathbf{w}^T \mathbf{x}+b$</li>
+<li>广义线性方法：$f(\mathbf{x},\theta)=\mathbf{w}^T \phi(\mathbf{x})+b$ ，这里如果 $\phi(\mathbf{x})$ 为可学习的非线性基函数，$f(\mathbf{x},\theta)$ 就等价于神经网络。</li>
+</ul>
+</li>
+<li>学习准则<ul>
+<li>最小化期望风险：$\mathcal{R}(f)=\mathbf{E}_{(\mathbf{x},y) \sim p(\mathbf{x},y)} [\mathcal{L}(f(\mathbf{x},y)]$</li>
 <li>最大似然估计</li>
 <li>最大后验估计</li>
-</ul></li>
+</ul>
+</li>
 <li>优化：梯度下降</li>
 </ol>
-<h3 id="学习准则">学习准则</h3>
-<p>令训练集 <span class="math inline">\(\mathcal{D}={\lbrace
-\mathbf{x}^{(n)},y^{(n)} \rbrace}^N_{n=1}\)</span> 是由 <span
-class="math inline">\(N\)</span>
-个<strong>独立同分布</strong>的（Identically and Independently
-Distributed, IID）样本组成，即每个样本 <span
-class="math inline">\((\mathbf{x},y)\)</span> 是从输入空间 <span
-class="math inline">\(\mathcal{X}\)</span> 和 输出空间 <span
-class="math inline">\(\mathcal{Y}\)</span>
-的联合空间中按照某个未知分布独立地随机产生的。这里要求样本分布必须是固定的（虽然可以是未知的），不会随着时间而变化。</p>
-<p>一个好的模型 <span
-class="math inline">\(f(\mathbf{x},\theta^*)\)</span> 应该在所有 <span
-class="math inline">\((\mathbf{x},y)\)</span>
-的可能取值上都与真实映射函数 <span
-class="math inline">\(y=g(\mathbf{x})\)</span> 一致，即 <span
-class="math display">\[
-|f(\mathbf{x},\theta^*)-y| &lt; \epsilon ,\forall(\mathbf{x},y) \in
-\mathcal{X}\times\mathcal{Y}
-\]</span> 或与真实条件概率分布 <span
-class="math inline">\(p_r(y|\mathbf{x})\)</span> 一致，即 <span
-class="math display">\[
-|f_y(\mathbf{x},\theta^*)-p_r(y|\mathbf{x})| &lt; \epsilon
-,\forall(\mathbf{x},y) \in \mathcal{X}\times\mathcal{Y}
-\]</span> 其中，<span class="math inline">\(\epsilon\)</span>
-是一个很小的正数，<span
-class="math inline">\(f_y(\mathbf{x},\theta^*)\)</span>
-为模型预测的条件概率分布中 <span class="math inline">\(y\)</span>
-对应的概率。</p>
-<p>模型 <span class="math inline">\(f(\mathbf{x},\theta)\)</span>
-的好坏可以通过期望风险（Expected Risk）<span
-class="math inline">\(\mathcal{R}(\theta)\)</span>​ 来衡量，其定义为
-<span class="math display">\[
-\mathcal{R}(\theta) = \mathbf{E}_{(\mathbf{x},y) \sim p_r(\mathbf{x},y)}
-[\mathcal{L}(y,f(\mathbf{x};\theta)]
-\]</span> 其中，<span class="math inline">\(p_r(\mathbf{x},y)\)</span>
-为真实的数据分布，<span
-class="math inline">\(\mathcal{L}(y,f(\mathbf{x};\theta)\)</span>
-为损失函数，用于量化两个变量之间的差异。</p>
-<h3 id="损失函数">损失函数</h3>
-<p><strong>损失函数是一个非负实数函数，用来量化模型预测和真实标签之间的差异。</strong></p>
+<h3 id="学习准则"><a href="#学习准则" class="headerlink" title="学习准则"></a>学习准则</h3><p>令训练集 $\mathcal{D}={\lbrace \mathbf{x}^{(n)},y^{(n)} \rbrace}^N_{n=1}$ 是由 $N$ 个<strong>独立同分布</strong>的（Identically and Independently Distributed, IID）样本组成，即每个样本 $(\mathbf{x},y)$ 是从输入空间 $\mathcal{X}$ 和 输出空间 $\mathcal{Y}$  的联合空间中按照某个未知分布独立地随机产生的。这里要求样本分布必须是固定的（虽然可以是未知的），不会随着时间而变化。</p>
+<p>一个好的模型 $f(\mathbf{x},\theta^*)$ 应该在所有 $(\mathbf{x},y)$ 的可能取值上都与真实映射函数 $y=g(\mathbf{x})$ 一致，即</p>
+<script type="math/tex; mode=display">
+|f(\mathbf{x},\theta^*)-y| < \epsilon ,\forall(\mathbf{x},y) \in \mathcal{X}\times\mathcal{Y}</script><p>或与真实条件概率分布 $p_r(y|\mathbf{x})$ 一致，即</p>
+<script type="math/tex; mode=display">
+|f_y(\mathbf{x},\theta^*)-p_r(y|\mathbf{x})| < \epsilon ,\forall(\mathbf{x},y) \in \mathcal{X}\times\mathcal{Y}</script><p>其中，$\epsilon$ 是一个很小的正数，$f_y(\mathbf{x},\theta^*)$ 为模型预测的条件概率分布中 $y$ 对应的概率。</p>
+<p>模型 $f(\mathbf{x},\theta)$ 的好坏可以通过期望风险（Expected Risk）$\mathcal{R}(\theta)$​ 来衡量，其定义为</p>
+<script type="math/tex; mode=display">
+\mathcal{R}(\theta) = \mathbf{E}_{(\mathbf{x},y) \sim p_r(\mathbf{x},y)} [\mathcal{L}(y,f(\mathbf{x};\theta)]</script><p>其中，$p_r(\mathbf{x},y)$ 为真实的数据分布，$\mathcal{L}(y,f(\mathbf{x};\theta)$ 为损失函数，用于量化两个变量之间的差异。</p>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p><strong>损失函数是一个非负实数函数，用来量化模型预测和真实标签之间的差异。</strong></p>
 <p>下面介绍几种常用的损失函数：</p>
 <ul>
 <li>0-1 损失函数</li>
@@ -476,7 +412,7 @@ class="math inline">\(\mathcal{L}(y,f(\mathbf{x};\theta)\)</span>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">机器学习是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.2.</span> <span class="nav-text">为什么要机器学习？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">1.3.</span> <span class="nav-text">机器学习的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.1.</span> <span class="nav-text">监督学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.2.</span> <span class="nav-text">无监督学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.3.</span> <span class="nav-text">强化学习</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">机器学习基本流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%87%86%E5%88%99"><span class="nav-number">1.4.1.</span> <span class="nav-text">学习准则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">损失函数</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">机器学习是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">为什么要机器学习？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">1.3.</span> <span class="nav-text">机器学习的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.1.</span> <span class="nav-text">监督学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.2.</span> <span class="nav-text">无监督学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.3.</span> <span class="nav-text">强化学习</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">机器学习基本流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%87%86%E5%88%99"><span class="nav-number">1.4.1.</span> <span class="nav-text">学习准则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">损失函数</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -492,14 +428,14 @@ class="math inline">\(\mathcal{L}(y,f(\mathbf{x};\theta)\)</span>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="组合设计与组合优化 线性规划 1 线性规划问题的数学模型 线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。 线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。 目标函数： \[ \text{max(min)} \ y &#x3D;">
+  <meta name="description" content="组合设计与组合优化线性规划1 线性规划问题的数学模型线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。 线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。 目标函数：  \text{max(min)} \ y &#x3D; \sum \limits">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LinearProgramming">
 <meta property="og:url" content="http://example.com/2022/03/19/LinearProgramming/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="组合设计与组合优化 线性规划 1 线性规划问题的数学模型 线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。 线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。 目标函数： \[ \text{max(min)} \ y &#x3D;">
+<meta property="og:description" content="组合设计与组合优化线性规划1 线性规划问题的数学模型线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。 线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。 目标函数：  \text{max(min)} \ y &#x3D; \sum \limits">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/03/19/LinearProgramming/image-20220319171444450.png">
 <meta property="og:image" content="http://example.com/2022/03/19/LinearProgramming/image-20220319171538409.png">
@@ -232,35 +232,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="组合设计与组合优化">组合设计与组合优化</h1>
-<h2 id="线性规划">线性规划</h2>
-<h3 id="线性规划问题的数学模型">1 线性规划问题的数学模型</h3>
-<p>线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。</p>
+        <h1 id="组合设计与组合优化"><a href="#组合设计与组合优化" class="headerlink" title="组合设计与组合优化"></a>组合设计与组合优化</h1><h2 id="线性规划"><a href="#线性规划" class="headerlink" title="线性规划"></a>线性规划</h2><h3 id="1-线性规划问题的数学模型"><a href="#1-线性规划问题的数学模型" class="headerlink" title="1 线性规划问题的数学模型"></a>1 线性规划问题的数学模型</h3><p>线性规划是最简单，应用最广泛的一种数学规划方法，也是使用最早的一种优化方法。从数学上说，线性规划问题可以归结为一类条件极值问题，用微积分方法来解决一般是无能为力的。</p>
 <p>线性规划问题可归结为一类条件极值问题，即：在一组线性约束条件下，寻求一个线性函数的极大值或极小值。</p>
 <p>目标函数：</p>
-<p><span class="math display">\[
-\text{max(min)} \ y = \sum \limits_{i=1}^r c_ix_i
-\]</span></p>
-<p>约束条件：</p>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
+\text{max(min)} \ y = \sum \limits_{i=1}^r c_ix_i</script><p>约束条件：</p>
+<script type="math/tex; mode=display">
 \begin{align}
-s.t. \sum \limits_{i=1}^r a_{1i}x_i &amp; \le(=,\ge) b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i &amp; \le(=,\ge) b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i &amp; \le(=,\ge) b_m \\\\
-\end{align}
-\]</span></p>
-<p>非负约束条件：</p>
-<p><span class="math display">\[
-x_i \ge 0,i = 1,2,...,r
-\]</span></p>
-<h4 id="运输问题">（1）运输问题</h4>
-<p>设有两个电视机厂 A1,A2，产量分别为 23 万台与 27
-万台，其产品供应三个城市 B1,B2,B3。每个城市的需要量分别为 17 万台，18
-万台和 15 万台，而各厂到各城市的运费单价如下表。</p>
+s.t. \sum \limits_{i=1}^r a_{1i}x_i & \le(=,\ge) b_1 \\\\
+ \sum \limits_{i=1}^r a_{2i}x_i & \le(=,\ge) b_2 \\\\
+ ......\\\\
+  \sum \limits_{i=1}^r a_{2mi}x_i & \le(=,\ge) b_m \\\\
+\end{align}</script><p>非负约束条件：</p>
+<script type="math/tex; mode=display">
+x_i \ge 0,i = 1,2,...,r</script><h4 id="（1）运输问题"><a href="#（1）运输问题" class="headerlink" title="（1）运输问题"></a>（1）运输问题</h4><p>设有两个电视机厂 A1,A2，产量分别为 23 万台与 27 万台，其产品供应三个城市 B1,B2,B3。每个城市的需要量分别为 17 万台，18 万台和 15 万台，而各厂到各城市的运费单价如下表。</p>
+<div class="table-container">
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>B₁</th>
 <th>B₂</th>
@@ -268,13 +257,13 @@ x_i \ge 0,i = 1,2,...,r
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>A₁</td>
 <td>50</td>
 <td>60</td>
 <td>70</td>
 </tr>
-<tr class="even">
+<tr>
 <td>A₂</td>
 <td>60</td>
 <td>110</td>
@@ -282,9 +271,11 @@ x_i \ge 0,i = 1,2,...,r
 </tr>
 </tbody>
 </table>
+</div>
+<div class="table-container">
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>B₁</th>
 <th>B₂</th>
@@ -293,21 +284,21 @@ x_i \ge 0,i = 1,2,...,r
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>A₁</td>
 <td>X₁₁</td>
 <td>X₁₂</td>
 <td>X₁₃</td>
 <td>23</td>
 </tr>
-<tr class="even">
+<tr>
 <td>A₂</td>
 <td>X₂₁</td>
 <td>X₂₂</td>
 <td>X₂₃</td>
 <td>27</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>总收量</td>
 <td>17</td>
 <td>18</td>
@@ -316,38 +307,27 @@ x_i \ge 0,i = 1,2,...,r
 </tr>
 </tbody>
 </table>
+</div>
 <p>则我们可以定义其为一个线性规划问题：</p>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
-\text{min} \ y = 50x_{11}+60x_{12}+70x_{13}+60x_{21}+110x_{22}+160x_{23}
-\\\\
+\text{min} \ y = 50x_{11}+60x_{12}+70x_{13}+60x_{21}+110x_{22}+160x_{23} \\\\
 \begin{aligned}
-s.t. \quad x_{11} + x_{12} + x_{13} &amp; = 23 \\\\
-x_{21} + x_{22} + x_{23} &amp; = 27 \\\\
-x_{11} + x_{21} &amp; = 17 \\\\
-x_{12} + x_{22} &amp; = 18 \\\\
-x_{13} + x_{23} &amp; = 15 \\\\
+s.t. \quad x_{11} + x_{12} + x_{13} & = 23 \\\\
+x_{21} + x_{22} + x_{23} & = 27 \\\\
+x_{11} + x_{21} & = 17 \\\\
+x_{12} + x_{22} & = 18 \\\\
+x_{13} + x_{23} & = 15 \\\\
 \end{aligned}
 \\\\ x_{ij}  \ge 0,i=1,2;j=1,2,3
 \end{split}
-\end{equation}
-\]</span></p>
-<p>（2）生产计划问题</p>
-<p>我们需要加工 4 种产品，分别为 P1,P2,P3,P4，而我们拥有三种机床 A,B,C
-，如果要加工产品就必须同时使用 3
-种机床进行加工。而机床类型，机床数量以及每种机床加工产品的时间如下表：</p>
+\end{equation}</script><p>（2）生产计划问题</p>
+<p>我们需要加工 4 种产品，分别为 P1,P2,P3,P4，而我们拥有三种机床 A,B,C ，如果要加工产品就必须同时使用 3 种机床进行加工。而机床类型，机床数量以及每种机床加工产品的时间如下表：</p>
+<div class="table-container">
 <table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 17%" />
-<col style="width: 17%" />
-<col style="width: 17%" />
-<col style="width: 17%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>机床类型</th>
 <th>机床数量</th>
 <th>P1（小时）</th>
@@ -357,7 +337,7 @@ x_{13} + x_{23} &amp; = 15 \\\\
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>A</td>
 <td>20</td>
 <td>2</td>
@@ -365,7 +345,7 @@ x_{13} + x_{23} &amp; = 15 \\\\
 <td>0.5</td>
 <td>1.5</td>
 </tr>
-<tr class="even">
+<tr>
 <td>B</td>
 <td>30</td>
 <td>0.5</td>
@@ -373,7 +353,7 @@ x_{13} + x_{23} &amp; = 15 \\\\
 <td>1</td>
 <td>2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>C</td>
 <td>15</td>
 <td>1.5</td>
@@ -383,10 +363,12 @@ x_{13} + x_{23} &amp; = 15 \\\\
 </tr>
 </tbody>
 </table>
+</div>
 <p>每种产品的利润如下表：</p>
+<div class="table-container">
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>商品</th>
 <th>P1</th>
 <th>P2</th>
@@ -395,7 +377,7 @@ x_{13} + x_{23} &amp; = 15 \\\\
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>单个利润</td>
 <td>3.5 元</td>
 <td>4.2 元</td>
@@ -404,329 +386,227 @@ x_{13} + x_{23} &amp; = 15 \\\\
 </tr>
 </tbody>
 </table>
-<p>每台机床每周运行不超过 60
-小时，为了使获得的利润达到最大，问每周应制造这些产品各多少件？</p>
-<p>设 <span class="math inline">\(x_i\)</span> 为 每周制造产品 <span
-class="math inline">\(P_i\)</span>
-的数量，我们可以定义其为一个线性规划问题：</p>
-<p><span class="math display">\[
+</div>
+<p>每台机床每周运行不超过 60 小时，为了使获得的利润达到最大，问每周应制造这些产品各多少件？</p>
+<p>设 $x_i$ 为 每周制造产品 $P_i$ 的数量，我们可以定义其为一个线性规划问题：</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = 3.5 x_1 + 4.2 x_2 + 6.5 x_3 + 3.8 x_4 \\\\
 \begin{aligned}
-s.t. 2x_{1} + 2x_{2} + 0.5x_{3} + 1.5x_{4} &amp; \le 1200 \\\\
-0.5x_{1} + 2x_{2} + x_{3} + 2x_{4} &amp; \le 1800 \\\\
-1.5x_{1} + x_{2} + 3x_{3} + 1.5x_{4} &amp; \le 800
+s.t. 2x_{1} + 2x_{2} + 0.5x_{3} + 1.5x_{4} & \le 1200 \\\\
+0.5x_{1} + 2x_{2} + x_{3} + 2x_{4} & \le 1800 \\\\
+1.5x_{1} + x_{2} + 3x_{3} + 1.5x_{4} & \le 800
 \end{aligned}\\\\
 x_{i}  \ge 0,i=1,2,3,4
 \end{split}
-\end{equation}
-\]</span></p>
-<h4 id="网络流问题">（3）网络流问题</h4>
-<p>在之前所讨论的寻求运输网络中最大流的问题，实际上是一个线性规划问题。</p>
-<p><span class="math display">\[
+\end{equation}</script><h4 id="（3）网络流问题"><a href="#（3）网络流问题" class="headerlink" title="（3）网络流问题"></a>（3）网络流问题</h4><p>在之前所讨论的寻求运输网络中最大流的问题，实际上是一个线性规划问题。</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ f_v = \sum \limits_{j \in V} f(s,j) \\\\
 \begin{aligned}
-s.t.\ &amp;  c(i,j) - f(i,j)  \ge 0 \\\\
-&amp; \sum \limits_{\substack{i \in V \\\\ j \neq s,t}} f(i,j) - \sum
-\limits_{ \substack{j \in V \\\\ j \neq s,t}} f(j,k)  = 0 \\\\
-&amp; f(i,j) \ge 0,(i,j) \in E
+s.t.\ &  c(i,j) - f(i,j)  \ge 0 \\\\
+& \sum \limits_{\substack{i \in V \\\\ j \neq s,t}} f(i,j) - \sum \limits_{ \substack{j \in V \\\\ j \neq s,t}} f(j,k)  = 0 \\\\
+ & f(i,j) \ge 0,(i,j) \in E
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<h3 id="线性规划问题的几何意义">2 线性规划问题的几何意义</h3>
-<h4 id="相关概念">（1）相关概念</h4>
-<p><strong>可行解</strong>：满足以下约束条件</p>
-<p><span class="math display">\[
+\end{equation}</script><h3 id="2-线性规划问题的几何意义"><a href="#2-线性规划问题的几何意义" class="headerlink" title="2 线性规划问题的几何意义"></a>2 线性规划问题的几何意义</h3><h4 id="（1）相关概念"><a href="#（1）相关概念" class="headerlink" title="（1）相关概念"></a>（1）相关概念</h4><p><strong>可行解</strong>：满足以下约束条件</p>
+<script type="math/tex; mode=display">
 \begin{split}
 \begin{aligned}
-s.t. \sum \limits_{i=1}^r a_{1i}x_i &amp; \le(=,\ge) b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i &amp; \le(=,\ge) b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i &amp; \le(=,\ge) b_m
+s.t. \sum \limits_{i=1}^r a_{1i}x_i & \le(=,\ge) b_1 \\\\
+ \sum \limits_{i=1}^r a_{2i}x_i & \le(=,\ge) b_2 \\\\
+ ......\\\\
+  \sum \limits_{i=1}^r a_{2mi}x_i & \le(=,\ge) b_m
 \end{aligned}\
 \\\\
 x_i  \ge 0,i = 1,2,...,r
-\end{split}
-\]</span></p>
-<p>的变量 <span class="math inline">\(x_1,x_2,...,x_r\)</span>的值。</p>
-<p><strong>最优可行解</strong>：使目标函数 <span
-class="math inline">\(y=\sum \limits_{i=1}^r c_ix_i\)</span>
-取到最大值（或最小值）的可行解</p>
+\end{split}</script><p>的变量 $x_1,x_2,…,x_r$的值。</p>
+<p><strong>最优可行解</strong>：使目标函数 $y=\sum \limits_{i=1}^r c_ix_i$ 取到最大值（或最小值）的可行解</p>
 <p><strong>可行解域：</strong>所有可行解的集合</p>
-<h4 id="例子">（2）例子</h4>
-<p><strong>例 1</strong>：给出一个线性规划问题如下：</p>
-<p><span class="math display">\[
+<h4 id="（2）例子"><a href="#（2）例子" class="headerlink" title="（2）例子"></a>（2）例子</h4><p><strong>例 1</strong>：给出一个线性规划问题如下：</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = x_1 + x_2 \\\\
 \begin{aligned}
-s.t. 2x_1+3x_2 &amp; \le 6 \\\\
-3x_1+2x_2 &amp; \le 6 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
+s.t. 2x_1+3x_2 & \le 6 \\\\
+3x_1+2x_2 & \le 6 \\\\
+x_1  & \ge 0 \\\\ x_2 & \ge 0\\\\
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
+\end{equation}</script><p>则画图如下：</p>
 <img src="/2022/03/19/LinearProgramming/image-20220319171444450.png" class="" title="例1-图1">
 <img src="/2022/03/19/LinearProgramming/image-20220319171538409.png" class="" title="例1-图2">
-<p>如图所示，在点 (6/5,6/5) ， <span class="math inline">\(y\)</span>
-取得最大值 12/5 ，即最优可行解为 (6/5,6/5) 。</p>
+<p>如图所示，在点 (6/5,6/5) ， $y$ 取得最大值 12/5 ，即最优可行解为 (6/5,6/5) 。</p>
 <p><strong>例 2</strong> 给出一个线性规划问题如下：</p>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = 3x_1 + x_2 \\\\
 \begin{aligned}
-s.t. x_1+x_2 &amp; \le 5 \\\\
--x_1+x_2 &amp; \le 0 \\\\
-6x_1+2x_2 &amp; \le 21 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
+s.t. x_1+x_2 & \le 5 \\\\
+-x_1+x_2 & \le 0 \\\\
+6x_1+2x_2 & \le 21 \\\\
+x_1  & \ge 0 \\\\ x_2 & \ge 0\\\\
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
+\end{equation}</script><p>则画图如下：</p>
 <img src="/2022/03/19/LinearProgramming/image-20220318114944778.png" class="" title="image-20220318114944778">
 <img src="/2022/03/19/LinearProgramming/image-20220318115111885.png" class="" title="image-20220318115111885">
-<p>如图所示，<span class="math inline">\(y\)</span> 可取得最大值 21/2
-，但有无穷多个最优可行解。</p>
+<p>如图所示，$y$ 可取得最大值 21/2 ，但有无穷多个最优可行解。</p>
 <p><strong>例 3</strong> 给出一个线性规划问题如下：</p>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = 2x_1 + 2x_2\\\\
 \begin{aligned}
-s.t. x_1 - x_2 &amp; \ge 1 \\\\
--x_1+2x_2 &amp; \le 0 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
+s.t. x_1 - x_2 & \ge 1 \\\\
+-x_1+2x_2 & \le 0 \\\\
+x_1  & \ge 0 \\\\ x_2 & \ge 0\\\\
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
+\end{equation}</script><p>则画图如下：</p>
 <img src="/2022/03/19/LinearProgramming/image-20220318115306288.png" class="" title="image-20220318115306288">
-<p>如图所示，可行解域无穷大，<span class="math inline">\(y\)</span>
-无法取到最大值， 有无穷多个最优可行解。</p>
+<p>如图所示，可行解域无穷大，$y$ 无法取到最大值， 有无穷多个最优可行解。</p>
 <p><strong>例 4</strong> 给出一个线性规划问题如下：</p>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{min} \ y = 3x_1 + 2x_2 \\\\
 \begin{aligned}
-s.t. -x_1 + x_2 &amp; \ge 1 \\\\
-x_1+x_2 &amp; \le -2 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
+s.t. -x_1 + x_2 & \ge 1 \\\\
+x_1+x_2 & \le -2 \\\\
+x_1  & \ge 0 \\\\ x_2 & \ge 0\\\\
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<p>则画图如下：</p>
+\end{equation}</script><p>则画图如下：</p>
 <img src="/2022/03/19/LinearProgramming/image-20220318115526464.png" class="" title="image-20220318115526464">
-<p>如图所示，没有可行解，因此 <span class="math inline">\(y\)</span>
-无法取到最大值，没有最优可行解。</p>
-<h4 id="解的-4-种情况">（3）解的 4 种情况</h4>
-<p><strong>两个变量的线性规划问题的解可能有以下四种情况：</strong></p>
+<p>如图所示，没有可行解，因此 $y$ 无法取到最大值，没有最优可行解。</p>
+<h4 id="（3）解的-4-种情况"><a href="#（3）解的-4-种情况" class="headerlink" title="（3）解的 4 种情况"></a>（3）解的 4 种情况</h4><p><strong>两个变量的线性规划问题的解可能有以下四种情况：</strong></p>
 <p>1.有唯一的最优可行解。这个唯一的最优可行解一定是可行解域的一个顶点。</p>
 <p>2.有最优可行解，但不唯一。此时最优可行解一定是可行解域的一条边界上的所有点。</p>
 <p>3.有可行解，但没有最优可行解。此时在可行解域上，目标函数的值趋向无穷。</p>
 <p>4.无可行解。此时可行解域为空集。</p>
-<h3 id="凸多边形与凸多面体">3 凸多边形与凸多面体</h3>
-<h4 id="相关概念-1">（1）相关概念</h4>
-<p><strong>凸多边形：</strong>是指没有一个内角超过
-180。的多边形。或者说，一个多边形是凸的，如果联接这个多边形中任意两个点的线段上的所有点仍在这个多边形中.</p>
-<p><strong>凸多边形的角点
-x：</strong>它在凸多边形中且不在凸多边形中任何两点（除 x
-点外）的线段上。</p>
+<h3 id="3-凸多边形与凸多面体"><a href="#3-凸多边形与凸多面体" class="headerlink" title="3 凸多边形与凸多面体"></a>3 凸多边形与凸多面体</h3><h4 id="（1）相关概念-1"><a href="#（1）相关概念-1" class="headerlink" title="（1）相关概念"></a>（1）相关概念</h4><p><strong>凸多边形：</strong>是指没有一个内角超过 180。的多边形。或者说，一个多边形是凸的，如果联接这个多边形中任意两个点的线段上的所有点仍在这个多边形中.</p>
+<p><strong>凸多边形的角点 x：</strong>它在凸多边形中且不在凸多边形中任何两点（除 x 点外）的线段上。</p>
 <p>具有两个变量的线性规划问题，其最优可行解如果存在，一定在角点上可以找到最优可行解。</p>
 <p>推广到多维情形：</p>
 <p><strong>凸多面体：</strong>如果联接这个多面体中任意两个点的线段上的所有点仍在这个多面体中。</p>
-<h4 id="r-维空间中的点">（2）<span class="math inline">\(r\)</span>
-维空间中的点</h4>
-<p>在 <span class="math inline">\(r\)</span>
-维空间中，一个点可以用这个点的 <span class="math inline">\(r\)</span>
-个坐标来表示.</p>
-<p><span class="math display">\[
+<h4 id="（2）-r-维空间中的点"><a href="#（2）-r-维空间中的点" class="headerlink" title="（2）$r$ 维空间中的点"></a>（2）$r$ 维空间中的点</h4><p>在 $r$ 维空间中，一个点可以用这个点的 $r$ 个坐标来表示.</p>
+<script type="math/tex; mode=display">
 \begin{split}
 a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r=bi\\\\
-a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r&gt;bi\\\\
-a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r&lt;bi
-\end{split}
-\]</span></p>
-<h4 id="线性规划问题的几何表示">（3）线性规划问题的几何表示</h4>
-<p>对一个有 <span class="math inline">\(r\)</span> 个变元和 <span
-class="math inline">\(m\)</span>
-个线性约束条件的线性规划问题，可行解域是 <span
-class="math inline">\(r\)</span>
-维空间中的一个凸多面体，它由对应于线性约束条件的 <span
-class="math inline">\(m\)</span> 个超平面和对应于非负条件的 <span
-class="math inline">\(r\)</span> 个超平面所围成：</p>
-<p><span class="math display">\[
+a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r>bi\\\\
+a_{i1}x_1+a_{i2}x_2+...+a_{ir}x_r<bi
+\end{split}</script><h4 id="（3）线性规划问题的几何表示"><a href="#（3）线性规划问题的几何表示" class="headerlink" title="（3）线性规划问题的几何表示"></a>（3）线性规划问题的几何表示</h4><p>对一个有 $r$ 个变元和 $m$ 个线性约束条件的线性规划问题，可行解域是 $r$ 维空间中的一个凸多面体，它由对应于线性约束条件的 $m$ 个超平面和对应于非负条件的 $r$ 个超平面所围成：</p>
+<script type="math/tex; mode=display">
 \begin{split}
 a_{11}x_1+a_{12}x_2+...+a_{1r}x_r=b_1\\\\
 a_{21}x_1+a_{22}x_2+...+a_{2r}x_r=b_2\\\\
 ...\\\\
 a_{m1}x_1+a_{m2}x_2+...+a_{mr}x_r=b_m\\\\
 x_i \ge 0,i = 1,2,...,r
-\end{split}
-\]</span></p>
-<p>对 <span class="math inline">\(r\)</span>
-维空间的线性规划问题，如果存在最优可行解，那么在凸多面体的某个角点上一定能找到最优可行解。</p>
-<p>在二维空间中，互不平行的两条直线相交于一点，在 <span
-class="math inline">\(r\)</span> 维空间中，互不平行的 <span
-class="math inline">\(r\)</span> 个超平面也相交于一个点。</p>
-<h3 id="线性规划问题的标准形式">4 线性规划问题的标准形式</h3>
-<h4 id="标准形式">（1）标准形式</h4>
-<p>给定一个线性规划问题：</p>
-<p><span class="math display">\[
+\end{split}</script><p>对 $r$ 维空间的线性规划问题，如果存在最优可行解，那么在凸多面体的某个角点上一定能找到最优可行解。</p>
+<p>在二维空间中，互不平行的两条直线相交于一点，在 $r$ 维空间中，互不平行的 $r$ 个超平面也相交于一个点。</p>
+<h3 id="4-线性规划问题的标准形式"><a href="#4-线性规划问题的标准形式" class="headerlink" title="4 线性规划问题的标准形式"></a>4 线性规划问题的标准形式</h3><h4 id="（1）标准形式"><a href="#（1）标准形式" class="headerlink" title="（1）标准形式"></a>（1）标准形式</h4><p>给定一个线性规划问题：</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max(min)} \ y = \sum  \limits_{i=1}^r c_ix_i \\\\
 \begin{aligned}
-s.t. \quad \sum \limits_{i=1}^r a_{1i}x_i &amp; \le(=,\ge) b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i &amp; \le(=,\ge) b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i &amp; \le(=,\ge) b_m \\\\
+s.t. \quad \sum \limits_{i=1}^r a_{1i}x_i & \le(=,\ge) b_1 \\\\
+ \sum \limits_{i=1}^r a_{2i}x_i & \le(=,\ge) b_2 \\\\
+ ......\\\\
+  \sum \limits_{i=1}^r a_{2mi}x_i & \le(=,\ge) b_m \\\\
 \end{aligned}\\\\
 \quad x_i   \ge 0,i  = 1,2,...,r
 \end{split}
-\end{equation}
-\]</span></p>
-<p>将其标准化，为</p>
-<p><span class="math display">\[
+\end{equation}</script><p>将其标准化，为</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y  = \sum  \limits_{i=1}^r c_ix_i \\\\
 \begin{aligned}
-s.t.   \sum \limits_{i=1}^r a_{1i}x_i  &amp;= b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i  &amp;= b_2 \\\\
-......\\\\
-  \sum \limits_{i=1}^r a_{2mi}x_i  &amp;= b_m \\\\
+s.t.   \sum \limits_{i=1}^r a_{1i}x_i  &= b_1 \\\\
+ \sum \limits_{i=1}^r a_{2i}x_i  &= b_2 \\\\
+ ......\\\\
+  \sum \limits_{i=1}^r a_{2mi}x_i  &= b_m \\\\
 \end{aligned} \\\\
 x_i   \ge 0,i  = 1,2,...,r
 \end{split}
-\end{equation}
-\]</span></p>
-<h4 id="标准化方法">（2）标准化方法</h4>
-<p>（a）如果约束条件中出现了 <span class="math inline">\(&lt;,\le
-,&gt;,\ge\)</span> ，则需要引入松弛变量：</p>
-<p><span class="math display">\[
+\end{equation}</script><h4 id="（2）标准化方法"><a href="#（2）标准化方法" class="headerlink" title="（2）标准化方法"></a>（2）标准化方法</h4><p>（a）如果约束条件中出现了 $&lt;,\le ,&gt;,\ge$ ，则需要引入松弛变量：</p>
+<script type="math/tex; mode=display">
 \begin{align}
 a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r \le b_k \\\\
-\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r
-+x_{r+k}= b_k
-\end{align}
-\]</span></p>
-<p><span class="math display">\[
+\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r +x_{r+k}= b_k
+\end{align}</script><script type="math/tex; mode=display">
 \begin{align}
 a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r \ge b_k \\\\
-\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r
--x_{r+k}= b_k
-\end{align}
-\]</span></p>
-<p>（b）如果线性规划问题求最小值，那么我们可以将等式左右取负转为求最大值问题：</p>
-<p><span class="math display">\[
-\text{min} \ y = \sum  \limits_{i=1}^r c_ix_i \Rightarrow \text{max} \
-y&#39; = -y = -\sum  \limits_{i=1}^r c_ix_i
-\]</span></p>
-<p>（c）如果约束条件中的 <span class="math inline">\(b_k &lt;0\)</span>
-，那么我们可以将等式左右取负将等式后边置为正值：</p>
-<p><span class="math display">\[
-a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r = b_k \Rightarrow\text{插入}{b_k &lt;
-0}\Rightarrow -a_{k1}x_1-a_{k2}x_2 -...-a_{kr}x_r = -b_k
-\]</span></p>
-<p>（d）如果某个变量 <span class="math inline">\(x_i &lt; 0\)</span>
-，做如下变换：</p>
-<p><span class="math display">\[
-x_i = x_i&#39;-x_i&#39;&#39;(x_i&#39;&#39; &gt; x_i&#39; \ge 0)
-\]</span></p>
-<p>（e）这样我们就可以得到标准化的线性规划问题：</p>
-<p><span class="math display">\[
+\text{插入}{x_{r+k}\ge0}\Rightarrow a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r -x_{r+k}= b_k
+\end{align}</script><p>（b）如果线性规划问题求最小值，那么我们可以将等式左右取负转为求最大值问题：</p>
+<script type="math/tex; mode=display">
+\text{min} \ y = \sum  \limits_{i=1}^r c_ix_i \Rightarrow \text{max} \ y' = -y = -\sum  \limits_{i=1}^r c_ix_i</script><p>（c）如果约束条件中的 $b_k &lt;0$ ，那么我们可以将等式左右取负将等式后边置为正值：</p>
+<script type="math/tex; mode=display">
+a_{k1}x_1+a_{k2}x_2 +...+a_{kr}x_r = b_k \Rightarrow\text{插入}{b_k < 0}\Rightarrow -a_{k1}x_1-a_{k2}x_2 -...-a_{kr}x_r = -b_k</script><p>（d）如果某个变量 $x_i &lt; 0$ ，做如下变换：</p>
+<script type="math/tex; mode=display">
+x_i = x_i'-x_i''(x_i'' > x_i' \ge 0)</script><p>（e）这样我们就可以得到标准化的线性规划问题：</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = \sum  \limits_{i=1}^r c_ix_i \\\\
 \begin{aligned}
-s.t. \sum \limits_{i=1}^r a_{1i}x_i \pm x_{r+1} &amp; = b_1 \\\\
-\sum \limits_{i=1}^r a_{2i}x_i \pm x_{r+2} &amp; = b_2 \\\\
-......\\\\
-\sum \limits_{i=1}^r a_{2mi}x_i \pm x_{r+m}  &amp; = b_m
+s.t. \sum \limits_{i=1}^r a_{1i}x_i \pm x_{r+1} & = b_1 \\\\
+\sum \limits_{i=1}^r a_{2i}x_i \pm x_{r+2} & = b_2 \\\\
+ ......\\\\
+\sum \limits_{i=1}^r a_{2mi}x_i \pm x_{r+m}  & = b_m
 \end{aligned}
-\\\\
-x_i   \ge 0,x_{r+j} \ge 0,i  = 1,2,...,r \\\\
-b_i  \ge 0,i=1,2,...,m
+ \\\\
+ x_i   \ge 0,x_{r+j} \ge 0,i  = 1,2,...,r \\\\
+ b_i  \ge 0,i=1,2,...,m
 \end{split}
-\end{equation}
-\]</span></p>
-<p>观察得到，<span
-class="math inline">\((x_1,x_2,...,x_r,x_{r+1},x_{r+2},...x_{r+m})\)</span>
-= <span class="math inline">\((0,0,...,0,b_1,b_2,...,b_m)\)</span>
-是当前约束条件下</p>
+\end{equation}</script><p>观察得到，$(x<em>1,x_2,…,x_r,x</em>{r+1},x<em>{r+2},…x</em>{r+m})$ = $(0,0,…,0,b_1,b_2,…,b_m)$ 是当前约束条件下</p>
 <p>的一个可行解。</p>
-<h3 id="线性规划问题的基本定理">5 线性规划问题的基本定理</h3>
-<h4
-id="基本可行解的相关概念">（1）<strong>基本可行解的相关概念</strong></h4>
-<p><strong>基本可行解：</strong>一个可行解的 <span
-class="math inline">\(r+m\)</span> 个分量中的 <span
-class="math inline">\(r\)</span> 个分量都是 0 称为基本可行解；如果有多于
-<span class="math inline">\(r\)</span> 个 0
-的分量，则为退化的基本可行解。</p>
-<p>基本可行解中，取非 0
-值的变量称为<strong>基本变量</strong>，其他的称为<strong>非基本变量</strong>。</p>
+<h3 id="5-线性规划问题的基本定理"><a href="#5-线性规划问题的基本定理" class="headerlink" title="5 线性规划问题的基本定理"></a>5 线性规划问题的基本定理</h3><h4 id="（1）基本可行解的相关概念"><a href="#（1）基本可行解的相关概念" class="headerlink" title="（1）基本可行解的相关概念"></a>（1）<strong>基本可行解的相关概念</strong></h4><p><strong>基本可行解：</strong>一个可行解的 $r+m$ 个分量中的 $r$ 个分量都是 0 称为基本可行解；如果有多于 $r$ 个 0 的分量，则为退化的基本可行解。</p>
+<p>基本可行解中，取非 0 值的变量称为<strong>基本变量</strong>，其他的称为<strong>非基本变量</strong>。</p>
 <p><strong>最优基本可行解：</strong>使目标函数达到最优的基本可行解。</p>
-<h4
-id="最优基本可行解存在定理">（2）<strong>最优基本可行解存在定理</strong></h4>
-<p><strong>最优基本可行解存在定理(线性规划问题基本定理）：</strong>如果线性规划问题存在最优可行解，则一定存在最优基本可行解。</p>
+<h4 id="（2）最优基本可行解存在定理"><a href="#（2）最优基本可行解存在定理" class="headerlink" title="（2）最优基本可行解存在定理"></a>（2）<strong>最优基本可行解存在定理</strong></h4><p><strong>最优基本可行解存在定理(线性规划问题基本定理）：</strong>如果线性规划问题存在最优可行解，则一定存在最优基本可行解。</p>
 <p>这个定理的证明是构造性的，我们直接在后面的求解方法中介绍。</p>
 <p><strong>推论：线性规划问题的最优可行解若存在，则必在可行解域的角点上找到。</strong></p>
 <p>只需在可行解域的有限个角点处计算目标函数的值，然后将这些值进行比较，从中挑出最优的值。</p>
 <p>当变量的数目和线性约束条件的数目增加时，可行解域中的角点就会大大增加，从而在每一角点处计算目标函数的值就会花费许多工作量。</p>
-<h3 id="单纯形方法">6 单纯形方法</h3>
-<h4 id="基本思想">（1）基本思想</h4>
-<img src="/2022/03/19/LinearProgramming/image-20220318140958990.png" class="" title="image-20220318140958990">
-<h4 id="存在问题">（2）存在问题</h4>
-<ul>
+<h3 id="6-单纯形方法"><a href="#6-单纯形方法" class="headerlink" title="6 单纯形方法"></a>6 单纯形方法</h3><h4 id="（1）基本思想"><a href="#（1）基本思想" class="headerlink" title="（1）基本思想"></a>（1）基本思想</h4><img src="/2022/03/19/LinearProgramming/image-20220318140958990.png" class="" title="image-20220318140958990">
+<h4 id="（2）存在问题"><a href="#（2）存在问题" class="headerlink" title="（2）存在问题"></a>（2）存在问题</h4><ul>
 <li>计算了目标函数在某一角点处的值之后，如何求得另一角点使得目标函数在该角点的值会更大些？</li>
 <li>当可行解域的相应角点已经达到时，如何知道已经求得最优解？</li>
 </ul>
-<h4 id="例子-1">（3）例子</h4>
-<p><span class="math display">\[
+<h4 id="（3）例子"><a href="#（3）例子" class="headerlink" title="（3）例子"></a>（3）例子</h4><script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = x_1 + 4x_2 \\\\
 \begin{aligned}
-s.t. 4x_1 + 5x_2 &amp; \le 10 \\\\
-5x_1 + 2x_2 &amp; \le 10\\\\
--7x_1+4x_2 &amp; \le 4 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
+s.t. 4x_1 + 5x_2 & \le 10 \\\\
+5x_1 + 2x_2 & \le 10\\\\
+-7x_1+4x_2 & \le 4 \\\\
+x_1  & \ge 0 \\\\ x_2 & \ge 0\\\\
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<p>标准化后，为：</p>
-<p><span class="math display">\[
+\end{equation}</script><p>标准化后，为：</p>
+<script type="math/tex; mode=display">
 \begin{equation}
 \begin{split}
 \text{max} \ y = x_1 + 4x_2 \\\\
 \begin{aligned}
-s.t. 4x_1 + 5x_2 + x_3 &amp; = 10 \\\\
-5x_1 + 2x_2 + x_4 &amp; = 10 \\\\
--7x_1+4x_2 +x_5 &amp; = 4 \\\\
-x_1  &amp; \ge 0 \\\\ x_2 &amp; \ge 0\\\\
+s.t. 4x_1 + 5x_2 + x_3 & = 10 \\\\
+5x_1 + 2x_2 + x_4 & = 10 \\\\
+-7x_1+4x_2 +x_5 & = 4 \\\\
+x_1  & \ge 0 \\\\ x_2 & \ge 0\\\\
 \end{aligned}
 \end{split}
-\end{equation}
-\]</span></p>
-<p>注意这里 <span class="math inline">\(r=2,m=3\)</span></p>
+\end{equation}</script><p>注意这里 $r=2,m=3$</p>
 <img src="/2022/03/19/LinearProgramming/image-20220318143957406.png" class="" title="image-20220318143957406">
-<p>在 <span class="math inline">\(m\)</span> 个约束条件中，令 <span
-class="math inline">\(r+m\)</span> 个变量的 <span
-class="math inline">\(r\)</span> 个(非基本变量)为 0，解出其余 <span
-class="math inline">\(m\)</span>
-个变量，就可以得到一个基本可行解，对应一个角点。</p>
+<p>在 $m$ 个约束条件中，令 $r+m$ 个变量的 $r$ 个(非基本变量)为 0，解出其余 $m$ 个变量，就可以得到一个基本可行解，对应一个角点。</p>
 
     </div>
 
@@ -829,8 +709,7 @@ class="math inline">\(m\)</span>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">组合设计与组合优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92"><span class="nav-number">1.1.</span> <span class="nav-text">线性规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E6%95%B0%E5%AD%A6%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">1 线性规划问题的数学模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">（1）运输问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%B5%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">（3）网络流问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E5%87%A0%E4%BD%95%E6%84%8F%E4%B9%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">2 线性规划问题的几何意义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">（1）相关概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">（2）例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E7%9A%84-4-%E7%A7%8D%E6%83%85%E5%86%B5"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">（3）解的 4 种情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%B8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E4%B8%8E%E5%87%B8%E5%A4%9A%E9%9D%A2%E4%BD%93"><span class="nav-number">1.1.3.</span> <span class="nav-text">3 凸多边形与凸多面体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5-1"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">（1）相关概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#r-%E7%BB%B4%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E7%82%B9"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">（2）\(r\)
-维空间中的点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E5%87%A0%E4%BD%95%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">（3）线性规划问题的几何表示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E6%A0%87%E5%87%86%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.4.</span> <span class="nav-text">4 线性规划问题的标准形式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">（1）标准形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%8C%96%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">（2）标准化方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.5.</span> <span class="nav-text">5 线性规划问题的基本定理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8F%AF%E8%A1%8C%E8%A7%A3%E7%9A%84%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">（1）基本可行解的相关概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E4%BC%98%E5%9F%BA%E6%9C%AC%E5%8F%AF%E8%A1%8C%E8%A7%A3%E5%AD%98%E5%9C%A8%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">（2）最优基本可行解存在定理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%AF%E5%BD%A2%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.6.</span> <span class="nav-text">6 单纯形方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">（1）基本思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">（2）存在问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-1"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">（3）例子</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">组合设计与组合优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92"><span class="nav-number">1.1.</span> <span class="nav-text">线性规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E6%95%B0%E5%AD%A6%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">1 线性规划问题的数学模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E8%BF%90%E8%BE%93%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">（1）运输问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E7%BD%91%E7%BB%9C%E6%B5%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">（3）网络流问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E5%87%A0%E4%BD%95%E6%84%8F%E4%B9%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">2 线性规划问题的几何意义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">（1）相关概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%90"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">（2）例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E8%A7%A3%E7%9A%84-4-%E7%A7%8D%E6%83%85%E5%86%B5"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">（3）解的 4 种情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%87%B8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E4%B8%8E%E5%87%B8%E5%A4%9A%E9%9D%A2%E4%BD%93"><span class="nav-number">1.1.3.</span> <span class="nav-text">3 凸多边形与凸多面体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5-1"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">（1）相关概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89-r-%E7%BB%B4%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E7%82%B9"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">（2）$r$ 维空间中的点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E5%87%A0%E4%BD%95%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">（3）线性规划问题的几何表示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E6%A0%87%E5%87%86%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.4.</span> <span class="nav-text">4 线性规划问题的标准形式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%A0%87%E5%87%86%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">（1）标准形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E6%A0%87%E5%87%86%E5%8C%96%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">（2）标准化方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E9%97%AE%E9%A2%98%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.5.</span> <span class="nav-text">5 线性规划问题的基本定理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E6%9C%AC%E5%8F%AF%E8%A1%8C%E8%A7%A3%E7%9A%84%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">（1）基本可行解的相关概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E6%9C%80%E4%BC%98%E5%9F%BA%E6%9C%AC%E5%8F%AF%E8%A1%8C%E8%A7%A3%E5%AD%98%E5%9C%A8%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">（2）最优基本可行解存在定理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8D%95%E7%BA%AF%E5%BD%A2%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.6.</span> <span class="nav-text">6 单纯形方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">（1）基本思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">（2）存在问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E4%BE%8B%E5%AD%90"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">（3）例子</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -846,14 +725,14 @@ class="math inline">\(m\)</span>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

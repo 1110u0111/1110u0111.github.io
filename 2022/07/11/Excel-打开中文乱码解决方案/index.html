@@ -22,21 +22,28 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="每周论文总结 week1主题：命名实体识别 知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。 知识图谱的技术架构如下图所示。 命名实体识别(Named Entity Recogniti">
+  <meta name="description" content="Excel 打开中文乱码解决方案问题在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。  其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。 解决方法加入BOM头中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带">
 <meta property="og:type" content="article">
-<meta property="og:title" content="每周论文w1">
-<meta property="og:url" content="http://example.com/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/index.html">
+<meta property="og:title" content="Excel 打开中文乱码解决方案">
+<meta property="og:url" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="每周论文总结 week1主题：命名实体识别 知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。 知识图谱的技术架构如下图所示。 命名实体识别(Named Entity Recogniti">
+<meta property="og:description" content="Excel 打开中文乱码解决方案问题在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。  其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。 解决方法加入BOM头中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-06-27T06:09:36.000Z">
-<meta property="article:modified_time" content="2022-06-29T13:32:10.461Z">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110428908.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110555057.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111720726.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111810304.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/Excel-打开中文乱码解决方案/image-20220711111834738.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/Excel-打开中文乱码解决方案/image-20220711112253092.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/Excel-打开中文乱码解决方案/image-20220711112348498.png">
+<meta property="article:published_time" content="2022-07-11T02:52:58.000Z">
+<meta property="article:modified_time" content="2022-07-11T03:26:01.736Z">
 <meta property="article:author" content="Rebecca">
-<meta property="article:tag" content="知识图谱">
-<meta property="article:tag" content="命名实体识别">
+<meta property="article:tag" content="Excel">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110428908.png">
 
-<link rel="canonical" href="http://example.com/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/">
+<link rel="canonical" href="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
 
 
 <script id="page-configurations">
@@ -49,7 +56,7 @@
   };
 </script>
 
-  <title>每周论文w1 | Rebecca的赛博世界</title>
+  <title>Excel 打开中文乱码解决方案 | Rebecca的赛博世界</title>
   
 
 
@@ -178,7 +185,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -191,7 +198,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          每周论文w1
+          Excel 打开中文乱码解决方案
         </h1>
 
         <div class="post-meta">
@@ -200,16 +207,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-06-27 14:09:36" itemprop="dateCreated datePublished" datetime="2022-06-27T14:09:36+08:00">2022-06-27</time>
+              <time title="创建时间：2022-07-11 10:52:58 / 修改时间：11:26:01" itemprop="dateCreated datePublished" datetime="2022-07-11T10:52:58+08:00">2022-07-11</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-29 21:32:10" itemprop="dateModified" datetime="2022-06-29T21:32:10+08:00">2022-06-29</time>
-              </span>
 
           
 
@@ -222,31 +223,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="每周论文总结-week1"><a href="#每周论文总结-week1" class="headerlink" title="每周论文总结 week1"></a>每周论文总结 week1</h1><p>主题：命名实体识别</p>
-<p>知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。</p>
-<p>知识图谱的技术架构如下图所示。</p>
-<p>命名实体识别(Named Entity Recognition, NER)，目标是识别文本中的实体，并且取得其边界以及所属的类别。其方法有传统机器学习方法和深度学习方法。深度学习方法为现在主流应用方法。</p>
-<h2 id="LSTM-CRF"><a href="#LSTM-CRF" class="headerlink" title="LSTM-CRF"></a>LSTM-CRF</h2><p>HUANG等人提出了双向长短期记忆网络(Bidirectional long short<br>term memory, Bi-LSTM)和条件随机场(Conditional random field,CRF)结合的方法，用于进行命名实体识别。</p>
-<p>HUANG Z，XU W，YU K. Bidirectional LSTM-CRF models for sequence tagging[J]. arXiv preprint arXiv：.01991，2015.</p>
-<p>LSTM是基于循环神经网络(Recurrent Neural Network, RNN)的基础上进行改进的一种模型。</p>
-<p>RNN的基本思想是，对输入的序列中的每一个位置都进行同样的循环单元计算，每一个循环单元不仅接受该位置的信息，也接收上一个循环单元的输出进行输入。因此，与卷积神经网络(Convolutional Neural Network, CNN)相比，RNN保留了长距离的上下文信息。</p>
-<p>LSTM是在简单RNN的基础上，添加了细胞状态(cell state)，同时，加入了采用Sigmoid激活函数的门控机制(遗忘门、输入门、输出门)。添加了细胞状态之后，可以缓解梯度消失问题，添加了门控机制之后，可以实现对信息的长短期记忆。</p>
-<p>CRF是一种判别式无向图模型，其条件分布为：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-P(Y|X) &= \frac{1}{Z} \prod_c \phi_c (y_c |x) \\
-\phi_c (y_c |x) &= e^{\sum_k \lambda_k f_k (y_t,y_{t-1},x_t) + \mu_k s_k (y_t,x_t)} \\
-Z &= \sum_y \prod_c \phi_c (y_c |x)
-\end{aligned}</script><p>其中，$\phi_c (y_c |x)$ 为团势函数，$Z$ 为归一化函数，$\lambda$ 和 $\mu$ 是权重，为待学习的参数。</p>
-<p>针对实体识别任务，使用Bi-LSTM可以在任意时刻获得前后的信息。其步骤如下：</p>
-<ul>
-<li>训练出每个单词的词向量，将处理为单词索引的句子作为输入，经过嵌入层(Embedding)层转换为对应的特征张量(bs,len,dim)，并提供给Bi-LSTM层。</li>
-<li>Bi-LSTM层接受将这个张量作为输入，叠加正反两个循环神经网络，并计算序列输出张量(bs,len,hidden)，该输出张量进一步通过Softmax层计算得到输入概率(bs,len,1).</li>
-<li>通过这个概率与利用BIOES等方式标注好的标签来计算交叉熵损失。</li>
-</ul>
-<p>使用Bi-LSTM预测的前后两个标注是相互独立的，也就是说，可能出现序列前后两个字都预测为“Begin”，也就是词首，因此引入CRF层。</p>
-<p>CRF层替换了Bi-LSTM层中的Softmax层。</p>
-<h2 id="空洞卷积加强模型"><a href="#空洞卷积加强模型" class="headerlink" title="空洞卷积加强模型"></a>空洞卷积加强模型</h2><h2 id="加入了注意力机制的Transformer模型"><a href="#加入了注意力机制的Transformer模型" class="headerlink" title="加入了注意力机制的Transformer模型"></a>加入了注意力机制的Transformer模型</h2>
+        <h1 id="Excel-打开中文乱码解决方案"><a href="#Excel-打开中文乱码解决方案" class="headerlink" title="Excel 打开中文乱码解决方案"></a>Excel 打开中文乱码解决方案</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。</p>
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110428908.png" class="" title="image-20220711110428908">
+<p>其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="加入BOM头"><a href="#加入BOM头" class="headerlink" title="加入BOM头"></a>加入BOM头</h3><p>中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带bom头的csv文件转换为带bom头的编码形式即可解决。</p>
+<ol>
+<li>使用Notepad++打开，然后设置为“转为UTF-8编码”。<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110555057.png" class="" title="image-20220711110555057"></li>
+<li>直接用编程语言，将Bom头编码写入文件流。</li>
+</ol>
+<p>第一种方法的优点在于，容易操作，无需任何编程知识，缺点在于，Notepad++只支持Windows系统，同时，如果该csv文件为大文件，可能会导致无法打开的现象。</p>
+<p>第二种方法的优点在于，在任何平台都可以使用编程语言解决该问题，缺点在于，需要有编写程序的背景知识支持。</p>
+<h3 id="编辑Excel文件"><a href="#编辑Excel文件" class="headerlink" title="编辑Excel文件"></a>编辑Excel文件</h3><p>这种方法的思路是，新建一个Excel然后倒入旧的Excel，在导入时可以设置文件的编码。</p>
+<ol>
+<li>在【数据】选项卡，选择【获取外部数据】下的【自文本】<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111720726.png" class="" title="image-20220711111720726"></li>
+<li>选择你需要导入的中文乱码的数据集<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111810304.png" class="" title="image-20220711111810304"></li>
+<li>文本导入中，第一步需注意其格式选择【65001:Unicode(UTF-8)】，第二步需注意选择【分隔符号】选择【逗号】而不是【Tab键】，第三步可以预览。<img src="Excel-打开中文乱码解决方案/image-20220711111834738.png" alt="image-20220711111834738"><img src="Excel-打开中文乱码解决方案/image-20220711112253092.png" alt="image-20220711112253092"><img src="Excel-打开中文乱码解决方案/image-20220711112348498.png" alt="image-20220711112348498"></li>
+<li>完成。</li>
+</ol>
+<p>本方法的优点在于简单有效，也可以导入大文件，缺点在于可能丢失源csv文件的部分格式，且处理时间很长。</p>
+
     </div>
 
     
@@ -261,7 +256,7 @@ Z &= \sum_y \prod_c \phi_c (y_c |x)
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/" title="每周论文w1">http://example.com/2022/06/27/每周论文w1/</a>
+    <a href="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" title="Excel 打开中文乱码解决方案">http://example.com/2022/07/11/Excel-打开中文乱码解决方案/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -272,8 +267,7 @@ Z &= \sum_y \prod_c \phi_c (y_c |x)
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag"># 知识图谱</a>
-              <a href="/tags/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" rel="tag"># 命名实体识别</a>
+              <a href="/tags/Excel/" rel="tag"># Excel</a>
           </div>
 
         
@@ -282,13 +276,10 @@ Z &= \sum_y \prod_c \phi_c (y_c |x)
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/06/12/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%BB%A5%E5%8F%8APython%E5%AE%9E%E7%8E%B0/" rel="prev" title="数据预处理以及Python实现">
-      <i class="fa fa-chevron-left"></i> 数据预处理以及Python实现
+    <a href="/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/" rel="prev" title="每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction">
+      <i class="fa fa-chevron-left"></i> 每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/06/29/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="next" title="知识图谱">
-      知识图谱 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -347,7 +338,7 @@ Z &= \sum_y \prod_c \phi_c (y_c |x)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93-week1"><span class="nav-number">1.</span> <span class="nav-text">每周论文总结 week1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM-CRF"><span class="nav-number">1.1.</span> <span class="nav-text">LSTM-CRF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%8A%A0%E5%BC%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">空洞卷积加强模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E4%BA%86%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84Transformer%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">加入了注意力机制的Transformer模型</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">Excel 打开中文乱码解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5BOM%E5%A4%B4"><span class="nav-number">1.2.1.</span> <span class="nav-text">加入BOM头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91Excel%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">编辑Excel文件</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

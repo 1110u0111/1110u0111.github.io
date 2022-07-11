@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="每日论文：ManifoldE 问题 在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 \(\approx\) 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。 方法 对于">
+  <meta name="description" content="每日论文：ManifoldE问题在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 $\approx$ 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。 方法对于预测实体链接问题，针对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="每日论文：From one point to a manifold: Knowledge graph embedding for precise link prediction">
 <meta property="og:url" content="http://example.com/2022/07/09/%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AFrom-one-point-to-a-manifold-Knowledge-graph-embedding-for-precise-link-prediction/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="每日论文：ManifoldE 问题 在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 \(\approx\) 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。 方法 对于">
+<meta property="og:description" content="每日论文：ManifoldE问题在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 $\approx$ 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。 方法对于预测实体链接问题，针对">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-07-09T14:42:18.000Z">
 <meta property="article:modified_time" content="2022-07-09T15:06:46.838Z">
@@ -215,55 +215,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="每日论文manifolde">每日论文：ManifoldE</h1>
-<h2 id="问题">问题</h2>
-<p>在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系
-<span class="math inline">\(\approx\)</span>
-尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。</p>
-<h3 id="方法">方法</h3>
-<p>对于预测实体链接问题，针对基于逻辑规则的知识推理计算复杂度过高的问题，可以使用基于平移的方法以及本文提出的ManifoldE方法，通过嵌入表示，将数据结构转化为向量化的表示，使用明确的目标函数，将实体和关系投影到连续的高维向量空间中。基于平移的方法将尾实体映射为一个点，而ManifoldE方法将尾实体映射到流形上。</p>
+        <h1 id="每日论文：ManifoldE"><a href="#每日论文：ManifoldE" class="headerlink" title="每日论文：ManifoldE"></a>每日论文：ManifoldE</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在构建完成知识图谱之后，由于构建时数据不足或者是专家经验不足，出现了事实缺失和关系缺失等问题，需要进行知识推理以补全知识图谱。基于逻辑规则的知识推理，多数使用穷举法，计算复杂度过高。同时，在基于平移的方法TransE系列的模型中，使用原则是头+关系 $\approx$ 尾，将尾实体映射为一个点，存在不适定问题以及无法处理一对多的问题。</p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>对于预测实体链接问题，针对基于逻辑规则的知识推理计算复杂度过高的问题，可以使用基于平移的方法以及本文提出的ManifoldE方法，通过嵌入表示，将数据结构转化为向量化的表示，使用明确的目标函数，将实体和关系投影到连续的高维向量空间中。基于平移的方法将尾实体映射为一个点，而ManifoldE方法将尾实体映射到流形上。</p>
 <ul>
-<li>基于平移的方法：知识图谱中的事实通常表示为一个三元组 <span
-class="math inline">\((h,r,t)\)</span>，其中，<span
-class="math inline">\(h,r,t\)</span> 分别表示头实体，关系以及尾实体。
-<ul>
-<li>TransE方法：将三元组视为头实体到尾实体的一个特定关系的平移，即 <span
-class="math inline">\(h + r = t\)</span>，计算分数的打分方法为 <span
-class="math inline">\(||h+r-t||^2_2\)</span>，TransE就是希望头实体的向量表示加上关系的向量表示尽量接近于尾实体的向量表示，得分越高越合理。TransE模型的优点在于直观且可解释性强。</li>
-<li>PTransE方法：TransE方法只能进行单步推理，PTransE方法改进了TransE方法，考虑了路径相关因素，将原来的三元组
-<span class="math inline">\((h,r,t)\)</span> 视为 <span
-class="math inline">\((h,r_1,e_1),(e_1,r_2,t),(h,r_1\circ
-r_2,t)\)</span>。PTransE模型的优点在于可以进行多步推理。</li>
+<li>基于平移的方法：知识图谱中的事实通常表示为一个三元组 $(h,r,t)$，其中，$h,r,t$ 分别表示头实体，关系以及尾实体。<ul>
+<li>TransE方法：将三元组视为头实体到尾实体的一个特定关系的平移，即 $h + r = t$，计算分数的打分方法为 $||h+r-t||^2_2$，TransE就是希望头实体的向量表示加上关系的向量表示尽量接近于尾实体的向量表示，得分越高越合理。TransE模型的优点在于直观且可解释性强。</li>
+<li>PTransE方法：TransE方法只能进行单步推理，PTransE方法改进了TransE方法，考虑了路径相关因素，将原来的三元组 $(h,r,t)$ 视为 $(h,r_1,e_1),(e_1,r_2,t),(h,r_1\circ r_2,t)$。PTransE模型的优点在于可以进行多步推理。</li>
 <li>KG2E方法：一种概率嵌入方法，用于对知识图谱中未确定的实体或关系进行建模。KG2E方法使用高斯分布来表示实体和关系，其中高斯分布的均值表示的是实体或关系在语义空间中的中心位置，高斯分布的协方差表示该实体或关系的不确定度。KG2E模型的优点在于，考虑了知识图谱中，关系和实体的语义本身就具有不确定性的性质。</li>
-</ul></li>
 </ul>
-<p>以上基于平移的方法的原理都是 <span class="math inline">\(h + r =
-t\)</span>
-，存在两个问题：一是不适定问题。不适定问题指的是一个方程组中，方程式个数远大于变量个数，可能会导致不存在稳定的唯一解，而这也是以往方法无法准确进行精准的链接预测的原因之一。二是采用过于严格的几何形状，难以解决两个实体之间关系的多对多问题，因为多个尾实体竞争一个点，势必会造成损失。</p>
+</li>
+</ul>
+<p>以上基于平移的方法的原理都是 $h + r = t$ ，存在两个问题：一是不适定问题。不适定问题指的是一个方程组中，方程式个数远大于变量个数，可能会导致不存在稳定的唯一解，而这也是以往方法无法准确进行精准的链接预测的原因之一。二是采用过于严格的几何形状，难以解决两个实体之间关系的多对多问题，因为多个尾实体竞争一个点，势必会造成损失。</p>
 <ul>
 <li>ManifoldE方法</li>
 </ul>
-<p>对于TransE采用过于严格的几何形状问题，Manifold方法的解决思路是，对于三元组，采用的是基于流形的准则
-<span class="math inline">\(M(h,r,t)=D_r^2\)</span> 来代替 <span
-class="math inline">\(h+r=t\)</span>，且用于衡量三元组距离的打分方法为
-<span
-class="math inline">\(f_r(h,t)=||M(h,r,t)-D_r^2||^2\)</span>。该方法可以将多个尾实体映射到流形上来缓解多个尾实体竞争一个点的问题。对于
-<span class="math inline">\(M\)</span> 的定义，若以球体为流形，流形函数
-<span class="math inline">\(M\)</span> 则可表示为 <span
-class="math inline">\(M(h,r,t)=||h+r-t||_2^2\)</span>，将球体放置在希尔伯特空间来更高效的表征流形；考虑到两个球体只有在某些严格条件下才能相交，也可以以超平面为流形，则流形函数
-<span class="math inline">\(M\)</span> 则可表示为 <span
-class="math inline">\(M(h,r,t)=(h+r_{head})^T(t+r_{tail})\)</span>，亦可以使用核技巧。</p>
-<p>为了解决TransE的不适定问题，以球形为例，本文对于每个三元组只对应一个等式
-<span class="math inline">\(\sum_{i=1}^d
-(h_i+r_i-t_i)^2=D_r^2\)</span>，所以只要满足 <span
-class="math inline">\(d \ge \frac{T}{E+R}\)</span>，等式数量 <span
-class="math inline">\(T\)</span> 就不会大于自由变量 <span
-class="math inline">\(((E+R)*d)\)</span>，即将嵌入维度增加即可解决该问题。</p>
-<h2 id="项目应用">项目应用</h2>
-<p>对于链接任务，ManifoldE方法在数据集WN18上的HITS@1达到了55%，相比TransE提升了85.1%，在FB15K上的HITS@1达到了64.1%，相比TransE提升了162.7%；对于三元组分类任务，ManifoldE方法在数据集WN11和FB13的准确率达到了87.5%（基于球形）和87.3（基于超平面）。不过，另一篇论文提出，FB15K和WN18存在测试泄露，即大部分测试三元组是训练集中包含的三元组的逆，可能会有影响。</p>
-<p>ManifoldE方法相比简单的TransE系列的基于平移的方法，加入了流形操作和核技巧，但是其计算复杂性只有
-<span class="math inline">\(O(\lambda \times
-O(\text{TransE}))\)</span>，其效率更高，因此，比其他TransE系列的基于平移的方法更快。在项目中，如果知识图谱中的关系存在一对多的关系，则可以考虑使用ManifoldE方法来进行精确的关系预测。</p>
+<p>对于TransE采用过于严格的几何形状问题，Manifold方法的解决思路是，对于三元组，采用的是基于流形的准则 $M(h,r,t)=D<em>r^2$ 来代替 $h+r=t$，且用于衡量三元组距离的打分方法为 $f_r(h,t)=||M(h,r,t)-D_r^2||^2$。该方法可以将多个尾实体映射到流形上来缓解多个尾实体竞争一个点的问题。对于 $M$ 的定义，若以球体为流形，流形函数 $M$ 则可表示为 $M(h,r,t)=||h+r-t||_2^2$，将球体放置在希尔伯特空间来更高效的表征流形；考虑到两个球体只有在某些严格条件下才能相交，也可以以超平面为流形，则流形函数 $M$ 则可表示为 $M(h,r,t)=(h+r</em>{head})^T(t+r_{tail})$，亦可以使用核技巧。</p>
+<p>为了解决TransE的不适定问题，以球形为例，本文对于每个三元组只对应一个等式 $\sum_{i=1}^d (h_i+r_i-t_i)^2=D_r^2$，所以只要满足 $d \ge \frac{T}{E+R}$，等式数量 $T$ 就不会大于自由变量 $((E+R)*d)$，即将嵌入维度增加即可解决该问题。</p>
+<h2 id="项目应用"><a href="#项目应用" class="headerlink" title="项目应用"></a>项目应用</h2><p>对于链接任务，ManifoldE方法在数据集WN18上的HITS@1达到了55%，相比TransE提升了85.1%，在FB15K上的HITS@1达到了64.1%，相比TransE提升了162.7%；对于三元组分类任务，ManifoldE方法在数据集WN11和FB13的准确率达到了87.5%（基于球形）和87.3（基于超平面）。不过，另一篇论文提出，FB15K和WN18存在测试泄露，即大部分测试三元组是训练集中包含的三元组的逆，可能会有影响。</p>
+<p>ManifoldE方法相比简单的TransE系列的基于平移的方法，加入了流形操作和核技巧，但是其计算复杂性只有 $O(\lambda \times O(\text{TransE}))$，其效率更高，因此，比其他TransE系列的基于平移的方法更快。在项目中，如果知识图谱中的关系存在一对多的关系，则可以考虑使用ManifoldE方法来进行精确的关系预测。</p>
 
     </div>
 
@@ -302,7 +271,10 @@ O(\text{TransE}))\)</span>，其效率更高，因此，比其他TransE系列的
     <a href="/2022/07/01/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E7%9F%A5%E8%AF%86%E8%A1%A8%E7%A4%BA/" rel="prev" title="知识图谱-知识表示">
       <i class="fa fa-chevron-left"></i> 知识图谱-知识表示
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="next" title="Excel 打开中文乱码解决方案">
+      Excel 打开中文乱码解决方案 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -361,7 +333,7 @@ O(\text{TransE}))\)</span>，其效率更高，因此，比其他TransE系列的
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87manifolde"><span class="nav-number">1.</span> <span class="nav-text">每日论文：ManifoldE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">项目应用</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E6%97%A5%E8%AE%BA%E6%96%87%EF%BC%9AManifoldE"><span class="nav-number">1.</span> <span class="nav-text">每日论文：ManifoldE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">项目应用</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -377,14 +349,14 @@ O(\text{TransE}))\)</span>，其效率更高，因此，比其他TransE系列的
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
