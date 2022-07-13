@@ -22,26 +22,26 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Excel 打开中文乱码解决方案问题在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。  其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。 解决方法加入BOM头中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带">
+  <meta name="description" content="Excel 打开中文乱码解决方案 问题 在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。  其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。 解决方法 加入BOM头 中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Excel 打开中文乱码解决方案">
 <meta property="og:url" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="Excel 打开中文乱码解决方案问题在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。  其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。 解决方法加入BOM头中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带">
+<meta property="og:description" content="Excel 打开中文乱码解决方案 问题 在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。  其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。 解决方法 加入BOM头 中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110428908.png">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110555057.png">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111720726.png">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111810304.png">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/Excel-打开中文乱码解决方案/image-20220711111834738.png">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/Excel-打开中文乱码解决方案/image-20220711112253092.png">
-<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/Excel-打开中文乱码解决方案/image-20220711112348498.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/dataset-1.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/notepad-1.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/excelprocess1-1.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/excelprocess2-1.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/import1.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/import2.png">
+<meta property="og:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/import3.png">
 <meta property="article:published_time" content="2022-07-11T02:52:58.000Z">
-<meta property="article:modified_time" content="2022-07-11T03:26:01.736Z">
+<meta property="article:modified_time" content="2022-07-13T03:05:58.652Z">
 <meta property="article:author" content="Rebecca">
 <meta property="article:tag" content="Excel">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110428908.png">
+<meta name="twitter:image" content="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/dataset-1.png">
 
 <link rel="canonical" href="http://example.com/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
 
@@ -207,10 +207,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-07-11 10:52:58 / 修改时间：11:26:01" itemprop="dateCreated datePublished" datetime="2022-07-11T10:52:58+08:00">2022-07-11</time>
+              <time title="创建时间：2022-07-11 10:52:58" itemprop="dateCreated datePublished" datetime="2022-07-11T10:52:58+08:00">2022-07-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-13 11:05:58" itemprop="dateModified" datetime="2022-07-13T11:05:58+08:00">2022-07-13</time>
+              </span>
 
           
 
@@ -223,22 +229,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Excel-打开中文乱码解决方案"><a href="#Excel-打开中文乱码解决方案" class="headerlink" title="Excel 打开中文乱码解决方案"></a>Excel 打开中文乱码解决方案</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。</p>
-<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110428908.png" class="" title="image-20220711110428908">
-<p>其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照 ANSI 格式读取。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="加入BOM头"><a href="#加入BOM头" class="headerlink" title="加入BOM头"></a>加入BOM头</h3><p>中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带bom头的csv文件转换为带bom头的编码形式即可解决。</p>
-<ol>
-<li>使用Notepad++打开，然后设置为“转为UTF-8编码”。<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711110555057.png" class="" title="image-20220711110555057"></li>
+        <h1 id="excel-打开中文乱码解决方案">Excel 打开中文乱码解决方案</h1>
+<h2 id="问题">问题</h2>
+<p>在下载数据集的时候，发现用Excel打开之后，英文可以显示，但是中文出现乱码现象，特在此记录如何解决。</p>
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/dataset-1.png" class="" title="dataset-1">
+<p>其根源在于，Excel在读取csv文件时，该csv文件无bom头编码，Excel按照
+ANSI 格式读取。</p>
+<h2 id="解决方法">解决方法</h2>
+<h3 id="加入bom头">加入BOM头</h3>
+<p>中文乱码问题是由于Excel在读取csv文件时，该csv文件无bom头编码，Excel按照默认编码读取发生的问题，因此，只需将不带bom头的csv文件转换为带bom头的编码形式即可解决。</p>
+<ol type="1">
+<li>使用Notepad++打开，然后设置为“转为UTF-8编码”。 <img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/notepad-1.png" class="" title="notepad-1"></li>
 <li>直接用编程语言，将Bom头编码写入文件流。</li>
 </ol>
 <p>第一种方法的优点在于，容易操作，无需任何编程知识，缺点在于，Notepad++只支持Windows系统，同时，如果该csv文件为大文件，可能会导致无法打开的现象。</p>
 <p>第二种方法的优点在于，在任何平台都可以使用编程语言解决该问题，缺点在于，需要有编写程序的背景知识支持。</p>
-<h3 id="编辑Excel文件"><a href="#编辑Excel文件" class="headerlink" title="编辑Excel文件"></a>编辑Excel文件</h3><p>这种方法的思路是，新建一个Excel然后倒入旧的Excel，在导入时可以设置文件的编码。</p>
-<ol>
-<li>在【数据】选项卡，选择【获取外部数据】下的【自文本】<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111720726.png" class="" title="image-20220711111720726"></li>
-<li>选择你需要导入的中文乱码的数据集<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/image-20220711111810304.png" class="" title="image-20220711111810304"></li>
-<li>文本导入中，第一步需注意其格式选择【65001:Unicode(UTF-8)】，第二步需注意选择【分隔符号】选择【逗号】而不是【Tab键】，第三步可以预览。<img src="Excel-打开中文乱码解决方案/image-20220711111834738.png" alt="image-20220711111834738"><img src="Excel-打开中文乱码解决方案/image-20220711112253092.png" alt="image-20220711112253092"><img src="Excel-打开中文乱码解决方案/image-20220711112348498.png" alt="image-20220711112348498"></li>
-<li>完成。</li>
+<h3 id="编辑excel文件">编辑Excel文件</h3>
+<p>这种方法的思路是，新建一个Excel然后倒入旧的Excel，在导入时可以设置文件的编码。</p>
+<ol type="1">
+<li>在【数据】选项卡，选择【获取外部数据】下的【自文本】</li>
+</ol>
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/excelprocess1-1.png" class="" title="excelprocess1-1">
+<ol start="2" type="1">
+<li><p>选择你需要导入的中文乱码的数据集</p>
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/excelprocess2-1.png" class="" title="excelprocess2-1"></li>
+<li><p>文本导入中，第一步需注意其格式选择【65001:Unicode(UTF-8)】，第二步需注意选择【分隔符号】选择【逗号】而不是【Tab键】，第三步可以预览。
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/import1.png" class="" title="import1"></p>
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/import2.png" class="" title="import2">
+<img src="/2022/07/11/Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/import3.png" class="" title="import3"></li>
+<li><p>完成。</p></li>
 </ol>
 <p>本方法的优点在于简单有效，也可以导入大文件，缺点在于可能丢失源csv文件的部分格式，且处理时间很长。</p>
 
@@ -338,7 +357,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">Excel 打开中文乱码解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5BOM%E5%A4%B4"><span class="nav-number">1.2.1.</span> <span class="nav-text">加入BOM头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91Excel%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">编辑Excel文件</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#excel-%E6%89%93%E5%BC%80%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">Excel 打开中文乱码解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5bom%E5%A4%B4"><span class="nav-number">1.2.1.</span> <span class="nav-text">加入BOM头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91excel%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">编辑Excel文件</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="每周论文总结 week1主题：命名实体识别 知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。 知识图谱的技术架构如下图所示。 命名实体识别(Named Entity Recogniti">
+  <meta name="description" content="每周论文总结 week1 主题：命名实体识别 知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。 知识图谱的技术架构如下图所示。 命名实体识别(Named Entity Reco">
 <meta property="og:type" content="article">
 <meta property="og:title" content="每周论文w1">
 <meta property="og:url" content="http://example.com/2022/06/27/%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87w1/index.html">
 <meta property="og:site_name" content="Rebecca的赛博世界">
-<meta property="og:description" content="每周论文总结 week1主题：命名实体识别 知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。 知识图谱的技术架构如下图所示。 命名实体识别(Named Entity Recogniti">
+<meta property="og:description" content="每周论文总结 week1 主题：命名实体识别 知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。 知识图谱的技术架构如下图所示。 命名实体识别(Named Entity Reco">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-06-27T06:09:36.000Z">
 <meta property="article:modified_time" content="2022-06-29T13:32:10.461Z">
@@ -222,22 +222,36 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="每周论文总结-week1"><a href="#每周论文总结-week1" class="headerlink" title="每周论文总结 week1"></a>每周论文总结 week1</h1><p>主题：命名实体识别</p>
+        <h1 id="每周论文总结-week1">每周论文总结 week1</h1>
+<p>主题：命名实体识别</p>
 <p>知识图谱本质是一种有向图结构的语义知识库，其中，图由结点和边构成。结点用于描述概念或实体，边用于描述概念或实体之间的语义关系。通常使用三元组，&lt;主语(Subject)，谓语(Predicate)，宾语(Object)&gt;的形式，即SPO三元组来描述知识。</p>
 <p>知识图谱的技术架构如下图所示。</p>
-<p>命名实体识别(Named Entity Recognition, NER)，目标是识别文本中的实体，并且取得其边界以及所属的类别。其方法有传统机器学习方法和深度学习方法。深度学习方法为现在主流应用方法。</p>
-<h2 id="LSTM-CRF"><a href="#LSTM-CRF" class="headerlink" title="LSTM-CRF"></a>LSTM-CRF</h2><p>HUANG等人提出了双向长短期记忆网络(Bidirectional long short<br>term memory, Bi-LSTM)和条件随机场(Conditional random field,CRF)结合的方法，用于进行命名实体识别。</p>
-<p>HUANG Z，XU W，YU K. Bidirectional LSTM-CRF models for sequence tagging[J]. arXiv preprint arXiv：.01991，2015.</p>
-<p>LSTM是基于循环神经网络(Recurrent Neural Network, RNN)的基础上进行改进的一种模型。</p>
-<p>RNN的基本思想是，对输入的序列中的每一个位置都进行同样的循环单元计算，每一个循环单元不仅接受该位置的信息，也接收上一个循环单元的输出进行输入。因此，与卷积神经网络(Convolutional Neural Network, CNN)相比，RNN保留了长距离的上下文信息。</p>
-<p>LSTM是在简单RNN的基础上，添加了细胞状态(cell state)，同时，加入了采用Sigmoid激活函数的门控机制(遗忘门、输入门、输出门)。添加了细胞状态之后，可以缓解梯度消失问题，添加了门控机制之后，可以实现对信息的长短期记忆。</p>
-<p>CRF是一种判别式无向图模型，其条件分布为：</p>
-<script type="math/tex; mode=display">
+<p>命名实体识别(Named Entity Recognition,
+NER)，目标是识别文本中的实体，并且取得其边界以及所属的类别。其方法有传统机器学习方法和深度学习方法。深度学习方法为现在主流应用方法。</p>
+<h2 id="lstm-crf">LSTM-CRF</h2>
+<p>HUANG等人提出了双向长短期记忆网络(Bidirectional long short term
+memory, Bi-LSTM)和条件随机场(Conditional random
+field,CRF)结合的方法，用于进行命名实体识别。</p>
+<p>HUANG Z，XU W，YU K. Bidirectional LSTM-CRF models for sequence
+tagging[J]. arXiv preprint arXiv：.01991，2015.</p>
+<p>LSTM是基于循环神经网络(Recurrent Neural Network,
+RNN)的基础上进行改进的一种模型。</p>
+<p>RNN的基本思想是，对输入的序列中的每一个位置都进行同样的循环单元计算，每一个循环单元不仅接受该位置的信息，也接收上一个循环单元的输出进行输入。因此，与卷积神经网络(Convolutional
+Neural Network, CNN)相比，RNN保留了长距离的上下文信息。</p>
+<p>LSTM是在简单RNN的基础上，添加了细胞状态(cell
+state)，同时，加入了采用Sigmoid激活函数的门控机制(遗忘门、输入门、输出门)。添加了细胞状态之后，可以缓解梯度消失问题，添加了门控机制之后，可以实现对信息的长短期记忆。</p>
+<p>CRF是一种判别式无向图模型，其条件分布为： <span
+class="math display">\[
 \begin{aligned}
-P(Y|X) &= \frac{1}{Z} \prod_c \phi_c (y_c |x) \\
-\phi_c (y_c |x) &= e^{\sum_k \lambda_k f_k (y_t,y_{t-1},x_t) + \mu_k s_k (y_t,x_t)} \\
-Z &= \sum_y \prod_c \phi_c (y_c |x)
-\end{aligned}</script><p>其中，$\phi_c (y_c |x)$ 为团势函数，$Z$ 为归一化函数，$\lambda$ 和 $\mu$ 是权重，为待学习的参数。</p>
+P(Y|X) &amp;= \frac{1}{Z} \prod_c \phi_c (y_c |x) \\
+\phi_c (y_c |x) &amp;= e^{\sum_k \lambda_k f_k (y_t,y_{t-1},x_t) + \mu_k
+s_k (y_t,x_t)} \\
+Z &amp;= \sum_y \prod_c \phi_c (y_c |x)
+\end{aligned}
+\]</span> 其中，<span class="math inline">\(\phi_c (y_c |x)\)</span>
+为团势函数，<span class="math inline">\(Z\)</span> 为归一化函数，<span
+class="math inline">\(\lambda\)</span> 和 <span
+class="math inline">\(\mu\)</span> 是权重，为待学习的参数。</p>
 <p>针对实体识别任务，使用Bi-LSTM可以在任意时刻获得前后的信息。其步骤如下：</p>
 <ul>
 <li>训练出每个单词的词向量，将处理为单词索引的句子作为输入，经过嵌入层(Embedding)层转换为对应的特征张量(bs,len,dim)，并提供给Bi-LSTM层。</li>
@@ -246,7 +260,10 @@ Z &= \sum_y \prod_c \phi_c (y_c |x)
 </ul>
 <p>使用Bi-LSTM预测的前后两个标注是相互独立的，也就是说，可能出现序列前后两个字都预测为“Begin”，也就是词首，因此引入CRF层。</p>
 <p>CRF层替换了Bi-LSTM层中的Softmax层。</p>
-<h2 id="空洞卷积加强模型"><a href="#空洞卷积加强模型" class="headerlink" title="空洞卷积加强模型"></a>空洞卷积加强模型</h2><h2 id="加入了注意力机制的Transformer模型"><a href="#加入了注意力机制的Transformer模型" class="headerlink" title="加入了注意力机制的Transformer模型"></a>加入了注意力机制的Transformer模型</h2>
+<h2 id="空洞卷积加强模型">空洞卷积加强模型</h2>
+<h2
+id="加入了注意力机制的transformer模型">加入了注意力机制的Transformer模型</h2>
+
     </div>
 
     
@@ -347,7 +364,7 @@ Z &= \sum_y \prod_c \phi_c (y_c |x)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93-week1"><span class="nav-number">1.</span> <span class="nav-text">每周论文总结 week1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM-CRF"><span class="nav-number">1.1.</span> <span class="nav-text">LSTM-CRF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%8A%A0%E5%BC%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">空洞卷积加强模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E4%BA%86%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84Transformer%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">加入了注意力机制的Transformer模型</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E5%91%A8%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93-week1"><span class="nav-number">1.</span> <span class="nav-text">每周论文总结 week1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lstm-crf"><span class="nav-number">1.1.</span> <span class="nav-text">LSTM-CRF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%8A%A0%E5%BC%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">空洞卷积加强模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E4%BA%86%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84transformer%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">加入了注意力机制的Transformer模型</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
